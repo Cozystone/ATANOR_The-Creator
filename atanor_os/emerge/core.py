@@ -21,7 +21,11 @@ class Core(nn.Module):
         self.register_buffer("rel_de", torch.zeros(k, ni)); self.register_buffer("rel_x", torch.zeros(k, dx))
         self.register_buffer("rel_a", torch.zeros(k, dtype=torch.long)); self.register_buffer("rel_n", torch.zeros((), dtype=torch.long))
         self.register_buffer("rel_s", torch.zeros(k, dtype=torch.long)); self.register_buffer("rel_c", torch.zeros((), dtype=torch.long))
+        self.register_buffer("rel_inn", torch.zeros(k, dtype=torch.bool))       # 타고난 본능의 씨앗인가 (저장에도 남게)
         self.register_buffer("fnd_x", torch.zeros(k, dx)); self.register_buffer("fnd_a", torch.zeros(k, dtype=torch.long)); self.register_buffer("fnd_n", torch.zeros((), dtype=torch.long))
+        # 다침의 기억 (풀림의 기억과 짝, 크기 고정): 몸 안이 깎인 순간 (얼마나, 그때 느낀 것, 그때 한 것). 닮은 때에 그 장면에서 멀어지는 쪽으로 밀리고 그때 한 것을 꺼린다
+        self.register_buffer("harm_de", torch.zeros(k)); self.register_buffer("harm_x", torch.zeros(k, dx)); self.register_buffer("harm_a", torch.zeros(k, dtype=torch.long))
+        self.register_buffer("harm_n", torch.zeros((), dtype=torch.long)); self.register_buffer("harm_c", torch.zeros((), dtype=torch.long))
         pl = torch.zeros(dx); pl[place] = 1
         self.register_buffer("pl", pl)
         self.also = None
@@ -51,8 +55,9 @@ class Core(nn.Module):
 
     # ---- 풀림의 기억 ----
     @torch.no_grad()
-    def keep(self, de, x, a):
-        """de [n, ni] 몸 안에서 오른 것, x [n, dx] 그때 느낀 것, a [n] 그때 한 것."""
+    def keep(self, de, x, a, innate=False):
+        """de [n, ni] 몸 안에서 오른 것, x [n, dx] 그때 느낀 것, a [n] 그때 한 것.
+        innate: 타고난 본능의 씨앗 (손으로 준 것, 장부). 그 행동은 '풀어 주리라 내다봄' 없이도 끌린다 (본능은 알아챔과 몸짓이 한 묶음: 개구리는 먹어 본 적 없이도 문다)."""
         for i in range(len(a)):
             if int(self.rel_n) < self.k:
                 j = int(self.rel_n); self.rel_n += 1
@@ -60,7 +65,38 @@ class Core(nn.Module):
                 dn = F.normalize(self.rel_de, dim=-1); many = ((dn @ dn.t()) > 0.9).float().sum(1)
                 j = int(torch.where(many >= many.max(), self.rel_s, torch.full_like(self.rel_s, 2 ** 62)).argmin())
             self.rel_de[j], self.rel_x[j], self.rel_a[j] = de[i].clamp(min=0), x[i], a[i]
+            self.rel_inn[j] = bool(innate)
             self.rel_c += 1; self.rel_s[j] = self.rel_c
+
+    @torch.no_grad()
+    def keep_harm(self, drop, x, a):
+        """drop [n] 몸 안이 깎인 크기, x [n, dx] 그때(깎이기 직전) 느낀 것, a [n] 그때 한 것. 크기 고정: 가득 차면 가장 오래된 것부터."""
+        for i in range(len(a)):
+            j = int(self.harm_c) % self.k
+            self.harm_de[j], self.harm_x[j], self.harm_a[j] = float(drop[i]), x[i], a[i]
+            self.harm_c += 1; self.harm_n = torch.clamp(self.harm_n + 1, max=self.k)
+
+    @torch.no_grad()
+    def avoid(self, x):
+        """x [B, dx] -> 행동마다 밀림 [B, m] (다침의 기억이 없으면 0). 끌림(pull)과 같은 얼개를 거꾸로:
+        지금과 닮은 다친 순간들을 떠올려 (닮음은 그 순간들 사이에서 늘 같았던 느낌으로 잰다), 내다본 다음 느낌이 그 장면에서 멀어질수록 좋고, 그때 한 것은 꺼린다.
+        모자람과 상관없이 늘 켜진다 (아픔은 배가 불러도 아프다)."""
+        n = int(self.harm_n)
+        B = x.shape[0]
+        if n == 0:
+            return torch.zeros(B, self.m, device=x.device)
+        hx = self.harm_x[:n]
+        other = torch.ones(self.dx, dtype=torch.bool, device=x.device); other[self.inside] = False
+        var = hx[:, other].var(0, unbiased=False) if n > 1 else torch.ones(int(other.sum()), device=x.device)
+        q = 1.0 / (var + 0.02); wt = torch.zeros(self.dx, device=x.device); wt[other] = q / q.mean()
+        dist = ((x[:, None] - hx[None]) ** 2 * wt).sum(-1) / other.sum()          # [B, n] 지금과 그 순간들의 거리 (느낌 한 칸당)
+        w = torch.softmax(-dist * 4.0, 1) * self.harm_de[:n][None]                # 닮은 순간일수록, 크게 다친 순간일수록
+        sim = torch.exp(-dist.min(1).values * 2.0)                                # 지금이 다친 순간과 얼마나 닮았나 (0~1)
+        mu = (w / w.sum(1, keepdim=True).clamp(min=1e-6)) @ hx
+        fo = self.foresee(x)
+        away = ((fo - mu[:, None]) ** 2 * wt).sum(-1) / other.sum() - ((x - mu) ** 2 * wt).sum(-1, keepdim=True) / other.sum()   # 이 행동으로 그 장면에서 멀어지는 만큼
+        did = w @ F.one_hot(self.harm_a[:n], self.m).float() / w.sum(1, keepdim=True).clamp(min=1e-6)
+        return sim[:, None] * (away - did)
 
     # ---- 찾아냄의 기억 (풀림의 기억과 같은 얼개를 한 단 앞에: 끌릴 데가 없다가 생긴 순간) ----
     @torch.no_grad()
@@ -169,9 +205,13 @@ class Core(nn.Module):
         fo = self.foresee(x)
         d = (wt[:, None] * (fo - mu[:, None]) ** 2).sum(-1)
         here = torch.exp(-(wt * (x - mu) ** 2).sum(-1))
-        act = w @ F.one_hot(self.rel_a[:n], self.m).float()
+        inn = getattr(self, "rel_inn", None)
+        inn = inn[:n].float() if inn is not None else torch.zeros(n, device=x.device)
+        oh = F.one_hot(self.rel_a[:n], self.m).float()
+        act = (w * (1 - inn)[None]) @ oh
         rise = ((fo[:, :, self.inside] - x[:, None, self.inside]) * (need > 0).float()[:, None]).sum(-1).clamp(min=0)     # 이 행동이 지금 급한 그 모자람을 얼마나 풀 것이라 내다보는가
         act = act * (rise / need.max(1, keepdim=True).values.clamp(min=0.05)).clamp(max=1) ** 2 * (here[:, None] if self.like else 1.0)
+        act = act + ((w * inn[None]) @ oh) * (here[:, None] if self.like else 1.0)      # 본능의 씨앗: 내다봄 없이, 지금이 그 장면과 닮은 만큼만 끌린다
         #    # 그때 한 것은, 여기서 그것이 풀어 주리라 내다보는 만큼만 끌린다 (멀리서 헛되이 하지 않는다)
         self._last = (mu, wt, need.max(1).values ** 2 * strong)       # 방금 무엇에 끌렸는가 (헛됨을 셈할 때 쓴다)
         return (need.max(1).values ** 2 * strong)[:, None] * (-d + 10.0 * act), strong

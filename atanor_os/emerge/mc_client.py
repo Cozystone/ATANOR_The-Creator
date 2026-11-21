@@ -28,7 +28,7 @@ def _recv(s):
 
 
 class MCWorld:
-    def __init__(self, host="127.0.0.1", port=8790, timeout=600):
+    def __init__(self, host="127.0.0.1", port=8790, timeout=180):          # 세계가 3분 넘게 답이 없으면 멈춘 것으로 보고 오류를 낸다 (지키는 스크립트가 다시 띄움)
         self.s = socket.create_connection((host, port), timeout=timeout); self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         hello = _recv(self.s); self.n = hello["n"]; self.obs = hello["obs"]
         self.felt = np.zeros((self.n, 3), dtype=np.float32)
@@ -60,6 +60,14 @@ class MCWorld:
         got = _recv(self.s)
         for i, o in zip(which, got):
             self.obs[i] = o; self.felt[i] = 0
+        return got
+
+    def feed(self, which, item="bread", qty=8):
+        """부모가 손(첫 칸)에 먹을 것을 쥐여 준다 (돌봄 단계, 장부, 차츰 뗌)."""
+        _send(self.s, dict(cmd="feed", which=list(which), item=item, qty=qty))
+        got = _recv(self.s)
+        for i, o in zip(which, got):
+            self.obs[i] = o
         return got
 
     def pics(self):

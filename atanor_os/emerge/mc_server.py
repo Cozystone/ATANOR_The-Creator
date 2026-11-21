@@ -12,6 +12,7 @@ import os
 EYE = os.environ.get("ATANOR_EYE_PATH", os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "eye", "fovea.py"))
 CROP = int(os.environ.get("ATANOR_MC_CROP", "44"))       # 그린 그림 아래에서 잘라 낼 줄 수 (HUD)
 POINTER = os.environ.get("ATANOR_MC_POINTER", "/mnt/d/ATANOR-experiments/probe-work/mcviewer.json")      # 판 번호와 지금 판 설명 (bump_mc.py가 고친다)
+USE_TICKS = int(os.environ.get("ATANOR_MC_USE_TICKS", "32"))   # 쓰기를 누르고 있는 틱 수 (먹기 = 32)
 TURN = 2          # 고개 칸 수 (한 칸 15도): 한 번에 30도
 ACTS = ["가만히", "앞으로", "왼쪽으로 돌기", "오른쪽으로 돌기", "때리기", "쓰기", "뛰며 앞으로"]
 
@@ -59,8 +60,9 @@ def body(conn, seed, h, w, small, big):
         if p is None or p.shape != rgb.shape or k in (2, 3):
             return 0.0
         g, q = rgb.mean(2).astype(np.float32), p.mean(2).astype(np.float32)
-        x0, y0, x1, y1 = s["fovea_box"]; c = np.abs(g[y0:y1, x0:x1] - q[y0:y1, x0:x1]).mean()
-        X0, Y0, X1, Y1 = s["levels"][0]["box"]; ring = np.abs(g[Y0:Y1, X0:X1] - q[Y0:Y1, X0:X1]); sur = (ring.sum() - np.abs(g[y0:y1, x0:x1] - q[y0:y1, x0:x1]).sum()) / max(ring.size - (y1 - y0) * (x1 - x0), 1)
+        H_, W_ = g.shape; cy, cx = H_ // 2, W_ // 2                # 바로 앞 (시야 한가운데 = 손이 닿는 곳): 개구리도 바로 앞의 벌레만 문다. 초점은 화면을 떠돌므로 쓰지 않는다
+        x0, y0, x1, y1 = cx - 12, cy - 12, cx + 12, cy + 12; c = np.abs(g[y0:y1, x0:x1] - q[y0:y1, x0:x1]).mean()
+        X0, Y0, X1, Y1 = cx - 36, cy - 36, cx + 36, cy + 36; ring = np.abs(g[Y0:Y1, X0:X1] - q[Y0:Y1, X0:X1]); sur = (ring.sum() - np.abs(g[y0:y1, x0:x1] - q[y0:y1, x0:x1]).sum()) / max(ring.size - (y1 - y0) * (x1 - x0), 1)
         return float(max(c - sur, 0.0) / 64.0)
 
     def pack(obs, done, hurt, k=None):
@@ -94,8 +96,21 @@ def body(conn, seed, h, w, small, big):
             for _ in range(10):                                   # 떨어져 자리 잡을 때까지 몇 걸음 그대로
                 obs, _, done, _ = env.step(env.action_space.no_op())
             conn.send(pack(obs, done, 0.0)); continue
+        if isinstance(cmd, tuple) and cmd[0] == "feed":      # 먹여 주기 (돌봄 단계, 장부): 부모가 손(첫 칸)에 먹을 것을 쥐여 준다
+            ex = getattr(env, "execute_cmd", None) or env.unwrapped.execute_cmd
+            obs, _, done, _ = ex(f"/replaceitem entity @p slot.hotbar.0 minecraft:{cmd[1]} {int(cmd[2])}")
+            conn.send(pack(obs, done, 0.0)); continue
         a = env.action_space.no_op()
         k = int(cmd)
+        if k == 5:                                            # '쓰기' = 1.6초 (32틱) 누르고 있기 (먹는 몸짓. 마크에서 먹으려면 이만큼 눌러야 한다): 몸의 움직임 단위
+            hurt = 0.0
+            for _ in range(USE_TICKS):
+                a = env.action_space.no_op(); a[5] = 1
+                obs, r, done, info = env.step(a)
+                dm = obs.get("damage_source", {}); hurt += float(np.asarray(dm.get("damage_amount", 0)).sum()) if isinstance(dm, dict) else 0.0
+                if done:
+                    break
+            conn.send(pack(obs, done, hurt, k)); continue
         if k == 1: a[0] = 1
         elif k == 2: a[4] = 12 - TURN
         elif k == 3: a[4] = 12 + TURN
@@ -218,6 +233,12 @@ def main():
             send(s, dict(n=a.bodies, obs=[{k: v for k, v in o.items() if k not in ("big", "kept")} for o in first]))
             while True:
                 m = recv(s)
+                if m.get("cmd") == "feed":
+                    for i in m["which"]:
+                        pipes[i].send(("feed", m.get("item", "bread"), int(m.get("qty", 8))))
+                    for i in m["which"]:
+                        first[i] = pipes[i].recv()
+                    send(s, [{k: v for k, v in first[i].items() if k not in ("big", "kept")} for i in m["which"]]); continue
                 if m.get("cmd") == "move":
                     for i in m["which"]:
                         pipes[i].send(("move", int(m.get("r", 400))))
