@@ -21,6 +21,7 @@ class Life:
         self.use_roads = roads if roads is not None else torch.zeros(n, dtype=torch.bool, device=device)
         self.watch = watch
         self.explore = explore if explore is not None else torch.zeros(n, dtype=torch.bool, device=device)
+        self.follow = torch.zeros(n, dtype=torch.bool, device=device)      # 갈 데를 모를 때 눈에 보이는 같은 종(풀빛)을 따라간다 (새끼가 어미를 따르는 타고난 버릇)
         self.link = torch.zeros(n, 2, G.CH, device=device)
         self.t = torch.zeros(n, device=device); self.gen = torch.Generator(device=device).manual_seed(seed + 7)
         self.lives = 0
@@ -52,7 +53,7 @@ class Life:
         out[b] = torch.where(blocked[:, None], behind, best)
         return out
 
-    def _with_roads(self, x, where, seen):
+    def _with_roads(self, x, where, seen, size=None):
         """모자란데 그 빛깔이 안 보이면, 떠올린 길의 몇 걸음 앞을 그 빛깔의 자리 감각으로."""
         NS = G.CH
         for k in range(2):
@@ -63,6 +64,11 @@ class Life:
             notseen = ~seen.gather(1, c[:, None])[:, 0]
             want = want_k & notseen
             wp = self.roads.recall(self.pi, k, self.t, want)
+            fol = want & torch.isnan(wp[:, 0]) & self.follow & seen[:, 1]
+            if fol.any():                                        # 갈 데를 모르는데 같은 종이 보인다: 그쪽으로 (보이는 크기에서 어림한 거리의 조금 앞까지)
+                ang = self.ph + torch.nan_to_num(where[:, 1]); dd = (1.0 / size[:, 1].clamp(min=0.05) - 0.8).clamp(min=0.3, max=6.0)
+                tw = self.pi + dd[:, None] * torch.stack([torch.cos(ang), torch.sin(ang)], 1)
+                wp = torch.where(fol[:, None], tw, wp)
             lost = want & torch.isnan(wp[:, 0]) & self.explore
             if lost.any():                                       # 떠올릴 길이 없다: 눈에 트여 보이는 쪽 가운데 덜 걸어 본 쪽으로 (방금 뒤진 데로 돌아가지 않는다)
                 wp = torch.where(lost[:, None], self._fresh(lost), wp)
@@ -97,7 +103,7 @@ class Life:
         x = G.senses(w, self.eye)
         where, size, seen = self.eye.last
         self.wp = torch.full((self.n, 2), float("nan"), device=self.dev)
-        x = self._with_roads(x, where, seen)
+        x = self._with_roads(x, where, seen, size)
         if self.prev is not None:
             more, eased = self.net.unmet(self.prev[0], self.prev[1], x)
             self.fut = self.fut * LEAK; self.fut[torch.arange(self.n, device=self.dev), self.prev[1]] += more; self.fut[eased] = 0

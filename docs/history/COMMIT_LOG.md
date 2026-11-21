@@ -898,3 +898,5 @@
 - 2026-11-21 `2ad232d6` atanor-os: life_gpu - with nothing to recall, walk toward the open way the road memory holds least (do not go back where it has just searched); under test
 - 2026-11-21 `6dc57733` atanor-os: social_gpu - two bodies share a world (the being and a hand-written elder that knows the way), the being sees the other as a green pillar, and when it sees the elder eat it writes the elder's last walk into its own memory of roads; under test
 - 2026-11-21 `df33f6bb` atanor-os: tools/creator - export of the first-person 3D stage to the ATANOR_The-Creator repository (README, roadmap, principles, research log, scrubbed paths)
+- 2026-11-21 `a3a7b253` atanor-os: creator export carries the whole development history as records, with stronger scrubbing
+- 2026-11-21 `7be20c26` atanor-os: follow a seen conspecific when lost (innate, flagged); dev record - less-walked way lifts whole lives ~10x and plateaus by the third life; living beside an elder helps much, writing what it saw has not yet (it rarely saw the elder eat)
