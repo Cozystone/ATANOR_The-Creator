@@ -37,18 +37,12 @@ def live_gpu(a):
     R.set_slots(R.CHROMA, 1 + R.CHROMA)
     sd = T_.load(a.model, map_location="cpu")
     net = Core(R.DX, R.M, R.INSIDE, R.PLACE); net.load_state_dict(sd, strict=False); net = net.to(dev).eval()
-    roads = bool(getattr(a, "routes", False))
-    social = bool(getattr(a, "social", False))
-    if social:                                                     # 존재(0)와 어른(1)이 한 세계를 나눈다. 존재는 곁에 붙어 다니며 어른이 먹는 것을 보면 그 길을 적는다
-        from .social_gpu import Social
-        tf = T_.tensor([True, False], device=dev)
-        L = Social(net, 2, R.HOME, dev, seed=a.seed, watch_mask=tf, roads=tf, explore=tf, pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
-        L.follow = tf.clone(); L.attach = tf.clone()
-    else:
-        L = Life(net, 1, R.HOME, dev, seed=a.seed, roads=T_.tensor([roads], device=dev), pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
+    net.far = float(getattr(a, "far", 0.0))                   # 헛됨을 넓힘: 떠올린 순간에 가까워지리라 내다봤는데 안 가까워져도 헛되다 (알맹이의 배움, 손 규칙 아님)
+    L = Life(net, 1, R.HOME, dev, seed=a.seed, pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
+    social = False
     saved = time.strftime("%m-%d %H:%M", time.localtime(os.path.getmtime(a.model)))
-    label = (f"{('v' + str(a.version) + ' · ') if getattr(a, 'version', '') else ''}{getattr(a, 'note', '')} · {os.path.basename(a.model)} · 저장 {saved} · GPU 판 (몸 수천 개를 키우는 고리와 같은 것) · "
-             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{' · 길의 기억 (삶마다 이어 듦)' if roads or social else ''}{' · 덜 걸어 본 쪽으로 · 어른과 함께 (풀빛 기둥: 곁에 붙어 다니고, 어른이 먹는 것을 보면 그 길을 적는다)' if social else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
+    label = (f"{('v' + str(a.version) + ' · ') if getattr(a, 'version', '') else ''}{getattr(a, 'note', '')} · {os.path.basename(a.model)} · 저장 {saved} · GPU 판 · "
+             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{(' (넓힘 ' + str(net.far) + ')') if net.far else ''} · 손으로 넣은 행동 규칙 없음 · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
     span = float(getattr(a, "life", 900)); life = 0
     while True:
         life += 1; L.begin(); w = L.world; t0 = time.time()
@@ -62,17 +56,12 @@ def live_gpu(a):
             b2 = io.BytesIO(); Image.fromarray(eimg).resize((192, 120), Image.NEAREST).save(b2, format="PNG")
             start = G.parse(R.HOME)[2]; sx, sy = start[0] + 0.5, start[1] + 0.5
             seen = []
-            wp = L.wp[0].cpu().numpy() if hasattr(L, "wp") else None
-            if wp is not None and not np.isnan(wp[0]):
-                seen.append([float(sx + wp[0]), float(sy + wp[1]), 3, 1])
-            if social:
-                seen.append([float(w.pos[1, 0]), float(w.pos[1, 1]), 2, 1])          # 어른 (풀빛 점)
             where, size, vis = L.eye.last
             gx = float(L.eye.gx[0]); fw = 8 / 64
             store = w.store[0].cpu().numpy(); need = 1 - store; a_ = int(act[0])
             with LOCK:
                 STATE.update(label=label, life=life, clock=round(float(w.clock[0]), 1), span=span, store=[round(float(v), 3) for v in store], act=ACTS[a_],
-                             fills=int(L.fills[0]), watched=(int(L.watched[0]) if social else None), dead=bool(w.dead[0]), pos=[float(w.pos[0, 0]), float(w.pos[0, 1])], head=float(w.head[0]), map=w.map[0].cpu().numpy().tolist(),
+                             fills=int(L.fills[0]), watched=None, dead=bool(w.dead[0]), pos=[float(w.pos[0, 0]), float(w.pos[0, 1])], head=float(w.head[0]), map=w.map[0].cpu().numpy().tolist(),
                              colors=(COLOR * 255).astype(int).tolist(), seen=seen, frame=base64.b64encode(buf.getvalue()).decode(),
                              lack=["마실 것", "먹을 것"][int(need.argmax())], lack_size=round(float(need.max()), 2), pulled=bool(strong[0]), seeking=False,
                              pull=[round(float(v), 2) for v in sc[0]], acts=ACTS[:5], fov=G.FOV, lines=[], reach=G.REACH, retina=True,

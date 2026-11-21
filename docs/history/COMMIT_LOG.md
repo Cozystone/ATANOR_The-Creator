@@ -906,3 +906,6 @@
 - 2026-11-21 `02b23340` atanor-os: creator README rewritten as a project overview (vision, roadmap and current position)
 - 2026-11-21 `f85d1a43` atanor-os: viewer shows the being with its elder (green), staying near it and writing down the elder's walk when it sees it eat
 - 2026-11-21 `4263e939` atanor-os: dev record - staying near the elder: six times more watching, a gain while together, little left once alone; README states the purpose (true AGI)
+- 2026-11-21 `08267815` atanor-os: viewer can show the less-walked way alone (long-life look)
+- 2026-11-21 `0dab0a97` atanor-os: life_gpu - walk on after a full look round with nothing (spin fix, flagged); learned trust between guides (Thompson, under test); viewer v3.15
+- 2026-11-21 `ec0ee361` atanor-os: remove every hand-written behaviour rule from the main line (roads, less-walked, follow/attach, hand-made elder, trust picking, walk-on, scan, urgent-only); room graduation; imagination organ first look passes
