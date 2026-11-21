@@ -11,19 +11,21 @@ import torch, torch.nn as nn, torch.nn.functional as F
 
 
 class WM(nn.Module):
-    def __init__(s, z=32, m=5):
+    def __init__(s, z=32, m=5, ch=3, hw=(40, 64)):
+        """ch, hw: 받는 그림의 갈래 수와 크기. 방 = 그림 3 x 40 x 64. 마크 = 정본 눈의 가운데 + 고리 4 + 고리의 센 빛깔 4 (각 RGB) = 27 x 16 x 16."""
         super().__init__()
-        s.enc = nn.Sequential(nn.Conv2d(3, 16, 4, 2, 1), nn.ELU(), nn.Conv2d(16, 32, 4, 2, 1), nn.ELU(), nn.Conv2d(32, 64, 4, 2, 1), nn.ELU(), nn.Flatten(), nn.Linear(64 * 5 * 8, 2 * z))
-        s.dec_in = nn.Linear(z, 64 * 5 * 8)
-        s.dec = nn.Sequential(nn.ELU(), nn.ConvTranspose2d(64, 32, 4, 2, 1), nn.ELU(), nn.ConvTranspose2d(32, 16, 4, 2, 1), nn.ELU(), nn.ConvTranspose2d(16, 3, 4, 2, 1))
+        gh, gw = hw[0] // 8, hw[1] // 8
+        s.enc = nn.Sequential(nn.Conv2d(ch, 16 if ch <= 3 else 64, 4, 2, 1), nn.ELU(), nn.Conv2d(16 if ch <= 3 else 64, 32, 4, 2, 1), nn.ELU(), nn.Conv2d(32, 64, 4, 2, 1), nn.ELU(), nn.Flatten(), nn.Linear(64 * gh * gw, 2 * z))
+        s.dec_in = nn.Linear(z, 64 * gh * gw)
+        s.dec = nn.Sequential(nn.ELU(), nn.ConvTranspose2d(64, 32, 4, 2, 1), nn.ELU(), nn.ConvTranspose2d(32, 16 if ch <= 3 else 64, 4, 2, 1), nn.ELU(), nn.ConvTranspose2d(16 if ch <= 3 else 64, ch, 4, 2, 1))
         s.step = nn.Sequential(nn.Linear(z + m, 256), nn.ELU(), nn.Linear(256, 256), nn.ELU(), nn.Linear(256, 2 * z))
-        s.m, s.z = m, z
+        s.m, s.z, s.gh, s.gw = m, z, gh, gw
 
     def encode(s, x):
         mu, lv = s.enc(x).chunk(2, 1); return mu, lv.clamp(-6, 4)
 
     def decode(s, z):
-        return torch.sigmoid(s.dec(s.dec_in(z).view(-1, 64, 5, 8)))
+        return torch.sigmoid(s.dec(s.dec_in(z).view(-1, 64, s.gh, s.gw)))
 
     def next(s, z, a):
         d, lv = s.step(torch.cat([z, F.one_hot(a, s.m).float()], 1)).chunk(2, 1); return z + d, lv.clamp(-6, 4)

@@ -102,7 +102,11 @@ class Core(nn.Module):
         """방금 한 행동이 가장 급한 모자람을 풀어 주리라 내다본 만큼에서, 실제로 풀린 만큼을 뺀 것 [B] (0 이상), 그리고 실제로 풀렸는가 [B].
         이것을 행동마다 쌓아 두고 (새어 나가게 하며) 쌓인 만큼 그 행동의 끌림을 던다: 헛되면 놓는다. 쌓는 것은 몸을 사는 쪽이 한다 (존재마다 따로)."""
         ins = self.inside
-        lack = F.one_hot((1 - x[:, ins]).argmax(1), ins.stop - ins.start).float()
+        if getattr(self, "whole", False):                            # 온전함의 잣대: 모자람마다 결핍^2의 몫으로 (가장 급한 하나만이 아니라)
+            dfc = (1 - x[:, ins]).clamp(min=0) ** 2
+            lack = dfc / dfc.sum(1, keepdim=True).clamp(min=1e-6)
+        else:
+            lack = F.one_hot((1 - x[:, ins]).argmax(1), ins.stop - ins.start).float()
         fo = self.foresee(x).gather(1, a[:, None, None].expand(-1, 1, self.dx))[:, 0]
         hoped = (((fo - x)[:, ins]) * lack).sum(1).clamp(min=0); came = (((x2 - x)[:, ins]) * lack).sum(1).clamp(min=0)
         more = (hoped - came).clamp(min=0)
@@ -116,13 +120,32 @@ class Core(nn.Module):
     # ---- 끌림 ----
     @torch.no_grad()
     def pull(self, x):
-        """x [B, dx] -> 행동마다의 끌림 [B, m] (끌림이 없는 줄은 0), 끌림이 있는가 [B]"""
+        """x [B, dx] -> 행동마다의 끌림 [B, m] (끌림이 없는 줄은 0), 끌림이 있는가 [B]
+        whole이 켜지면: 모자람마다 따로 떠올려 끌림을 내고, 온전함(1 - 평균 제곱 결핍)이 그 모자람으로 깎이는 만큼(결핍^2)의 무게로 더한다.
+        꺼져 있으면: 가장 급한 모자람 하나만 (처음부터의 꼴)."""
+        if not getattr(self, "whole", False):
+            full = 1 - x[:, self.inside]
+            return self._pull(x, full * F.one_hot(full.argmax(1), full.shape[1]))
+        full = (1 - x[:, self.inside]).clamp(min=0)
+        tot, any_, keep, top = 0.0, None, None, None
+        for k in range(full.shape[1]):                               # 모자람 k의 끌림은 _pull 안에서 결핍_k^2 의 무게를 받는다
+            sc, st = self._pull(x, full * F.one_hot(torch.full((x.shape[0],), k, device=x.device), full.shape[1]))
+            tot = tot + sc; any_ = st if any_ is None else (any_ | st)
+            if keep is None:
+                keep, top = self._last, full[:, k]
+            else:                                                    # 헛됨이 쓸 '방금 끌린 것'은 가장 급한 모자람의 것으로
+                use = full[:, k] > top
+                keep = tuple(torch.where(use[:, None] if v.dim() == 2 else use, v, o) for v, o in zip(self._last, keep)); top = torch.maximum(full[:, k], top)
+        self._last = keep
+        return tot, any_
+
+    @torch.no_grad()
+    def _pull(self, x, need):
+        """need [B, ni]: 이번에 떠올릴 모자람 (그 줄만 0이 아님)."""
         n = int(self.rel_n)
         B = x.shape[0]
         if n == 0:
             return torch.zeros(B, self.m, device=x.device), torch.zeros(B, dtype=torch.bool, device=x.device)
-        need = 1 - x[:, self.inside]
-        need = need * F.one_hot(need.argmax(1), need.shape[1])
         dn = F.normalize(self.rel_de[:n], dim=-1)
         rel = need @ dn.t()
         many = ((dn @ dn.t()) > 0.9).float().sum(1).clamp(min=1)
@@ -131,11 +154,16 @@ class Core(nn.Module):
         mx = self.rel_x[:n]
         mu = w @ mx
         var = (w[:, :, None] * (mx[None] - mu[:, None]) ** 2).sum(1)
-        g = mx[:, self.place].view(n, -1, 3)
-        touch = w @ (torch.exp(-4.0 * g[..., :2].norm(dim=-1)) * g[..., 2])
         wt = torch.zeros_like(var)
-        wt[:, self.place] = touch.repeat_interleave(3, 1) / (var[:, self.place] + 0.02)
-        if self.also is not None:                                    # 자리 감각 밖의 느낌 가운데 풀린 순간마다 같았던 것도 끌림에 든다 (눈의 초점에 차 있던 빛깔 같은 것)
+        if self.place.stop == self.place.start:                      # 자리 감각을 따로 묶지 않은 몸 (마크처럼): 몸 안 밖의 모든 느낌 가운데 풀린 순간마다 같았던 것이 무겁다
+            other = torch.ones(self.dx, dtype=torch.bool, device=x.device); other[self.inside] = False
+            q = 1.0 / (var[:, other] + 0.02)
+            wt[:, other] = q / q.mean(1, keepdim=True)
+        else:
+            g = mx[:, self.place].view(n, -1, 3)
+            touch = w @ (torch.exp(-4.0 * g[..., :2].norm(dim=-1)) * g[..., 2])
+            wt[:, self.place] = touch.repeat_interleave(3, 1) / (var[:, self.place] + 0.02)
+        if self.also is not None and self.place.stop != self.place.start:                                    # 자리 감각 밖의 느낌 가운데 풀린 순간마다 같았던 것도 끌림에 든다 (눈의 초점에 차 있던 빛깔 같은 것)
             cap = wt[:, self.place].sum(1, keepdim=True) / (wt[:, self.place] > 0).sum(1, keepdim=True).clamp(min=1)      # 눈의 자리 감각이 받는 무게의 평균
             wt[:, self.also] = torch.minimum(1 / (var[:, self.also] + 0.02), cap)      # 다른 느낌(소리 같은 것)은 그보다 무겁지 않다 (흩어짐이 작다고 끌림을 덮어쓰지 않게)
         fo = self.foresee(x)

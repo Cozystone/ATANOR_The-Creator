@@ -40,6 +40,7 @@ def live_gpu(a):
     body = getattr(a, "body", "")                                 # 몸에 더한 감각: "touch" 또는 "touch+depth"
     E = {"": 0, "touch": 3, "touch+depth": 8}[body]
     net = Core(R.DX + E, R.M, R.INSIDE, R.PLACE); net.load_state_dict(sd, strict=False); net = net.to(dev).eval()
+    net.whole = bool(getattr(a, "whole", False))                  # 끌림의 잣대를 온전함으로: 모자람마다 따로 떠올려 결핍^2 무게로 더함
     net.far = float(getattr(a, "far", 0.0))                   # 헛됨을 넓힘: 떠올린 순간에 가까워지리라 내다봤는데 안 가까워져도 헛되다 (알맹이의 배움, 손 규칙 아님)
     L = Life(net, 1, R.HOME, dev, seed=a.seed, pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
     L.dishab = bool(getattr(a, "dishab", False))
@@ -69,7 +70,7 @@ def live_gpu(a):
         wm = WM().to(dev).eval(); wm.load_state_dict(T_.load(a.wm, map_location=dev)); im = Imagine(wm, 1, device=dev, seed=a.seed)
     saved = time.strftime("%m-%d %H:%M", time.localtime(os.path.getmtime(a.model)))
     label = (f"{('v' + str(a.version) + ' · ') if getattr(a, 'version', '') else ''}{getattr(a, 'note', '')} · {os.path.basename(a.model)} · 저장 {saved} · GPU 판 · "
-             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{(' (넓힘 ' + str(net.far) + ')') if net.far else ''} · 손으로 넣은 행동 규칙 없음{' · 몸에 더한 감각: ' + body + ' (닿음 = 앞/왼/오른 가까움, 깊이 = 제 걸음으로 배운 깊이 5갈래)' if body else ''}{' · 탈습관화 (내다본 것과 크게 다른 것이 오면 쌓인 헛됨이 풀림)' if L.dishab else ''}{' · 상상으로 고름 (눈을 거꾸로 뒤집은 상상 기관으로 8걸음 앞을 그려 봄)' if im is not None else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
+             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{(' (넓힘 ' + str(net.far) + ')') if net.far else ''} · 손으로 넣은 행동 규칙 없음{' · 끌림의 잣대 = 온전함 (모든 모자람을 결핍^2 무게로)' if net.whole else ''}{' · 몸에 더한 감각: ' + body + ' (닿음 = 앞/왼/오른 가까움, 깊이 = 제 걸음으로 배운 깊이 5갈래)' if body else ''}{' · 탈습관화 (내다본 것과 크게 다른 것이 오면 쌓인 헛됨이 풀림)' if L.dishab else ''}{' · 상상으로 고름 (눈을 거꾸로 뒤집은 상상 기관으로 8걸음 앞을 그려 봄)' if im is not None else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
     span = float(getattr(a, "life", 900)); life = 0
     while True:
         life += 1; L.begin(); w = L.world; t0 = time.time()

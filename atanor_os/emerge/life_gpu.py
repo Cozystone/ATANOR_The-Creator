@@ -20,6 +20,7 @@ class Life:
         self.lives = 0
         self.dishab = False
         self.extra, self.record, self.try_p, self.learn = None, None, 0.0, False
+        self.curious = 0.0
         self.begin()
 
     @torch.no_grad()
@@ -50,6 +51,8 @@ class Life:
                 self.fut[novel] = 0; self.novel = novel
                 self.s_m = self.s_m + 0.02 * (odd - self.s_m); self.s_v = self.s_v + 0.02 * ((odd - self.s_m) ** 2 - self.s_v)
         sc, strong = self.net.pull(x); sc = sc - TIRE * self.fut
+        if self.curious:                                         # 둘째 바탕 (창립자 확정, E20): 제 내다보기가 틀릴 곳에 끌린다 (끌림이 약할수록 이것이 이끈다)
+            sc = sc + self.curious * self.net.wonder(x); strong = torch.ones_like(strong)
         a = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1, generator=self.gen)[:, 0]
         a = torch.where(strong, a, torch.randint(0, self.net.m, (self.n,), device=self.dev, generator=self.gen))
         if self.try_p:                                           # 기를 때: 얼마쯤은 아무렇게나 해 본다 (원래 기르던 꼴)
