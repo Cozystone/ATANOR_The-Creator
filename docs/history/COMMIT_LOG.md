@@ -909,3 +909,6 @@
 - 2026-11-21 `08267815` atanor-os: viewer can show the less-walked way alone (long-life look)
 - 2026-11-21 `0dab0a97` atanor-os: life_gpu - walk on after a full look round with nothing (spin fix, flagged); learned trust between guides (Thompson, under test); viewer v3.15
 - 2026-11-21 `ec0ee361` atanor-os: remove every hand-written behaviour rule from the main line (roads, less-walked, follow/attach, hand-made elder, trust picking, walk-on, scan, urgent-only); room graduation; imagination organ first look passes
+- 2026-11-21 `b44c02df` atanor-os: eyewm - imagination organ as a module + choosing by imagination (fails: freezes when nothing in view; cause recorded); roadmap order room -> Crafter -> Minecraft with an unscripted elder
+- 2026-11-21 `97452c97` atanor-os: dishabituation (released futility on surprise, seed 5: no spin and the most refills); depth eye from own motion via canon depth_learner (read-only), first look rank 0.60; viewer v3.23 shows learned depth
+- 2026-11-22 `ac305540` atanor-os: overall check - smoke test for the whole main line (6/6), export adds body_gpu/eyewm and retires experiments of removed organs, depth canon path via env in public copy, viewer reloads a growing being, utf-8 viewer bump

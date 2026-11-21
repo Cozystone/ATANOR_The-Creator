@@ -59,7 +59,8 @@
 | 3 | 상상으로 고르기: 떠올린 풀림의 순간에 가까워지는 장면이 나오는 행동 줄을 속으로 굴려 보고 고른다 | ▶ **다음** |
 | 4 | 두 세계(방 + Crafter)의 그림을 같은 상상 기관으로 (세계 이름 없이), 이월을 잰다 | ⏳ |
 | 5 | Crafter에서 같은 알맹이 + 눈 + 상상으로 산다 (Crafter 조정 없음) | ⏳ |
-| 6~10 | 상상의 속 상태로 크기 고정 기억, 같은 알맹이의 몸들끼리, 감정의 번짐·소리, Minecraft·컴퓨터 화면·사람의 삶, 세대 | ⏳ |
+| 6 | Minecraft에서 실시간으로 산다. 손으로 짜지 않은 유능한 어른(Voyager 같은 다른 존재) 곁에서 제 눈으로 보고 배운다 (어른 안의 언어 모델은 존재의 마음 밖) | ⏳ |
+| 7~10 | 상상의 속 상태로 크기 고정 기억, 같은 알맹이의 몸들끼리, 감정의 번짐·소리, 컴퓨터 화면·사람의 삶, 세대 | ⏳ |
 
 매 단계 붙는 관문: 손으로 준 것의 장부 / 다른 세계로의 이월 / 씨앗 둘 이상 / 네 표지에 비춰 보고.
 자세히: [`docs/ROADMAP.md`](docs/ROADMAP.md)
@@ -110,7 +111,9 @@ atanor_os/emerge/
   room3d_map.py   머릿속 지도 (모름 / 트임 / 막힘 + 언제) 와 속으로 걸어 보기
   routes.py       길의 기억 (CPU)
   room3d_gpu.py   세계 + 그림 + 눈을 몸 수천 개에 대해 GPU에서 한꺼번에
-  life_gpu.py     GPU에서 사는 고리 (얼린 알맹이 + 헛됨. 손으로 넣은 행동 규칙 없음)
+  life_gpu.py     GPU에서 사는 고리 (얼린 알맹이 + 헛됨 넓힘 + 탈습관화. 손으로 넣은 행동 규칙 없음)
+  body_gpu.py     몸의 감각 더하기: 닿음(앞/왼/오른), 제 걸음으로 배운 깊이 눈, 같은 존재에 새 감각 잇기
+  eyewm.py        상상 기관: 눈을 거꾸로 뒤집은 것 + 행동을 받아 다음 장면을 그려 봄
   inner.py        속마음 (실험 중)
   plastic.py      살면서 고치기 (해로움이 확인됨, 기록용)
   room3dwatch.py  실시간 뷰어
@@ -127,6 +130,9 @@ docs/history/             개발 역사 전체 (기록만)
 pip install torch numpy pillow opencv-python
 # 실시간 뷰어 (http://127.0.0.1:8769)
 python -m atanor_os.emerge.room3dwatch --pointer viewer3d.example.json --port 8769
+# 본 줄 전체를 한 번씩 돌려 보는 검사 (고칠 때마다)
+PYTHONPATH=. python tools/smoke_main.py
+# 깊이 눈은 창립자의 정본 depth_learner를 쓴다 (이 저장소에는 없음): ATANOR_DEPTH_PATH=<depth_learner 폴더>
 # 상상 기관 첫 판 (GPU)
 python experiments/wm0.py models/room3d_ret4r.pt 512 600 32 20000
 ```

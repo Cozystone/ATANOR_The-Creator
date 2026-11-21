@@ -4,13 +4,11 @@ import sys, time, torch
 from atanor_os.emerge import room3d_live as R
 from atanor_os.emerge.core import Core
 from atanor_os.emerge.life_gpu import Life
-from atanor_os.emerge.roads_gpu import RoadsGPU
 R.set_slots(R.CHROMA, 1 + R.CHROMA)
 n, LIVES, T, seed = int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
 for far in (0.0, 0.3, 1.0, 3.0):
     net = Core(R.DX, R.M, R.INSIDE, R.PLACE); net.load_state_dict(torch.load(sys.argv[1]), strict=False); net = net.cuda().eval(); net.far = far
-    off = torch.zeros(n, dtype=torch.bool, device="cuda")
-    L = Life(net, n, R.HOME, "cuda", seed=seed, roads=off, explore=off, pool="mean"); L.roads = RoadsGPU(n, "cuda", L=500)
+    L = Life(net, n, R.HOME, "cuda", seed=seed, pool="mean")
     out = []; t0 = time.time()
     for life in range(LIVES):
         run = torch.zeros(n, device="cuda"); best = torch.zeros(n, device="cuda"); turns = torch.zeros(n, device="cuda"); at = torch.zeros(n, device="cuda")

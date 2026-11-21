@@ -34,22 +34,66 @@ def live_gpu(a):
     from .life_gpu import Life
     dev = "cuda" if T_.cuda.is_available() else "cpu"
     st0 = os.path.getmtime(a.pointer) if a.pointer else 0
+    m0 = os.path.getmtime(a.model)
     R.set_slots(R.CHROMA, 1 + R.CHROMA)
     sd = T_.load(a.model, map_location="cpu")
-    net = Core(R.DX, R.M, R.INSIDE, R.PLACE); net.load_state_dict(sd, strict=False); net = net.to(dev).eval()
+    body = getattr(a, "body", "")                                 # 몸에 더한 감각: "touch" 또는 "touch+depth"
+    E = {"": 0, "touch": 3, "touch+depth": 8}[body]
+    net = Core(R.DX + E, R.M, R.INSIDE, R.PLACE); net.load_state_dict(sd, strict=False); net = net.to(dev).eval()
     net.far = float(getattr(a, "far", 0.0))                   # 헛됨을 넓힘: 떠올린 순간에 가까워지리라 내다봤는데 안 가까워져도 헛되다 (알맹이의 배움, 손 규칙 아님)
     L = Life(net, 1, R.HOME, dev, seed=a.seed, pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
+    L.dishab = bool(getattr(a, "dishab", False))
+    if body:
+        from .body_gpu import touch as _touch, DepthSense
+        _ds = DepthSense(getattr(a, "depth_net", "models/depth0.pt"), dev) if "depth" in body else None
+        L.extra = (lambda w_: T_.cat([_touch(w_), _ds(w_)], 1)) if _ds is not None else _touch
+    dep = None
+    if getattr(a, "depth", ""):                                  # 깊이 눈: 정본 depth_learner를 읽기 전용으로, 제 걸음으로 배운 무게
+        import importlib.util, math as _m
+        _cp = os.environ.get("ATANOR_DEPTH_PATH", "depth_learner")
+        def _ld(nm):
+            sp = importlib.util.spec_from_file_location("canon_depth_" + nm, os.path.join(_cp, nm + ".py")); mm = importlib.util.module_from_spec(sp); sp.loader.exec_module(mm); return mm
+        _SS, _MD = _ld("selfsup"), _ld("model")
+        dep = _MD.DepthNet(width=16).to(dev); dep.load_state_dict(T_.load(a.depth, map_location=dev)); dep.eval()
+        _f = 0.5 * 80 / _m.tan(0.5 * G.FOV); _offs = T_.atan((T_.arange(80, device=dev) + 0.5 - 40) / _f); _rows = T_.arange(48, device=dev).float()[:, None] + 0.5 - 24
+        def pinhole(w):
+            kind, dist = w.cast(w.head[:1, None] + _offs[None], step=0.05)
+            z = dist[:1] * T_.cos(_offs)[None]; half = 0.5 * _f / z.clamp(min=0.05); wall = _rows.abs()[None] <= half[:, None, :]
+            col = G.COLOR.to(dev)[kind[:1].long()] * (1.0 - z / 12.0).clamp(0.25, 1.0)[..., None]
+            base = T_.where((_rows < 0)[None, :, :, None], G.SKY.to(dev), G.GROUND.to(dev)).expand(1, 48, 80, 3)
+            return T_.where(wall[..., None], col[:, None].expand(-1, 48, -1, -1), base).permute(0, 3, 1, 2).clamp(0, 1)
     social = False
+    im = None
+    if getattr(a, "wm", ""):                                     # 상상으로 고르기: 모자랄 때 행동 줄을 속으로 굴려 보고, 풀리기 직전 장면에 가장 가까이 가는 줄의 첫 행동
+        from .eyewm import WM, Imagine
+        wm = WM().to(dev).eval(); wm.load_state_dict(T_.load(a.wm, map_location=dev)); im = Imagine(wm, 1, device=dev, seed=a.seed)
     saved = time.strftime("%m-%d %H:%M", time.localtime(os.path.getmtime(a.model)))
     label = (f"{('v' + str(a.version) + ' · ') if getattr(a, 'version', '') else ''}{getattr(a, 'note', '')} · {os.path.basename(a.model)} · 저장 {saved} · GPU 판 · "
-             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{(' (넓힘 ' + str(net.far) + ')') if net.far else ''} · 손으로 넣은 행동 규칙 없음 · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
+             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{(' (넓힘 ' + str(net.far) + ')') if net.far else ''} · 손으로 넣은 행동 규칙 없음{' · 몸에 더한 감각: ' + body + ' (닿음 = 앞/왼/오른 가까움, 깊이 = 제 걸음으로 배운 깊이 5갈래)' if body else ''}{' · 탈습관화 (내다본 것과 크게 다른 것이 오면 쌓인 헛됨이 풀림)' if L.dishab else ''}{' · 상상으로 고름 (눈을 거꾸로 뒤집은 상상 기관으로 8걸음 앞을 그려 봄)' if im is not None else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
     span = float(getattr(a, "life", 900)); life = 0
     while True:
         life += 1; L.begin(); w = L.world; t0 = time.time()
         while not bool(w.dead[0]) and float(w.clock[0]) < span:
             if a.pointer and os.path.exists(a.pointer) and os.path.getmtime(a.pointer) != st0:
                 return
+            if os.path.exists(a.model) and os.path.getmtime(a.model) != m0:      # 기르는 중인 존재가 다시 저장되면 그 존재로
+                return
+            if im is not None:
+                with T_.no_grad():
+                    zc = im.wm.encode(w.picture().permute(0, 3, 1, 2).clamp(0, 1))[0]
+                pick, _ = im.choose(zc, w.store.argmin(1), (w.store.min(1).values < 0.75) & ~w.dead)
+                L.override = lambda a_, pick=pick: T_.where(pick >= 0, pick, a_)
             act, sc, strong, filled = L.tick()
+            depth_img = ""
+            if dep is not None:
+                with T_.no_grad():
+                    dd = _SS.bounded_log_depth(dep(pinhole(w)), 0.1, 30.0)[0]
+                import matplotlib.cm as _cm
+                v = ((dd - _m.log(0.3)) / (_m.log(15) - _m.log(0.3))).clamp(0, 1).cpu().numpy()
+                dimg = (_cm.turbo_r(v)[..., :3] * 255).astype(np.uint8)
+                b3 = io.BytesIO(); Image.fromarray(dimg).resize((192, 115), Image.NEAREST).save(b3, format="PNG"); depth_img = base64.b64encode(b3.getvalue()).decode()
+            if im is not None:
+                im.remember(zc, filled)
             img = (L.world.picture(192, 120, step=0.04)[0].clamp(0, 1) * 255).byte().cpu().numpy()
             buf = io.BytesIO(); Image.fromarray(img).save(buf, format="PNG")
             eimg = (w.picture()[0].clamp(0, 1) * 255).byte().cpu().numpy()
@@ -66,7 +110,7 @@ def live_gpu(a):
                              lack=["마실 것", "먹을 것"][int(need.argmax())], lack_size=round(float(need.max()), 2), pulled=bool(strong[0]), seeking=False,
                              pull=[round(float(v), 2) for v in sc[0]], acts=ACTS[:5], fov=G.FOV, lines=[], reach=G.REACH, retina=True,
                              gaze=[max(gx - fw / 2, 0), 0.4, min(gx + fw / 2, 1), 0.6], kept=[[j, float(where[0, j]), float(size[0, j]), 1] for j in range(3) if bool(vis[0, j])],
-                             kept_img=base64.b64encode(b2.getvalue()).decode(), mind=None, futile=[round(float(v), 2) for v in L.fut[0]], mended=0, inner_norm=None,
+                             kept_img=base64.b64encode(b2.getvalue()).decode(), depth_img=depth_img, mind=None, futile=[round(float(v), 2) for v in L.fut[0]], mended=0, inner_norm=None,
                              mend_loss=0, infront=[])
             time.sleep(max(0.0, G.TICK - (time.time() - t0))); t0 = time.time()
         with LOCK:
@@ -236,6 +280,7 @@ h1{font-size:18px;margin:0 0 2px} #label{color:var(--mut);font-size:12.5px;margi
 <div class="row">
  <div class="card"><h2>존재의 눈앞 (이것과 몸의 느낌만 받는다)</h2><div class="view"><img id="eye" alt="존재의 눈앞 그림"><canvas id="ov" width="640" height="400"></canvas></div>
   <div id="keptwrap" style="display:none;margin-top:8px"><h2>눈이 실제로 받는 것 (초점 둘레만 곱게, 바깥은 거칠게)</h2><img id="kept" alt="눈이 받는 거친 그림" style="width:100%;image-rendering:pixelated;border-radius:6px;display:block"></div>
+  <div id="depthwrap" style="display:none;margin-top:8px"><h2>제 걸음으로 배운 깊이 (파랑 = 멀다, 빨강 = 가깝다. 아직 존재의 고름에는 쓰지 않음)</h2><img id="depth" alt="배운 깊이" style="width:100%;image-rendering:pixelated;border-radius:6px;display:block"></div>
   <small id="legend" data-rays="노란 상자 = 가운데 시선 ('하기'가 닿는 곳. 닿는 거리 안이면 굵게). 작은 표시 = 나머지 시선 8줄 (주변)."></small></div>
  <div class="card"><h2>위에서 본 세계 (사람이 보라고 그린 것. 존재는 받지 않는다)</h2><canvas id="map" width="420" height="420"></canvas>
   <div id="mindwrap" style="display:none;margin-top:12px"><h2>머릿속 지도 (존재가 제 몸과 눈으로 그린 것. 제 걸음 기준)</h2><canvas id="mind" width="420" height="420"></canvas>
@@ -271,7 +316,7 @@ function mindmap(s){const w=$('mindwrap');if(!s.mind){w.style.display='none';ret
  for(const p of m.ways){g.beginPath();g.arc((p[0]+.5)*u,(p[1]+.5)*u,8,0,7);g.lineWidth=2.5;g.strokeStyle=cc[p[2]];g.stroke();}
  const px=(m.me[0]+.5)*u,py=(m.me[1]+.5)*u;g.fillStyle='#f0c83c';g.beginPath();g.arc(px,py,u*.4,0,7);g.fill();g.strokeStyle='#222';g.lineWidth=2;g.beginPath();g.moveTo(px,py);g.lineTo(px+Math.cos(m.head)*u,py+Math.sin(m.head)*u);g.stroke();}
 async function tick(){try{const s=await (await fetch('state')).json();if(s.label){
- $('label').textContent='버전 '+s.label;$('keptwrap').style.display=s.retina?'block':'none';if(s.retina)$('kept').src='data:image/png;base64,'+s.kept_img;$('legend').textContent=s.retina?'노란 상자 = 초점 (곱게 보는 곳). 아래 동그라미 = 빛깔의 맞섬마다 지금 느끼는 쪽 (채워짐 = 지금 보임, 빈 것 = 마지막으로 본 쪽을 기억).':$('legend').dataset.rays;$('eye').src='data:image/png;base64,'+s.frame;draw(s);over(s);mindmap(s);
+ $('label').textContent='버전 '+s.label;$('keptwrap').style.display=s.retina?'block':'none';if(s.retina)$('kept').src='data:image/png;base64,'+s.kept_img;$('depthwrap').style.display=s.depth_img?'block':'none';if(s.depth_img)$('depth').src='data:image/png;base64,'+s.depth_img;$('legend').textContent=s.retina?'노란 상자 = 초점 (곱게 보는 곳). 아래 동그라미 = 빛깔의 맞섬마다 지금 느끼는 쪽 (채워짐 = 지금 보임, 빈 것 = 마지막으로 본 쪽을 기억).':$('legend').dataset.rays;$('eye').src='data:image/png;base64,'+s.frame;draw(s);over(s);mindmap(s);
  for(const i of [0,1]){$('s'+i).textContent=Math.round(s.store[i]*100)+'%';$('b'+i).style.width=(s.store[i]*100)+'%';}
  $('life').textContent=s.life+'번째'+(s.ended&&(s.dead||s.clock>=s.span)?' · '+s.ended:'');$('clock').textContent=s.clock+'초 / '+s.span+'초';$('fills').textContent=s.fills+'번';$('watchrow').style.display=(s.watched!=null)?'flex':'none';if(s.watched!=null)$('watchv').textContent=s.watched+'번';$('innerrow').style.display=(s.inner_norm!==null&&s.inner_norm!==undefined)?'flex':'none';if(s.inner_norm!=null)$('innerv').textContent=s.inner_norm;$('mended').textContent=s.mended?(s.mended+'번 ('+s.mend_loss+')'):'고치지 않음';$('act').textContent=s.act;
  $('lack').textContent=s.lack+' ('+Math.round(s.lack_size*100)+'% 비었음)';$('pulled').textContent=s.pulled?'있음 (풀렸던 순간을 떠올림)':(s.seeking?'갈 데를 모름 (찾아냈던 순간에 기댐)':'없음 (헤맴)');
