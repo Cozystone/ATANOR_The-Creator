@@ -900,3 +900,5 @@
 - 2026-11-21 `df33f6bb` atanor-os: tools/creator - export of the first-person 3D stage to the ATANOR_The-Creator repository (README, roadmap, principles, research log, scrubbed paths)
 - 2026-11-21 `a3a7b253` atanor-os: creator export carries the whole development history as records, with stronger scrubbing
 - 2026-11-21 `7be20c26` atanor-os: follow a seen conspecific when lost (innate, flagged); dev record - less-walked way lifts whole lives ~10x and plateaus by the third life; living beside an elder helps much, writing what it saw has not yet (it rarely saw the elder eat)
+- 2026-11-21 `d2457fa2` atanor-os: life_gpu - fix a shadowed name in following
+- 2026-11-21 `b9ee00b3` atanor-os: dev record - social run 2: what is learned by watching does not stay once alone (it saw the elder eat only once in four lives)

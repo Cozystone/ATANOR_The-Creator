@@ -79,13 +79,13 @@ class Life:
                 continue
             d = wp - self.pi; dist = d.norm(dim=1).clamp(min=0.3)
             off = torch.remainder(torch.atan2(d[:, 1], d[:, 0]) - self.ph + math.pi, 2 * math.pi) - math.pi
-            size = (1.0 / dist).clamp(max=0.3)
+            szw = (1.0 / dist).clamp(max=0.3)
             for jj in range(NS):
                 m = ok & (c == jj)
                 if not m.any():
                     continue
-                x[m, 3 + 3 * jj] = 1 - size[m]; x[m, 4 + 3 * jj] = off[m].abs() / math.pi; x[m, 5 + 3 * jj] = 1.0
-                x[m, 3 + 3 * NS + 2 * jj] = size[m] / 2; x[m, 4 + 3 * NS + 2 * jj] = (off[m] / (G.FOV / 2)).clamp(-1, 1)
+                x[m, 3 + 3 * jj] = 1 - szw[m]; x[m, 4 + 3 * jj] = off[m].abs() / math.pi; x[m, 5 + 3 * jj] = 1.0
+                x[m, 3 + 3 * NS + 2 * jj] = szw[m] / 2; x[m, 4 + 3 * NS + 2 * jj] = (off[m] / (G.FOV / 2)).clamp(-1, 1)
                 x[m, 3 + 5 * NS + jj] = torch.sin(off[m])
         return x
 
