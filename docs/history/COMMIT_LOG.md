@@ -903,3 +903,6 @@
 - 2026-11-21 `d2457fa2` atanor-os: life_gpu - fix a shadowed name in following
 - 2026-11-21 `b9ee00b3` atanor-os: dev record - social run 2: what is learned by watching does not stay once alone (it saw the elder eat only once in four lives)
 - 2026-11-21 `76b9f23e` atanor-os: life_gpu - staying near a seen conspecific when not pressed (innate attachment, flagged); under test
+- 2026-11-21 `02b23340` atanor-os: creator README rewritten as a project overview (vision, roadmap and current position)
+- 2026-11-21 `f85d1a43` atanor-os: viewer shows the being with its elder (green), staying near it and writing down the elder's walk when it sees it eat
+- 2026-11-21 `4263e939` atanor-os: dev record - staying near the elder: six times more watching, a gain while together, little left once alone; README states the purpose (true AGI)

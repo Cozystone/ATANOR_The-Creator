@@ -38,10 +38,17 @@ def live_gpu(a):
     sd = T_.load(a.model, map_location="cpu")
     net = Core(R.DX, R.M, R.INSIDE, R.PLACE); net.load_state_dict(sd, strict=False); net = net.to(dev).eval()
     roads = bool(getattr(a, "routes", False))
-    L = Life(net, 1, R.HOME, dev, seed=a.seed, roads=T_.tensor([roads], device=dev), pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
+    social = bool(getattr(a, "social", False))
+    if social:                                                     # 존재(0)와 어른(1)이 한 세계를 나눈다. 존재는 곁에 붙어 다니며 어른이 먹는 것을 보면 그 길을 적는다
+        from .social_gpu import Social
+        tf = T_.tensor([True, False], device=dev)
+        L = Social(net, 2, R.HOME, dev, seed=a.seed, watch_mask=tf, roads=tf, explore=tf, pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
+        L.follow = tf.clone(); L.attach = tf.clone()
+    else:
+        L = Life(net, 1, R.HOME, dev, seed=a.seed, roads=T_.tensor([roads], device=dev), pool=getattr(a, "pool", "mean"), drain=(1 / 60.0) / float(getattr(a, "slow", 4.0)))
     saved = time.strftime("%m-%d %H:%M", time.localtime(os.path.getmtime(a.model)))
     label = (f"{('v' + str(a.version) + ' · ') if getattr(a, 'version', '') else ''}{getattr(a, 'note', '')} · {os.path.basename(a.model)} · 저장 {saved} · GPU 판 (몸 수천 개를 키우는 고리와 같은 것) · "
-             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{' · 길의 기억 (삶마다 이어 듦)' if roads else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
+             f"지금 보이는 것만 · 눈의 반사 · 헛되면 놓음{' · 길의 기억 (삶마다 이어 듦)' if roads or social else ''}{' · 덜 걸어 본 쪽으로 · 어른과 함께 (풀빛 기둥: 곁에 붙어 다니고, 어른이 먹는 것을 보면 그 길을 적는다)' if social else ''} · 익숙한 세계 하나 · 1틱 {G.TICK}초 (실제 시간)")
     span = float(getattr(a, "life", 900)); life = 0
     while True:
         life += 1; L.begin(); w = L.world; t0 = time.time()
@@ -57,13 +64,15 @@ def live_gpu(a):
             seen = []
             wp = L.wp[0].cpu().numpy() if hasattr(L, "wp") else None
             if wp is not None and not np.isnan(wp[0]):
-                seen.append([float(sx + wp[0]), float(sy + wp[1]), 2, 1])
+                seen.append([float(sx + wp[0]), float(sy + wp[1]), 3, 1])
+            if social:
+                seen.append([float(w.pos[1, 0]), float(w.pos[1, 1]), 2, 1])          # 어른 (풀빛 점)
             where, size, vis = L.eye.last
             gx = float(L.eye.gx[0]); fw = 8 / 64
             store = w.store[0].cpu().numpy(); need = 1 - store; a_ = int(act[0])
             with LOCK:
                 STATE.update(label=label, life=life, clock=round(float(w.clock[0]), 1), span=span, store=[round(float(v), 3) for v in store], act=ACTS[a_],
-                             fills=int(L.fills[0]), dead=bool(w.dead[0]), pos=[float(w.pos[0, 0]), float(w.pos[0, 1])], head=float(w.head[0]), map=w.map[0].cpu().numpy().tolist(),
+                             fills=int(L.fills[0]), watched=(int(L.watched[0]) if social else None), dead=bool(w.dead[0]), pos=[float(w.pos[0, 0]), float(w.pos[0, 1])], head=float(w.head[0]), map=w.map[0].cpu().numpy().tolist(),
                              colors=(COLOR * 255).astype(int).tolist(), seen=seen, frame=base64.b64encode(buf.getvalue()).decode(),
                              lack=["마실 것", "먹을 것"][int(need.argmax())], lack_size=round(float(need.max()), 2), pulled=bool(strong[0]), seeking=False,
                              pull=[round(float(v), 2) for v in sc[0]], acts=ACTS[:5], fov=G.FOV, lines=[], reach=G.REACH, retina=True,
@@ -249,7 +258,7 @@ h1{font-size:18px;margin:0 0 2px} #label{color:var(--mut);font-size:12.5px;margi
   <div class="kv"><span>마실 것</span><span id="s0"></span></div><div class="bar"><i id="b0" style="background:var(--a)"></i></div>
   <div class="kv"><span>먹을 것</span><span id="s1"></span></div><div class="bar"><i id="b1" style="background:var(--b)"></i></div>
   <div class="kv"><span>삶</span><span id="life"></span></div><div class="kv"><span>이 삶의 시계</span><span id="clock"></span></div>
-  <div class="kv"><span>채운 횟수</span><span id="fills"></span></div><div class="kv"><span>살면서 고친 횟수 (내다보기의 틀림)</span><span id="mended"></span></div><div class="kv"><span>지금 하는 것</span><span id="act" class="now"></span></div></div>
+  <div class="kv"><span>채운 횟수</span><span id="fills"></span></div><div class="kv"><span>살면서 고친 횟수 (내다보기의 틀림)</span><span id="mended"></span></div><div class="kv" id="watchrow" style="display:none"><span>어른이 먹는 것을 본 횟수 (그 길을 적음)</span><span id="watchv"></span></div><div class="kv"><span>지금 하는 것</span><span id="act" class="now"></span></div></div>
  <div class="card"><h2>마음 안의 신호 (이름은 우리가 붙인 것. 존재 안에는 이름이 없다)</h2>
   <div class="kv"><span>가장 급한 모자람</span><span id="lack"></span></div><div class="kv" id="innerrow" style="display:none"><span>속 상태의 세기 (순간에서 순간으로 이어지는 것)</span><span id="innerv"></span></div><div class="kv"><span>끌림</span><span id="pulled"></span></div>
   <div id="pull" style="margin-top:8px"></div></div>
@@ -275,7 +284,7 @@ function mindmap(s){const w=$('mindwrap');if(!s.mind){w.style.display='none';ret
 async function tick(){try{const s=await (await fetch('state')).json();if(s.label){
  $('label').textContent='버전 '+s.label;$('keptwrap').style.display=s.retina?'block':'none';if(s.retina)$('kept').src='data:image/png;base64,'+s.kept_img;$('legend').textContent=s.retina?'노란 상자 = 초점 (곱게 보는 곳). 아래 동그라미 = 빛깔의 맞섬마다 지금 느끼는 쪽 (채워짐 = 지금 보임, 빈 것 = 마지막으로 본 쪽을 기억).':$('legend').dataset.rays;$('eye').src='data:image/png;base64,'+s.frame;draw(s);over(s);mindmap(s);
  for(const i of [0,1]){$('s'+i).textContent=Math.round(s.store[i]*100)+'%';$('b'+i).style.width=(s.store[i]*100)+'%';}
- $('life').textContent=s.life+'번째'+(s.ended&&(s.dead||s.clock>=s.span)?' · '+s.ended:'');$('clock').textContent=s.clock+'초 / '+s.span+'초';$('fills').textContent=s.fills+'번';$('innerrow').style.display=(s.inner_norm!==null&&s.inner_norm!==undefined)?'flex':'none';if(s.inner_norm!=null)$('innerv').textContent=s.inner_norm;$('mended').textContent=s.mended?(s.mended+'번 ('+s.mend_loss+')'):'고치지 않음';$('act').textContent=s.act;
+ $('life').textContent=s.life+'번째'+(s.ended&&(s.dead||s.clock>=s.span)?' · '+s.ended:'');$('clock').textContent=s.clock+'초 / '+s.span+'초';$('fills').textContent=s.fills+'번';$('watchrow').style.display=(s.watched!=null)?'flex':'none';if(s.watched!=null)$('watchv').textContent=s.watched+'번';$('innerrow').style.display=(s.inner_norm!==null&&s.inner_norm!==undefined)?'flex':'none';if(s.inner_norm!=null)$('innerv').textContent=s.inner_norm;$('mended').textContent=s.mended?(s.mended+'번 ('+s.mend_loss+')'):'고치지 않음';$('act').textContent=s.act;
  $('lack').textContent=s.lack+' ('+Math.round(s.lack_size*100)+'% 비었음)';$('pulled').textContent=s.pulled?'있음 (풀렸던 순간을 떠올림)':(s.seeking?'갈 데를 모름 (찾아냈던 순간에 기댐)':'없음 (헤맴)');
  const lo=Math.min(...s.pull),hi=Math.max(...s.pull),sp=(hi-lo)||1;
  $('pull').innerHTML=s.acts.map((a,i)=>`<div class="pl"><span class="${a==s.act?'now':''}">${a}</span><span class="t"><i style="width:${s.pulled?Math.round((s.pull[i]-lo)/sp*100):0}%"></i></span><span>${s.pull[i].toFixed(2)}</span></div>`).join('')+(s.futile&&Math.max(...s.futile)>0.01?'<div style="margin-top:8px;color:var(--mut);font-size:12.5px">헛됨이 쌓인 것: '+s.acts.map((a,i)=>s.futile[i]>0.01?a+' '+s.futile[i].toFixed(2):'').filter(Boolean).join(', ')+'</div>':'');
