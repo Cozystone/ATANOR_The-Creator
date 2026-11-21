@@ -927,3 +927,5 @@
 - 2026-11-22 `a43a9689` atanor-os: combined run - injuries 75->9, deaths 19->9 (6 of them before the harm memory filled), mostly from harm memory
 - 2026-11-22 `e796f709` atanor-os: replicate verdict (sharp harm memory: deaths -38% on two seeds each, overlapping); death detection also catches respawn teleports
 - 2026-11-22 `9091adf0` creator: README position (harm memory verdict, imagination honest result)
+- 2026-11-22 `56d04913` atanor-os: clean harm-memory comparison in the combined setup - deaths 18->6.5, injuries 67->14.5 on two seeds each, no overlap; long run queued
+- 2026-11-22 `b644945c` creator: README harm-memory clean result
