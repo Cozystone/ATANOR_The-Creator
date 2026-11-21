@@ -91,7 +91,14 @@ class Core(nn.Module):
         q = 1.0 / (var + 0.02); wt = torch.zeros(self.dx, device=x.device); wt[other] = q / q.mean()
         dist = ((x[:, None] - hx[None]) ** 2 * wt).sum(-1) / other.sum()          # [B, n] 지금과 그 순간들의 거리 (느낌 한 칸당)
         w = torch.softmax(-dist * 4.0, 1) * self.harm_de[:n][None]                # 닮은 순간일수록, 크게 다친 순간일수록
-        sim = torch.exp(-dist.min(1).values * 2.0)                                # 지금이 다친 순간과 얼마나 닮았나 (0~1)
+        dmin = dist.min(1).values
+        if getattr(self, "harm_sharp", False):                                      # 좁힘: 평소에 다친 장면과 떨어져 있는 거리보다 뚜렷이 가까울 때만 (위험한 데서만 피하고 나머지는 자유롭게)
+            if not hasattr(self, "harm_dbar"):
+                self.harm_dbar = dmin.mean().detach()
+            self.harm_dbar = 0.99 * self.harm_dbar + 0.01 * dmin.mean().detach()
+            sim = torch.sigmoid((self.harm_dbar - dmin) / (0.15 * self.harm_dbar + 1e-6))
+        else:
+            sim = torch.exp(-dmin * 2.0)                                            # 지금이 다친 순간과 얼마나 닮았나 (0~1)
         mu = (w / w.sum(1, keepdim=True).clamp(min=1e-6)) @ hx
         fo = self.foresee(x)
         away = ((fo - mu[:, None]) ** 2 * wt).sum(-1) / other.sum() - ((x - mu) ** 2 * wt).sum(-1, keepdim=True) / other.sum()   # 이 행동으로 그 장면에서 멀어지는 만큼

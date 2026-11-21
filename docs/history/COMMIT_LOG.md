@@ -921,3 +921,9 @@
 - 2026-11-22 `f19d8ae7` atanor-os: step 1 focus-only summary (groups by what is looked at: dirt, stone, leaves, water, sky, bark); step 2 harm memory in the core (mirror of relief: pushed away from scenes like where it was hurt, avoids the act done then); watchdog run script restarts a hung world
 - 2026-11-22 `66aa8668` atanor-os: overnight fixes - run list no longer swallowed by stdin, hung-world watchdog, death windows excluded from the hurt-distance measure
 - 2026-11-22 `dc679dd4` creator: README position (focus summary, harm memory, honest instinct/hunger results)
+- 2026-11-22 `6c59cdde` atanor-os: harm memory verdict (deaths 34->14, injuries 100->35, but mostly by freezing: movement down to 38%); sharper harm (only when clearly closer than usual to a harm scene) queued
+- 2026-11-22 `01ae083f` atanor-os: imagination verdict in Minecraft (no survival change; relief +40% but more water); imagination now also avoids futures near hurt scenes (harm bank in summary space); combined run queued
+- 2026-11-22 `f14ed713` atanor-os: sharp harm memory verdict - deaths 34->14 without freezing (stuck 51%, rescues 3)
+- 2026-11-22 `a43a9689` atanor-os: combined run - injuries 75->9, deaths 19->9 (6 of them before the harm memory filled), mostly from harm memory
+- 2026-11-22 `e796f709` atanor-os: replicate verdict (sharp harm memory: deaths -38% on two seeds each, overlapping); death detection also catches respawn teleports
+- 2026-11-22 `9091adf0` creator: README position (harm memory verdict, imagination honest result)

@@ -29,13 +29,14 @@ class Enc(nn.Module):                                    # mc_eyejudge.py의 JEP
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--steps", type=int, default=20000); ap.add_argument("--try_p", type=float, default=0.3); ap.add_argument("--hold", type=int, default=8)
-    ap.add_argument("--far", type=float, default=0.3); ap.add_argument("--learn_every", type=int, default=50); ap.add_argument("--name", default="being1"); ap.add_argument("--curious", type=float, default=0.0); ap.add_argument("--lp", type=float, default=0.0); ap.add_argument("--seed_instinct", type=int, default=0); ap.add_argument("--rescue", type=int, default=0); ap.add_argument("--rescue_grow", type=float, default=0.0); ap.add_argument("--lp_every", type=int, default=1000); ap.add_argument("--imagine", type=int, default=0); ap.add_argument("--innate_act", type=int, default=0); ap.add_argument("--feed", type=int, default=0); ap.add_argument("--harm", type=float, default=0.0); ap.add_argument("--focus", type=int, default=0); ap.add_argument("--feed_every", type=int, default=300); ap.add_argument("--feed_grow", type=float, default=0.0); ap.add_argument("--horizon", type=int, default=10)
+    ap.add_argument("--far", type=float, default=0.3); ap.add_argument("--learn_every", type=int, default=50); ap.add_argument("--name", default="being1"); ap.add_argument("--curious", type=float, default=0.0); ap.add_argument("--lp", type=float, default=0.0); ap.add_argument("--seed_instinct", type=int, default=0); ap.add_argument("--rescue", type=int, default=0); ap.add_argument("--rescue_grow", type=float, default=0.0); ap.add_argument("--lp_every", type=int, default=1000); ap.add_argument("--imagine", type=int, default=0); ap.add_argument("--innate_act", type=int, default=0); ap.add_argument("--feed", type=int, default=0); ap.add_argument("--harm", type=float, default=0.0); ap.add_argument("--harm_sharp", type=int, default=0); ap.add_argument("--focus", type=int, default=0); ap.add_argument("--feed_every", type=int, default=300); ap.add_argument("--feed_grow", type=float, default=0.0); ap.add_argument("--horizon", type=int, default=10)
     a = ap.parse_args()
     dev = "cuda"; torch.manual_seed(0); rng = np.random.default_rng(0)
     ck = torch.load(f"{OUT}/mc_jepa.pt", map_location=dev)
     E = Enc().to(dev); E.load_state_dict(ck["E"]); E.eval()
     Pr = nn.Sequential(nn.Linear(Z + 7, 256), nn.ELU(), nn.Linear(256, 256), nn.ELU(), nn.Linear(256, Z)).to(dev); Pr.load_state_dict(ck["P"]); Pr.eval()      # 상상: 요약 공간에서 행동을 받아 다음 요약
     KEEP = 64; bank = torch.zeros(3, KEEP, Z, device=dev); bank_n = [0, 0, 0]      # 풀림의 순간의 눈 요약 (모자람마다 크기 고정, 돌려 씀)
+    hbank = torch.zeros(KEEP, Z, device=dev); hbank_n = 0                       # 다친 순간의 눈 요약 (상상이 피할 곳, 크기 고정)
     zr_now = None
     dx = DX + (32 if a.focus else 0)                     # + 초점만의 요약 (1단계: 지금 보는 것이 무엇인가)
     if a.focus:
@@ -43,7 +44,7 @@ def main():
         fck = torch.load(f"{OUT}/mc_focus.pt", map_location=dev)
         FE = nn.Sequential(nn.Conv2d(6, 48, 3, 1, 1), nn.ELU(), nn.Conv2d(48, 64, 4, 2, 1), nn.ELU(), nn.Conv2d(64, 64, 4, 2, 1), nn.ELU(), nn.Flatten(), nn.Linear(64 * 16, 256), nn.ELU(), nn.Linear(256, 32)).to(dev)
         FE.load_state_dict({k.replace('net.', ''): v for k, v in fck['E'].items()}); FE.eval(); fstat = None
-    net = Core(dx, M, slice(0, 3), slice(0, 0)).to(dev); net.far = a.far
+    net = Core(dx, M, slice(0, 3), slice(0, 0)).to(dev); net.far = a.far; net.harm_sharp = bool(a.harm_sharp)
     opt = torch.optim.AdamW(net.parameters(), lr=1e-3)
     w = MCWorld(); n = w.n
     w.move(range(n), r=400, label=f"{a.name}: 태어남 (땅 위 아무 데서)")
@@ -132,9 +133,16 @@ def main():
                                 out = out + wk[:, k:k + 1] * (1 - (zn_ @ banks[k].T).max(-1).values)
                         return out
                     zz = zr_now[:, None].expand(n, K_, Z).reshape(n * K_, Z); best = torch.full((n, K_), 1e9, device=dev)
+                    hb = F.normalize(hbank[:max(hbank_n, 1)], dim=1) if (a.harm and hbank_n > 0) else None
+                    pen = torch.zeros(n, K_, device=dev)
                     for h in range(H_):
                         zz = zz + Pr(torch.cat([zz, F.one_hot(seq[:, :, h].reshape(-1), 7).float()], 1))
-                        best = torch.minimum(best, far_(zz.view(n, K_, Z)))
+                        sc_h = far_(zz.view(n, K_, Z))
+                        if hb is not None:                    # 그려 본 앞날이 다친 장면에 가까워지면 그만큼 나쁨 (가장 가까웠던 것을 그 줄 끝까지 든다)
+                            hnear = (F.normalize(zz.view(n, K_, Z), dim=-1) @ hb.T).max(-1).values
+                            pen = torch.maximum(pen, a.harm * hnear.clamp(min=0))
+                            sc_h = sc_h + pen
+                        best = torch.minimum(best, sc_h)
                     d0 = far_(zr_now[:, None])[:, 0]
                     bk = best.argmin(1); nearer = ok & (best.gather(1, bk[:, None])[:, 0] < d0 - 1e-4)
                     first = seq[torch.arange(n, device=dev), bk, 0]
@@ -150,6 +158,7 @@ def main():
         zr_prev = zr_now.clone() if zr_now is not None else None
         stats["imag"] = stats.get("imag", 0) + int(imag.sum())
         ins0 = w.inside()
+        pos0 = [np.asarray(o["pos"])[[0, 2]] for o in w.obs]
         obs = w.step(act.tolist(), who=f"존재 (알맹이가 고름{', 끌림 있음' if bool(strong[0]) else ', 아직 끌릴 데 모름'}{', 아무렇게나 해 봄' if bool(tried[0]) else ''})",
                      label=f"{a.name}: 마크에서 태어나 자라는 중 · 걸음 {step + 1} / {a.steps} · 풀림의 기억 {int(net.rel_n)}")
         dead = [i for i in range(n) if obs[i]["done"]]
@@ -157,13 +166,17 @@ def main():
         live = torch.tensor([0.0 if o["done"] else 1.0 for o in obs], device=dev)
         # 3) 풀림: 몸 안이 오른 순간을 든다
         rise = w.inside() - ins0
-        died = (ins0[:, 0] > 0) & ((w.inside()[:, 0] <= 0.0) | ((ins0[:, 0] < 0.5) & (w.inside()[:, 0] >= 0.99) & (w.inside()[:, 1] >= 0.99)))      # MineDojo는 죽어도 삶을 끝내지 않고 다시 태어나게 한다: 체력 0, 또는 낮던 체력·배부름이 한꺼번에 가득 = 죽고 다시 태어남
+        jumped = np.array([np.hypot(*(np.asarray(o["pos"])[[0, 2]] - p0)) > 15 for o, p0 in zip(w.obs, pos0)])      # 한 걸음에 15칸 넘게 = 죽고 세계의 태어나는 자리로 (체력 값이 그 걸음에 안 보일 때가 있음)
+        died = (ins0[:, 0] > 0) & ((w.inside()[:, 0] <= 0.0) | jumped | ((ins0[:, 0] < 0.5) & (w.inside()[:, 0] >= 0.99) & (w.inside()[:, 1] >= 0.99)))      # MineDojo는 죽어도 삶을 끝내지 않고 다시 태어나게 한다: 체력 0, 또는 낮던 체력·배부름이 한꺼번에 가득 = 죽고 다시 태어남
         stats["died"] += int(died.sum())
         if a.harm:                                            # 몸이 깎인 순간을 다침의 기억에 (체력이 준 만큼, 죽음은 가득 깎인 것으로)
             drop = np.where(died, 1.0, np.clip(ins0[:, 0] - w.inside()[:, 0], 0, None))
             hi_ = np.where(drop > 0.01)[0]
             if len(hi_):
                 net.keep_harm(torch.tensor(drop[hi_], device=dev, dtype=torch.float32), x[hi_], act[hi_])
+                if a.imagine and zr_prev is not None:
+                    for i in hi_:
+                        hbank[hbank_n % KEEP] = zr_prev[i]; hbank_n += 1
                 stats["harmkept"] = stats.get("harmkept", 0) + len(hi_)
         for i in range(n):
             if not obs[i]["done"] and not died[i] and (rise[i] > 0.01).any():        # 다시 태어나며 가득 찬 것은 풀림이 아니다
