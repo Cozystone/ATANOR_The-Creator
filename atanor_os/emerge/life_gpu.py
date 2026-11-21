@@ -21,6 +21,7 @@ class Life:
         self.use_roads = roads if roads is not None else torch.zeros(n, dtype=torch.bool, device=device)
         self.watch = watch
         self.explore = explore if explore is not None else torch.zeros(n, dtype=torch.bool, device=device)
+        self.attach = torch.zeros(n, dtype=torch.bool, device=device)      # 곁에 붙어 있기: 급하지 않을 때 보이는 같은 종 곁으로 간다 (새끼의 애착. 손으로 넣은 타고난 버릇)
         self.follow = torch.zeros(n, dtype=torch.bool, device=device)      # 갈 데를 모를 때 눈에 보이는 같은 종(풀빛)을 따라간다 (새끼가 어미를 따르는 타고난 버릇)
         self.link = torch.zeros(n, 2, G.CH, device=device)
         self.t = torch.zeros(n, device=device); self.gen = torch.Generator(device=device).manual_seed(seed + 7)
@@ -110,6 +111,12 @@ class Life:
         sc, strong = self.net.pull(x); sc = sc - TIRE * self.fut
         a = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1, generator=self.gen)[:, 0]
         a = torch.where(strong, a, torch.randint(0, self.net.m, (self.n,), device=self.dev, generator=self.gen))
+        if self.attach.any():
+            calm = self.attach & seen[:, 1] & (w.store.min(1).values > 0.4) & ~w.dead
+            if calm.any():
+                b = torch.nan_to_num(where[:, 1]); far = torch.nan_to_num(size[:, 1]) < 0.45
+                go = torch.where(b.abs() > 0.3, torch.where(b > 0, 3, 2), torch.where(far, 1, 0))
+                a = torch.where(calm, go, a)
         a = torch.where(w.dead, torch.zeros_like(a), a)
         if getattr(self, "override", None) is not None:
             a = self.override(a)

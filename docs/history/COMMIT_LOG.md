@@ -902,3 +902,4 @@
 - 2026-11-21 `7be20c26` atanor-os: follow a seen conspecific when lost (innate, flagged); dev record - less-walked way lifts whole lives ~10x and plateaus by the third life; living beside an elder helps much, writing what it saw has not yet (it rarely saw the elder eat)
 - 2026-11-21 `d2457fa2` atanor-os: life_gpu - fix a shadowed name in following
 - 2026-11-21 `b9ee00b3` atanor-os: dev record - social run 2: what is learned by watching does not stay once alone (it saw the elder eat only once in four lives)
+- 2026-11-21 `76b9f23e` atanor-os: life_gpu - staying near a seen conspecific when not pressed (innate attachment, flagged); under test
