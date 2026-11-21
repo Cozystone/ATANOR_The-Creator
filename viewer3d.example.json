@@ -1,0 +1,11 @@
+{
+ "model": "models/room3d_ret4r.pt",
+ "gpu": true,
+ "routes": true,
+ "pool": "mean",
+ "slow": 4.0,
+ "life": 900,
+ "seed": 1,
+ "version": "3.12",
+ "note": "GPU 판: 지금 보이는 것 + 길의 기억"
+}
