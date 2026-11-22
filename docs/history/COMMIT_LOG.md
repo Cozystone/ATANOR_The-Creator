@@ -1007,3 +1007,7 @@
 - 2026-11-22 `cd4c5276` atanor-os: laptop body judge - influence map read from the being's forecast vs true wiring, tempo-vs-heat; baseline right after wearing
 - 2026-11-22 `d7ce5171` creator export: include laptop body modules and new diagnostics; keep private laptop setup details out of the docs
 - 2026-11-22 `1c9445c2` creator export: scrub laptop hostname
+- 2026-11-23 `03f51de7` atanor-os: laptop mid-check (tempo lever learned rank 1/39, others not yet; no resting when hot); persistent speaker instead of one process per tone
+- 2026-11-23 `22ab076e` atanor-os: laptop 3h verdict - tempo lever only (rank 1/39), volume/backlight stalled under accelerometer noise; no rest when hot (corr confounded by tempo heating)
+- 2026-11-23 `dd12b211` senses: Stat spread over time and bodies - single-body laptop had every feeling saturated to +-1 (spread stuck at floor); explains 3h verdict pattern
+- 2026-11-23 `0f7debc0` atanor-os: laptop judge on real recent feelings + buffer dump; after spread fix volume/backlight reach rank 5/4 within 30 min

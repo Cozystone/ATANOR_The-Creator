@@ -23,7 +23,12 @@ def main(being, wiring, depth="model/mc_depth.pt", S=256, seed=0):
     nb = len(names)
     g = torch.Generator().manual_seed(seed)
     nbed = int(sum(np.prod(sens[k].shape) for k in O.bed))
-    x = torch.zeros(S, O.dx); x[:, :nbed] = 0.5 + 0.5 * torch.rand(S, nbed, generator=g); x[:, nbed:nb] = 0.5 * torch.randn(S, nb - nbed, generator=g)
+    import os
+    real = os.path.join(os.path.dirname(wiring), "recent_feel.npy")
+    if os.path.exists(real):                                              # 진짜 요즘 느낌 (laptop_live가 남김) - 없으면 고르게 뽑은 느낌
+        xs = torch.as_tensor(np.load(real)); x = xs[torch.randint(0, len(xs), (S,), generator=g)]
+    else:
+        x = torch.zeros(S, O.dx); x[:, :nbed] = 0.5 + 0.5 * torch.rand(S, nbed, generator=g); x[:, nbed:nb] = 0.5 * torch.randn(S, nb - nbed, generator=g)
     combos, _ = C.codes(); combos = np.array(combos); index = {tuple(c): i for i, c in enumerate(combos)}
     out = {}
     with torch.no_grad():

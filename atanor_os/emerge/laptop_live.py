@@ -102,7 +102,7 @@ def main():
         Mi.begin(torch.ones(1, dtype=torch.bool))
     M = len(B.combos); rng = np.random.default_rng(a.seed); act, left = 0, 0
     lever_sig = {"backlight": lambda o: o - 1, "volume": lambda o: o - 1, "sound": lambda o: float(o > 0), "own": lambda o: o - 1}
-    LS, EV = [], []; t0 = time.time(); step = 0; last_w = time.time(); last_v = 0.0
+    LS, EV, XS = [], [], []; t0 = time.time(); step = 0; last_w = time.time(); last_v = 0.0
     no = torch.zeros(1, dtype=torch.bool)
     raw = B.raw(); xr = O(raw); x = Mi.feel(xr) if Mi else xr
     while not a.minutes or time.time() - t0 < a.minutes * 60:
@@ -127,6 +127,7 @@ def main():
         if Mi is not None:
             Mi.carry(xr, torch.tensor([act]), no); x2 = Mi.feel(xr2)
             Mi.after(x, torch.tensor([act]), x2, no, no); x, xr = x2, xr2
+            XS.append(x[0].detach().cpu().numpy().astype(np.float32)); XS = XS[-512:]   # 재는 쪽: 요즘 느낌 (판정이 진짜 느낌 위에서 잼)
             if Mi.steps % a.save_every == 0:
                 Mi.save(a.being)
         else:
@@ -149,6 +150,11 @@ def main():
                     y = dE[:, i] - dE[:, i].mean(); c = float((xx * y).sum() / (np.linalg.norm(xx) * np.linalg.norm(y) + 1e-9))
                     inf.append((lv[0], nm, round(c, 3)))
             inf.sort(key=lambda r: -abs(r[2])); B._inf = [list(r) for r in inf[:12]]
+            if XS:
+                np.save(os.path.join(os.path.dirname(a.out) or ".", "recent_feel.npy"), np.stack(XS))
+            if Mi is not None and len(Mi.buf) >= 2000 and step % 2400 < 300:             # 재는 쪽: 겪음 되감기 고리를 가끔 남김 (알맹이 배움 진단용, 노트북 안에만)
+                Xb, Ab, X2b = [torch.cat([q[k] for q in Mi.buf]).cpu().numpy() for k in range(3)]
+                np.savez(os.path.join(os.path.dirname(a.out) or ".", "recent_buf.npz"), x=Xb, a=Ab, x2=X2b)
             json.dump(dict(time=time.strftime("%Y-%m-%d %H:%M:%S %z"), mode=a.mode, steps=step, age=(Mi.steps if Mi else None), window=len(LS), top_influence=B._inf,
                            lever_use=[np.bincount(L[:, j].astype(int) + 1, minlength=3).tolist() for j in range(len(B.levers))],
                            trust=(float(Mi.wo.earned()) if Mi and Mi.wo is not None else None), camera_ok=B.cam.ok, mic_ok=B.mic.ok,

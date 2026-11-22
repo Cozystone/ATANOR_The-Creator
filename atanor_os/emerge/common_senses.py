@@ -34,22 +34,34 @@ def focus_enc():
 
 class Stat:
     """제 겪음으로 고르게 (처음 본 것으로 평균과 흩어짐을 잡고 천천히 따라감)."""
+    """흩어짐 = 제 평균에서 벗어난 제곱의 평균 (몸들 사이 + 시간 위). 2026-11-23 고침: 전에는 몸들 사이 흩어짐만 쟀다 -> 몸이 하나 (노트북)면
+    늘 0이라 폭이 바닥값에 붙어, 모든 칸이 '평균보다 위/아래' 두 값으로 찼다. 겪은 수 c가 적을 때는 빨리 따라감 (1/c, 바닥 0.001)."""
     def __init__(self, floor):
-        self.m, self.s, self.floor = None, None, floor
+        self.m, self.v, self.floor, self.c = None, None, floor, 0
+
+    @property
+    def s(self):
+        return self.v.sqrt() + self.floor
 
     def __call__(self, v, unbiased=True):
-        sd = v.std(0, unbiased=unbiased and v.shape[0] > 1) + self.floor
         if self.m is None:
-            self.m, self.s = v.mean(0), sd
-        self.m = 0.999 * self.m + 0.001 * v.mean(0); self.s = 0.999 * self.s + 0.001 * sd
+            self.m = v.mean(0); self.v = v.var(0, unbiased=False)
+        r = max(0.001, 1.0 / (self.c + 1)); self.c += 1
+        self.v = (1 - r) * self.v + r * ((v - self.m) ** 2).mean(0)
+        self.m = (1 - r) * self.m + r * v.mean(0)
         return ((v - self.m) / self.s).clamp(-4, 4) / 4
 
     def state(self):
-        return None if self.m is None else (self.m.cpu(), self.s.cpu())
+        return None if self.m is None else (self.m.cpu(), self.s.cpu(), self.v.cpu(), self.c)
 
     def load(self, st, dev):
         if st is not None:
-            self.m, self.s = st[0].to(dev), st[1].to(dev)
+            self.m = st[0].to(dev)
+            if len(st) > 2:
+                self.v, self.c = st[2].to(dev), st[3]
+            else:                                                  # 옛 파일: 폭만 있음. 바닥에 붙은 폭은 아무것도 모르는 것이니 처음부터 빨리 배움
+                self.v = (st[1].to(dev) - self.floor).clamp(min=0) ** 2
+                self.c = 1000 if bool((self.v > 0).any()) else 0
 
 
 class Senses:

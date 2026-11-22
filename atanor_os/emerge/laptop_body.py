@@ -41,6 +41,35 @@ class _Proc(threading.Thread):
             self.ok = False; time.sleep(30)                                  # 장치가 없거나 권한이 없으면 30초 뒤 다시
 
 
+class _Speaker(threading.Thread):
+    """스피커 하나를 계속 열어 두고 (소리 낼 때마다 프로그램을 새로 띄우지 않음 - 그 셈이 몸을 데웠다), 실제 시간 박자로 20ms 조각을 흘린다.
+    낼 소리가 없으면 고요를 흘린다."""
+
+    def __init__(self):
+        super().__init__(daemon=True); self.q = b""; self.lock = threading.Lock()
+
+    def say(self, pcm):
+        with self.lock:
+            self.q = pcm                                                    # 앞 소리가 남았으면 새 소리로 바꿈
+
+    def run(self):
+        chunk = SR // 50 * 2; silence = bytes(chunk)
+        while True:
+            try:
+                p = subprocess.Popen(["pw-cat", "--playback", "--raw", "--format", "s16", "--rate", str(SR), "--channels", "1", "-"],
+                                     stdin=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                t0 = time.time(); k = 0
+                while True:
+                    with self.lock:
+                        b, self.q = (self.q[:chunk], self.q[chunk:]) if self.q else (silence, b"")
+                    p.stdin.write(b.ljust(chunk, b"\0")); p.stdin.flush(); k += 1
+                    d = t0 + k * 0.02 - time.time()
+                    if d > 0:
+                        time.sleep(d)
+            except Exception:
+                time.sleep(10)
+
+
 class _Events(threading.Thread):
     """입력 장치의 사건 수만 센다 (EV_KEY 누름, 터치패드 움직임). 키 번호 (무엇을 쳤나)는 읽고 버린다."""
 
@@ -90,6 +119,7 @@ class LaptopBody:
                           "-vf", f"scale={W}:{H}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], H * W * 3); self.cam.start()
         self.mic = _Proc(["ffmpeg", "-loglevel", "quiet", "-f", "alsa", "-i", "default", "-ac", "1", "-ar", str(SR), "-f", "s16le", "-"], SR // 5 * 2); self.mic.start()
         self.gap = 0.15; self.vol = 0.3; self.sound_until = 0.0
+        self.spk = _Speaker(); self.spk.start()
         # 날 장치 칸 (진짜 이름은 재는 쪽만): (이름, 꼴, 크기, 읽는 함수)
         phys = [("insides: heat margin, energy margin", "vector", 2, self._bedrock, True),
                 ("sysfs: thermal zones, battery, ac, mem avail, load", "vector", len(self.thermal) + 4, self._sysfs, False),
@@ -191,12 +221,7 @@ class LaptopBody:
             return
         f = [330, 440, 587, 784][o - 1]; t = np.arange(int(SR * 0.18)) / SR
         w = (np.sin(2 * np.pi * f * t) * np.hanning(len(t)) * self.vol * 0.5 * 32767).astype(np.int16).tobytes()
-        try:
-            p = subprocess.Popen(["ffmpeg", "-loglevel", "quiet", "-f", "s16le", "-ar", str(SR), "-ac", "1", "-i", "-", "-f", "alsa", "default"],
-                                 stdin=subprocess.PIPE, stderr=subprocess.DEVNULL)
-            p.stdin.write(w); p.stdin.close(); self.sound_until = time.time() + 0.25
-        except Exception:
-            pass
+        self.spk.say(w); self.sound_until = time.time() + 0.25
 
     def _tempo(self, o):
         self.gap = [0.5, 0.15, 0.05][o]
