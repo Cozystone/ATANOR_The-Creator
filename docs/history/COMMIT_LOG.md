@@ -977,3 +977,17 @@
 - 2026-11-22 `a6d06599` atanor-os: elder L2 judged - forecast does not use the elder's words (+0.1%); needs objects + a sound-thing association organ; elder speaks only known words
 - 2026-11-22 `b83f0d32` atanor-os: varied-room value carries to unseen rooms (fills +35/+70%, single-room value does not); export lists new modules
 - 2026-11-22 `d882ba37` creator: README status for 2026-11-22 (bedrock value, varied-room carry-over, two visual paths, honest failures)
+- 2026-11-22 `5c1cee46` atanor-os: founder direction - universal body contract (signals only, bedrock flag, eyes live in the being) and staged room enrichment; eye_gpu (canon fovea on GPU, matches within 0.004); common_senses draft
+- 2026-11-22 `5f812e3f` atanor-os: common interface v1 - universal body contract, being-side eyes (GPU canon fovea + depth), one shared mind, room and Minecraft bodies under the same contract; one being file moves room -> Minecraft (fake-world test passes, real Minecraft runs)
+- 2026-11-22 `9410cefa` atanor-os: long-range note - embodied coding via a terminal organ in a sandbox room, self-understanding via a mirror room (not implemented now)
+- 2026-11-22 `639c5b5e` atanor-os: host_live (real-time adaptive life on a CPU host) and laptop deploy script; laptop unreachable now
+- 2026-11-22 `72eff06a` atanor-os: being file leaves out the value's replay ring (362MB -> 0.8MB; learned content lives in the weights)
+- 2026-11-22 `93d82eca` atanor-os: outside training the being lives in continuous wall-clock time (world advances by real elapsed seconds); this PC as host while the laptop is off
+- 2026-11-22 `e0fca1e1` atanor-os: research note - how humans stay proactive without assigned purpose (multiple evolved drives, functional autonomy, culture); design for hunger-free worlds; social bedrock needs founder decision
+- 2026-11-22 `b60b3249` atanor-os: no-need room - keeps moving but aimless and circling more (only one engine); room-raised file lives on in Minecraft, value earns trust sooner, behaviour not clearly better
+- 2026-11-22 `403f45a3` atanor-os: second bedrock as learning progress (old vs current forecast error) added to the value's reward, option lp in Mind; hunger-free room test running
+- 2026-11-22 `41774a53` atanor-os: concrete design of the code-as-stepping-stone language path (terminal organ as motor branch + screen as image, T0-T4 gates, compositional generalisation as the grounding test, sandbox-only effects)
+- 2026-11-22 `52960058` atanor-os: second bedrock (learning progress) partial - early play with springs then boredom as designed, but spinning increases (self-caused view change is learnable); needs progress measured on things, not ego-motion
+- 2026-11-22 `68a44992` atanor-os: R1 diagnostic - a carried state does not help in a room that never demands memory, but helps in darkness (+0.07 AUC); darkness added to room_body
+- 2026-11-22 `77ac3c99` atanor-os: R1 inner-state organ in the shared mind (GRU over feeling + act, learns by foreseeing 1-4 steps ahead, h joins the feeling); test in dark rooms running
+- 2026-11-22 `d52ea23d` atanor-os: R1 organ v1 - no behavioural change in dark rooms yet (8 lives, 2 seeds); next: probe whether h holds the spring direction

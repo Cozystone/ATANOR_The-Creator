@@ -196,6 +196,8 @@ def body(conn, seed, h, w, small, big):
             out["ear"] = ear.bands()
         if SKIN:
             out["skin"] = np.concatenate([skin(obs, yaw), light(obs)])         # [20]
+        if os.environ.get("ATANOR_MC_FRAME") == "1":                    # 보편 몸 계약: 날 그림 (HUD 잘라 냄, 조준점 지움을 켰으면 지운 것) - 눈은 존재 안에서 돈다
+            out["frame"] = rgb
         if JUDGE_DEPTH and "rays" in obs:                            # 판정에만: 빛살마다 처음 닿은 블록까지의 거리
             out["rays"] = {k: np.asarray(v).ravel() for k, v in obs["rays"].items() if np.asarray(v).dtype.kind in "fiu"}
         if JUDGE:

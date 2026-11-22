@@ -296,9 +296,12 @@ class Worth(nn.Module):
         return 1 - ((1 - x[..., self.inside]).clamp(min=0) ** 2).mean(-1)
 
     @torch.no_grad()
-    def see(self, x, x2, died, a=None):
-        """겪은 걸음들 x [k, dx] -> x2, died [k] (이 걸음에 죽었나), a [k] 그때 한 몸짓 (몸짓 값일 때). 보상은 온전함의 바뀜만."""
+    def see(self, x, x2, died, a=None, extra=None):
+        """겪은 걸음들 x [k, dx] -> x2, died [k] (이 걸음에 죽었나), a [k] 그때 한 몸짓 (몸짓 값일 때). 보상은 온전함의 바뀜 (첫 바탕)
+        + extra [k]: 둘째 바탕 (창립자 확정: 제 내다보기에 끌림 - 여기서는 배움의 진척, 몸 쪽에서 셈해 넘김)."""
         r = torch.where(died, -self.whole(x), self.whole(x2) - self.whole(x))
+        if extra is not None:
+            r = r + extra
         k = len(x)
         if k == 0:
             return
