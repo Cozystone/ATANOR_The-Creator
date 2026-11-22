@@ -991,3 +991,4 @@
 - 2026-11-22 `68a44992` atanor-os: R1 diagnostic - a carried state does not help in a room that never demands memory, but helps in darkness (+0.07 AUC); darkness added to room_body
 - 2026-11-22 `77ac3c99` atanor-os: R1 inner-state organ in the shared mind (GRU over feeling + act, learns by foreseeing 1-4 steps ahead, h joins the feeling); test in dark rooms running
 - 2026-11-22 `d52ea23d` atanor-os: R1 organ v1 - no behavioural change in dark rooms yet (8 lives, 2 seeds); next: probe whether h holds the spring direction
+- 2026-11-22 `dd081e6d` creator export: include the common-interface modules and new experiments (were missing from the public repo); scrub LAN addresses and key names
