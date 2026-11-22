@@ -37,7 +37,7 @@ class Life:
         w = self.world
         x = G.senses(w, self.eye)
         if self.extra is not None:                               # 몸에 더한 감각 (닿음, 깊이 같은 것): 느끼는 것 끝에 붙는다
-            x = torch.cat([x, self.extra(w)], 1)
+            x = torch.cat([x, self.extra(w, x) if getattr(self, "extra_x", False) else self.extra(w)], 1)      # extra_x: 느낀 것에서 만드는 감각 (내다본 몸 같은)
         where, size, seen = self.eye.last
         if self.record is not None and self.prev is not None:   # 기를 때: 겪은 걸음 (그때 느낀 것, 한 것, 다음에 느낀 것, 살아 있었나)
             self.record.append((self.prev[0], self.prev[1], x, self.prev[2]))
@@ -50,11 +50,29 @@ class Life:
                 novel = (odd > self.s_m + 2.0 * self.s_v.sqrt()) & (self.t > 20)
                 self.fut[novel] = 0; self.novel = novel
                 self.s_m = self.s_m + 0.02 * (odd - self.s_m); self.s_v = self.s_v + 0.02 * ((odd - self.s_m) ** 2 - self.s_v)
+        wo = getattr(self, "worth", None)                         # 배우는 심장 (바탕만의 값, core.Worth): 겪은 걸음을 들고, 때마다 되감아 배우고, 고름에 기댐을 더한다
+        if wo is not None and self.prev is not None:
+            al = self.prev[2] > 0
+            wo.see(self.prev[0][al], x[al], w.dead[al], a=self.prev[1][al])
+            if int(self.t[0]) % getattr(self, "worth_every", 20) == 0:
+                with torch.enable_grad():
+                    wo.learn()
+        if wo is not None:
+            wo.track(x, ~w.dead)
         sc, strong = self.net.pull(x); sc = sc - TIRE * self.fut
+        lw = None
+        if wo is not None:
+            lw = wo.lean(self.net, x)
+            if lw is not None:
+                sc = sc + lw                                     # 끌림이 있을 때: 값의 기댐을 (얻은 믿음만큼) 더할 뿐. 끌림이 없을 때의 '아무거나 해 보기'는 없애지 않는다 (아래)
         if self.curious:                                         # 둘째 바탕 (창립자 확정, E20): 제 내다보기가 틀릴 곳에 끌린다 (끌림이 약할수록 이것이 이끈다)
             sc = sc + self.curious * self.net.wonder(x); strong = torch.ones_like(strong)
         a = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1, generator=self.gen)[:, 0]
-        a = torch.where(strong, a, torch.randint(0, self.net.m, (self.n,), device=self.dev, generator=self.gen))
+        rnd = torch.randint(0, self.net.m, (self.n,), device=self.dev, generator=self.gen)
+        if wo is not None and lw is not None:                    # 끌림이 없을 때: 얻은 믿음의 몫만큼은 값을 따르고, 나머지는 예전처럼 아무거나 해 본다 (찾아보기를 없애지 않는다)
+            byv = torch.multinomial(torch.softmax(lw / LOOSE, 1), 1, generator=self.gen)[:, 0]
+            rnd = torch.where(torch.rand(self.n, device=self.dev, generator=self.gen) < wo.earned(), byv, rnd)
+        a = torch.where(strong, a, rnd)
         if self.try_p:                                           # 기를 때: 얼마쯤은 아무렇게나 해 본다 (원래 기르던 꼴)
             a = torch.where(torch.rand(self.n, device=self.dev, generator=self.gen) < self.try_p, torch.randint(0, self.net.m, (self.n,), device=self.dev, generator=self.gen), a)
         if getattr(self, "override", None) is not None:          # 이음 자리: 다른 기관(상상으로 고르기 같은)이 고른 행동으로 바꿀 수 있다

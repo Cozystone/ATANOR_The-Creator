@@ -14,7 +14,65 @@ CROP = int(os.environ.get("ATANOR_MC_CROP", "44"))       # 그린 그림 아래�
 POINTER = os.environ.get("ATANOR_MC_POINTER", "/mnt/d/ATANOR-experiments/probe-work/mcviewer.json")      # 판 번호와 지금 판 설명 (bump_mc.py가 고친다)
 USE_TICKS = int(os.environ.get("ATANOR_MC_USE_TICKS", "32"))   # 쓰기를 누르고 있는 틱 수 (먹기 = 32)
 TURN = 2          # 고개 칸 수 (한 칸 15도): 한 번에 30도
+BRANCH_ON = os.environ.get("ATANOR_MC_BRANCH") == "1"
+NOCROSS = os.environ.get("ATANOR_MC_NOCROSS") == "1"             # 십자 조준점 지우기 (256x204 그림에서 가로·세로 9칸, 두께 1칸; 넉넉히 3칸 둘레)
+H0_ = 204
+import numpy as _np
+XMASK = _np.zeros((13, 13), bool); XMASK[5:8, 1:12] = True; XMASK[1:12, 5:8] = True
+_LEGS = ["서 있음", "앞", "뒤", "왼옆", "오른옆", "뛰며 앞"]; _NECK = ["그대로", "왼쪽 30도", "오른쪽 30도", "위 15도", "아래 15도"]; _HANDS = ["빈손", "때림", "씀"]
+
+
+def actname(k):
+    return f"{_LEGS[k // 15]} / {_NECK[(k // 3) % 5]} / {_HANDS[k % 3]}" if BRANCH_ON else ACTS[k]
 ACTS = ["가만히", "앞으로", "왼쪽으로 돌기", "오른쪽으로 돌기", "때리기", "쓰기", "뛰며 앞으로"]
+
+
+class Ear:
+    """달팽이관처럼: 이 몸의 Minecraft가 내는 소리 (게임 안 OpenAL Soft의 '파일로 쓰기' 방식)를, 걸음마다 방금 0.25초만
+    왼쪽·오른쪽 귀마다 주파수 띠 8개의 세기 (로그)로. 이름표 없음. 띠의 경계는 사람 귀처럼 로그 간격 (손으로 준 것, 장부).
+    파일은 쌓이지 않게 가끔 비운다 (쓰는 쪽은 제 자리에서 계속 쓰므로 빈 앞부분은 디스크를 차지하지 않는 구멍이 된다)."""
+    RATE, WIN, NB, HDR = 44100, 11025, 8, 68
+
+    def __init__(self):
+        import numpy as np, tempfile
+        self.np = np
+        d = tempfile.mkdtemp(prefix="atanor_ear_"); self.path = os.path.join(d, "ear.wav")
+        conf = os.path.join(d, "alsoft.conf")
+        open(conf, "w").write("\n".join(["[general]", "drivers = wave", "sample-type = float32", f"frequency = {self.RATE}", "channels = stereo", "[wave]", f"file = {self.path}", ""]))
+        os.environ["ALSOFT_CONF"] = conf; os.environ["ALSOFT_DRIVERS"] = "wave"
+        edges = np.geomspace(60, 16000, self.NB + 1); fq = np.fft.rfftfreq(self.WIN, 1 / self.RATE)
+        self.band = [(fq >= edges[i]) & (fq < edges[i + 1]) for i in range(self.NB)]; self.win = np.hanning(self.WIN).astype(np.float32)
+        self.calls = 0
+        self.voice, self.voice_t0 = None, 0.0
+
+    def say(self, wav):
+        """어른의 목소리 (모노, 44.1kHz)가 지금부터 이 몸의 귀에 들린다: 게임의 소리와 한 귀에서 섞인다 (글자가 아니라 소리로)."""
+        self.voice = self.np.asarray(wav, self.np.float32); self.voice_t0 = time.time()
+
+    def bands(self):
+        np = self.np
+        self.calls += 1
+        x = np.zeros((self.WIN, 2), np.float32)
+        if self.voice is not None:                                # 어른의 목소리 가운데 방금 0.25초에 흘러나온 부분 (실제 시간으로)
+            e = max(int((time.time() - self.voice_t0) * self.RATE), 0); s0 = max(e - self.WIN, 0); s1 = min(e, len(self.voice))
+            if s0 >= len(self.voice):
+                self.voice = None
+            elif s1 > s0:                                         # 창의 끝 = 지금(e). 목소리의 [s0, s1)는 창의 [WIN-(e-s0), WIN-(e-s1))에 놓인다
+                a0 = self.WIN - (e - s0); x[a0:a0 + (s1 - s0)] += self.voice[s0:s1, None]
+        try:
+            size = os.path.getsize(self.path)
+            n = (size - self.HDR) // 8
+            if n > self.WIN:
+                with open(self.path, "rb") as f:
+                    f.seek(self.HDR + (n - self.WIN) * 8); x = x + np.frombuffer(f.read(self.WIN * 8), np.float32).reshape(-1, 2)
+            if self.calls % 3000 == 0:
+                os.truncate(self.path, 0)
+        except OSError:
+            pass
+        x = np.nan_to_num(x)
+        sp = np.abs(np.fft.rfft(x * self.win[:, None], axis=0)) ** 2
+        e = np.stack([sp[b].sum(0) for b in self.band], 1)               # [2 귀, 8 띠]
+        return np.log10(e + 1e-9).astype(np.float32).ravel()            # [16]: 왼 귀 띠 8, 오른 귀 띠 8
 
 
 def body(conn, seed, h, w, small, big):
@@ -22,9 +80,55 @@ def body(conn, seed, h, w, small, big):
     from PIL import Image
     import importlib.util
     from PIL import ImageDraw
+    ear = Ear() if os.environ.get("ATANOR_MC_EAR") == "1" else None      # 귀: 게임 안의 소리 엔진이 스피커 대신 이 몸의 관(FIFO)으로 쓰게 한다 (minedojo.make 전에)
     food0 = os.environ.get("ATANOR_MC_FOOD")                     # 태어날 때의 배부름 (세계 설정, 견주는 두 판에 똑같이). 없으면 MineDojo 기본 (가득)
+    SKIN = os.environ.get("ATANOR_MC_SKIN") == "1"              # 살갗: 몸 둘레 3x3x3 칸이 막는가 / 물인가 (블록 이름은 쓰지 않는다)
+    JUDGE_DEPTH = os.environ.get("ATANOR_MC_TRUEDEPTH") == "1"   # 참 깊이: 깊이 눈을 '판정'할 때만 (배우는 데는 쓰지 않는다)
+    extra = {}
+    if SKIN:
+        extra.update(use_voxel=True, voxel_size=dict(xmin=-1, ymin=-1, zmin=-1, xmax=1, ymax=1, zmax=1))
+    if JUDGE_DEPTH:                                              # MineDojo 0.1의 깊이 그림은 막혀 있다 (assert): 눈높이 빛살 5개로 잰다 (깊이 눈의 5갈래와 같은 각)
+        import math as _m
+        HF = _m.degrees(_m.atan(_m.tan(_m.radians(35.0)) * w / h))         # 가로 반시야 (세로 70도에서)
+        extra.update(use_lidar=True, lidar_rays=[(0.0, float(_m.radians(HF * (2 * k + 1 - 5) / 5)), 30.0) for k in range(5)])      # Malmo 빛살의 각은 라디안 (Vec3d.rotateYaw). 예전엔 도로 넣어 옆 빛살이 엉뚱한 쪽을 봄 (2026-11-22 검토)
+    JUDGE = os.environ.get("ATANOR_MC_JUDGE") == "1"            # 판정에만 (존재에게 주지 않음): 캐서 얻은 것, 시야를 부채꼴로 가르는 빛살 7개의 짐승 (따라가기, 다가가기)
+    FAN = [-30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0]
+    if JUDGE:
+        extra.update(use_lidar=True, lidar_rays=list(extra.get("lidar_rays", [])) + [(0.0, float(np.radians(y)), 32.0) for y in FAN])
+    NFAN0 = len(extra.get("lidar_rays", [])) - (len(FAN) if JUDGE else 0)
+    ELDER = os.environ.get("ATANOR_MC_ELDER") == "1"            # 목소리 어른이 '아기가 바라보는 것'을 알려고 (어른만 기호를 안다, 존재의 마음에는 들어가지 않는다)
+    if ELDER:
+        extra.update(use_lidar=True, lidar_rays=list(extra.get("lidar_rays", [])) + [(0.0, 0.0, 24.0), (float(np.radians(-12.0)), 0.0, 24.0), (float(np.radians(12.0)), 0.0, 24.0)])
     env = minedojo.make(task_id="open-ended", image_size=(h, w), generate_world_type="default", world_seed=seed, allow_mob_spawn=True,
-                        **({"start_food": int(food0)} if food0 else {}))
+                        **({"start_food": int(food0)} if food0 else {}), **extra)
+
+    def skin(obs, yaw):
+        """[15]: 닿음 8 (발높이·머리높이 x 앞·오른쪽·뒤·왼쪽: 막는 것이 있나) + 발밑이 막혀 있나 + 발·머리가 물에 잠겼나 2
+        + 아픔이 온 쪽 4 (앞·오른쪽·뒤·왼쪽, 맞은 양만큼). 방향은 바라보는 쪽에 맞춰 가장 가까운 네 방위로 돌림 (장부)."""
+        out = np.zeros(15, np.float32)
+        vx = obs.get("voxels")
+        if vx is not None:
+            mv = np.asarray(vx["blocks_movement"]).astype(np.float32); lq = np.asarray(vx["is_liquid"]).astype(np.float32)      # [x, y, z] (-1..1)
+            q = int(np.round(((yaw % 360) / 90.0))) % 4                         # 0: +z를 봄, 1: -x, 2: -z, 3: +x (Minecraft yaw)
+            dirs = [(1, 2), (0, 1), (1, 0), (2, 1)]                            # +z, -x, -z, +x 칸 (x, z 자리)
+            order = [dirs[(q + k) % 4] for k in (0, 1, 2, 3)]                   # 앞, 오른쪽, 뒤, 왼쪽 (Minecraft는 yaw가 늘면 오른쪽으로 돈다: +z를 볼 때 오른쪽은 -x)
+            for hi, yy in enumerate((1, 2)):
+                for k, (ix, iz) in enumerate(order):
+                    out[hi * 4 + k] = mv[ix, yy, iz]
+            out[8] = mv[1, 0, 1]; out[9] = lq[1, 1, 1]; out[10] = lq[1, 2, 1]
+        dm = obs.get("damage_source", {})
+        amt = float(np.asarray(dm.get("damage_amount", 0)).sum()) if isinstance(dm, dict) else 0.0
+        if amt > 0:
+            rel = np.radians(float(np.asarray(dm.get("damage_yaw", 0)).ravel()[0]) - yaw)
+            for k, a in enumerate((0, np.pi / 2, np.pi, -np.pi / 2)):
+                out[11 + k] = min(amt / 5, 1.0) * max(np.cos(rel - a), 0.0)
+        return out
+
+    def light(obs):
+        """[5]: 둘레의 밝음, 하늘빛, 해의 밝기 (밤과 낮을 몸으로), 따뜻함, 비에 젖음."""
+        loc = obs.get("location_stats", {}); g = lambda k: float(np.asarray(loc.get(k, [0])).ravel()[0])
+        return np.array([g("light_level") / 15, g("sky_light_level") / 15, g("sun_brightness"), min(max(g("temperature"), -0.5), 2.0) / 2,
+                         float(g("is_raining") > 0 and g("can_see_sky") > 0)], np.float32)
     prev = {"rgb": None}
     # 눈: 창립자의 정본 눈 기관 (읽기 전용으로 불러 씀). 가운데 16px는 곱게, 고리 4개는 갈수록 넓고 거칠게 (16x16 같은 칸에), 고리마다 가장 센 빛깔도.
     # 초점은 눈 기관 스스로 옮긴다 (정본의 규칙: 내다본 것(앞 그림)과 달라진 곳으로). 마음이 고르지 않는다.
@@ -69,18 +173,58 @@ def body(conn, seed, h, w, small, big):
         rgb = np.asarray(obs["rgb"]).transpose(1, 2, 0)
         if CROP:                                                  # 화면 아래의 HUD (하트, 배부름, 손에 든 칸, 손)를 잘라 낸다: 몸 신호로 이미 받으므로 눈은 바깥세상만
             rgb = np.ascontiguousarray(rgb[:-CROP])
+        if NOCROSS:                                               # 십자 조준점 (사람 눈에는 없는, 게임이 그려 넣은 겨눔 표시)을 둘레 빛깔로 메운다
+            H_, W_ = rgb.shape[:2]; y0, x0 = H0_ // 2 - 6, W_ // 2 - 6      # 조준점은 (잘라 내기 전) 그린 그림의 한가운데
+            f = rgb[y0:y0 + 13, x0:x0 + 13].astype(np.float32); known = ~XMASK.copy()
+            for _ in range(8):                                    # 메울 칸을, 이미 아는 이웃의 평균으로 바깥부터 차례로 메운다
+                kp = np.pad(known, 1).astype(np.float32); fp = np.pad(f * known[..., None], ((1, 1), (1, 1), (0, 0)))
+                nb = [(0, 1), (2, 1), (1, 0), (1, 2)]
+                s = sum(fp[a:a + 13, b:b + 13] for a, b in nb); c = sum(kp[a:a + 13, b:b + 13] for a, b in nb)
+                new = ~known & (c > 0)
+                f[new] = (s[new] / c[new][:, None]); known |= new
+            rgb = rgb.copy(); rgb[y0:y0 + 13, x0:x0 + 13] = f.clip(0, 255).astype(np.uint8)
         im = Image.fromarray(rgb)
         ret, s = retina(rgb)
         mv = bug(rgb, s, k)
         ls = obs["life_stats"]; loc = obs.get("location_stats", {})
         pos = np.asarray(loc.get("pos", [0, 0, 0]), dtype=np.float32).ravel(); yaw = float(np.asarray(loc.get("yaw", [0])).ravel()[0])
         out = dict(ret=ret, bug=mv, gaze=(float(eye.cx), float(eye.cy)), health=float(np.asarray(ls["life"]).ravel()[0]) / 20, food=float(np.asarray(ls["food"]).ravel()[0]) / 20,
-                   air=float(np.asarray(ls["oxygen"]).ravel()[0]) / 300, hurt=float(hurt), done=bool(done), pos=pos, yaw=yaw)
+                   air=float(np.asarray(ls["oxygen"]).ravel()[0]) / 300, hurt=float(hurt), done=bool(done), pos=pos, yaw=yaw,
+                   pitch=float(np.asarray(loc.get("pitch", [0])).ravel()[0]),
+                   small=np.asarray(im.resize((80, 48), Image.BILINEAR), np.uint8))      # 깊이 눈이 받는 작은 온 그림 (HUD 잘라 낸 것, 48x80): 제 걸음으로 깊이를 배운다
+        if ear is not None:
+            out["ear"] = ear.bands()
+        if SKIN:
+            out["skin"] = np.concatenate([skin(obs, yaw), light(obs)])         # [20]
+        if JUDGE_DEPTH and "rays" in obs:                            # 판정에만: 빛살마다 처음 닿은 블록까지의 거리
+            out["rays"] = {k: np.asarray(v).ravel() for k, v in obs["rays"].items() if np.asarray(v).dtype.kind in "fiu"}
+        if JUDGE:
+            r = obs.get("rays", {}); sl = slice(NFAN0, NFAN0 + len(FAN))
+            en = [str(v).lower() for v in np.asarray(r.get("entity_name", [""] * 99)).ravel()[sl]]
+            ed = np.asarray(r.get("entity_distance", [99.0] * 99), np.float32).ravel()[sl]
+            di = obs.get("delta_inv", {}); q = np.asarray(di.get("inc_quantity_by_other", [0])).ravel() if isinstance(di, dict) else np.zeros(1)
+            bd_ = np.asarray(r.get("block_distance", [99.0] * 99), np.float32).ravel()[sl]
+            out["judge"] = dict(ent=[(e not in ("", "null", "none", "item")) and d < 32 for e, d in zip(en, ed)], ent_d=ed.tolist(), got=float(np.clip(q.astype(np.float32), 0, None).sum()),
+                                reach=float(bd_[3]))                # 바로 앞 블록까지 (손이 닿는 거리는 약 4.5칸: 그보다 멀면 헛손질)
+        if ELDER and "rays" in obs:                                 # 어른에게만: 바로 앞 (가운데, 조금 위, 조금 아래) 빛살이 처음 닿은 짐승·블록의 이름과 거리
+            r = obs["rays"]; L = 3
+            g = lambda k: [str(v) for v in np.asarray(r.get(k, [""] * 99)).ravel()[-L:]]
+            f_ = lambda k: [float(v) for v in np.asarray(r.get(k, [99] * 99)).ravel()[-L:]]
+            out["look"] = dict(entity=g("entity_name"), entity_d=f_("entity_distance"), block=g("block_name"), block_d=f_("block_distance"))
         if big:
             show = im.copy(); ImageDraw.Draw(show).rectangle(s["fovea_box"], outline=(255, 210, 0), width=2)
             b = io.BytesIO(); show.save(b, format="JPEG", quality=85); out["big"] = b.getvalue()
             b2 = io.BytesIO(); kept(s, rgb.shape[0], rgb.shape[1]).save(b2, format="PNG"); out["kept"] = b2.getvalue()
         return out
+
+    def use_ticks(o):
+        """쓰기 (먹기) = 32틱 누르기. 배가 가득 차면 마크는 먹지 않으므로 (세계의 성질) 1틱으로 끝낸다 - 겪는 결과는 같고 헛된 시간만 줄어듦 (효율, 장부).
+        재 보니 '쓰기'의 32틱이 판 시간의 대부분이었다 (먹여 줘서 배가 거의 늘 가득)."""
+        try:
+            full = float(np.asarray(o["life_stats"]["food"]).ravel()[0]) >= 20
+        except Exception:
+            full = False
+        return 1 if full else USE_TICKS
 
     obs = env.reset(); conn.send(pack(obs, False, 0.0))
     while True:
@@ -96,15 +240,47 @@ def body(conn, seed, h, w, small, big):
             for _ in range(10):                                   # 떨어져 자리 잡을 때까지 몇 걸음 그대로
                 obs, _, done, _ = env.step(env.action_space.no_op())
             conn.send(pack(obs, done, 0.0)); continue
+        if isinstance(cmd, tuple) and cmd[0] == "voice":     # 어른의 목소리를 이 몸의 귀에 (세계는 한 걸음도 가지 않는다)
+            if ear is not None:
+                ear.say(cmd[1])
+            conn.send(None); continue
         if isinstance(cmd, tuple) and cmd[0] == "feed":      # 먹여 주기 (돌봄 단계, 장부): 부모가 손(첫 칸)에 먹을 것을 쥐여 준다
             ex = getattr(env, "execute_cmd", None) or env.unwrapped.execute_cmd
-            obs, _, done, _ = ex(f"/replaceitem entity @p slot.hotbar.0 minecraft:{cmd[1]} {int(cmd[2])}")
+            obs, _, done, _ = ex(f"/replaceitem entity @p {cmd[3] if len(cmd) > 3 else 'slot.hotbar.0'} minecraft:{cmd[1]} {int(cmd[2])}")      # 자리: 주 손 (slot.hotbar.0) 또는 다른 손 (slot.weapon.offhand)
             conn.send(pack(obs, done, 0.0)); continue
         a = env.action_space.no_op()
         k = int(cmd)
-        if k == 5:                                            # '쓰기' = 1.6초 (32틱) 누르고 있기 (먹는 몸짓. 마크에서 먹으려면 이만큼 눌러야 한다): 몸의 움직임 단위
+        if BRANCH_ON:                                         # 갈래 몸: 몸짓 번호 = 다리*15 + 목*3 + 손. 다리 (서 있음, 앞, 뒤, 왼옆, 오른옆, 뛰며 앞) x 목 (그대로, 왼 30, 오른 30, 위 15, 아래 15) x 손 (빈손, 때림, 씀)
+            l, nk, hd = k // 15, (k // 3) % 5, k % 3
+            if l == 1: a[0] = 1
+            elif l == 2: a[0] = 2
+            elif l == 3: a[1] = 1
+            elif l == 4: a[1] = 2
+            elif l == 5: a[0] = 1; a[2] = 1
+            if nk == 1: a[4] = 12 - TURN
+            elif nk == 2: a[4] = 12 + TURN
+            elif nk == 3: a[3] = 11
+            elif nk == 4: a[3] = 13
+            kk = 2 if nk != 0 else 0                     # 벌레 탐지: 고개를 돌린 걸음은 온 그림이 바뀌므로 건너뜀
+            if hd == 2:                                       # 쓰기 = 32틱 누르기 (먹는 몸짓): 다리·목은 첫 틱에만
+                hurt = 0.0
+                for t_ in range(use_ticks(obs)):
+                    if t_ > 0:
+                        a = env.action_space.no_op()
+                    a[5] = 1
+                    obs, r, done, info = env.step(a)
+                    dm = obs.get("damage_source", {}); hurt += float(np.asarray(dm.get("damage_amount", 0)).sum()) if isinstance(dm, dict) else 0.0
+                    if done:
+                        break
+                conn.send(pack(obs, done, hurt, kk)); continue
+            if hd == 1: a[5] = 3
+            obs, r, done, info = env.step(a)
+            dm = obs.get("damage_source", {})
+            hurt = float(np.asarray(dm.get("damage_amount", 0)).sum()) if isinstance(dm, dict) else 0.0
+            conn.send(pack(obs, done, hurt, kk)); continue
+        if k == 5:                                           # '쓰기' = 1.6초 (32틱) 누르고 있기 (먹는 몸짓. 마크에서 먹으려면 이만큼 눌러야 한다): 몸의 움직임 단위
             hurt = 0.0
-            for _ in range(USE_TICKS):
+            for _ in range(use_ticks(obs)):
                 a = env.action_space.no_op(); a[5] = 1
                 obs, r, done, info = env.step(a)
                 dm = obs.get("damage_source", {}); hurt += float(np.asarray(dm.get("damage_amount", 0)).sum()) if isinstance(dm, dict) else 0.0
@@ -153,19 +329,20 @@ body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 system-ui,sans
 <h1>ATANOR · MineDojo</h1><div id="ver" style="font-weight:600;font-size:13px"></div><div id="label" style="color:var(--mute);font-size:12px"></div>
 <div class="two"><div class="card"><h2>1인칭 그림 (노란 상자 = 초점, 곱게 보는 곳)</h2><img id="eye" alt="1인칭 그림"></div>
 <div class="card"><h2>눈이 실제로 받는 것 (같은 크기로 되그림: 초점은 곱게, 바깥 고리로 갈수록 거칠게)</h2><img id="small" alt="눈이 받는 것"></div></div>
+<div class="card" id="dcard" style="display:none"><h2>깊이 눈이 보는 것 (제 걸음으로 배운 깊이: 밝을수록 가까움, 아래 막대 = 존재가 받는 눈높이 5갈래의 가까움)</h2><img id="depth" alt="깊이"></div>
 <div class="card"><h2>몸 (첫 몸)</h2>
 <div class="row"><span>체력</span><span id="hv"></span></div><div class="bar"><div id="hb" style="background:#d9534f"></div></div>
 <div class="row"><span>배부름</span><span id="fv"></span></div><div class="bar"><div id="fb" style="background:#c98a2e"></div></div>
 <div class="row"><span>숨</span><span id="ov"></span></div><div class="bar"><div id="ob" style="background:#4f8fe0"></div></div>
-<div class="row"><span>지금 한 것</span><b id="act"></b></div><div class="row"><span>누가 고르나</span><span id="who"></span></div>
+<div class="row"><span>지금 한 것</span><b id="act"></b></div><div class="row"><span>누가 고르나</span><span id="who"></span></div><div class="row"><span>어른의 목소리 (아기가 보는 것에 이름 붙임, 소리로만 들림)</span><b id="said"></b></div>
 <div class="row"><span>삶 / 걸음</span><span id="ls"></span></div><div class="row"><span>맞은 양 (이 걸음 / 이 삶)</span><span id="hurt"></span></div>
 <div class="row"><span>몸의 수 / 초당 걸음 (모두 합쳐)</span><span id="sps"></span></div></div>
 </main><script>
 const $=i=>document.getElementById(i);
-async function tick(){try{const s=await (await fetch('/state')).json();if(s.big){$('eye').src='data:image/jpeg;base64,'+s.big;$('small').src='data:image/png;base64,'+s.kept;
+async function tick(){try{const s=await (await fetch('/state')).json();if(s.big){$('eye').src='data:image/jpeg;base64,'+s.big;$('small').src='data:image/png;base64,'+s.kept;if(s.depth){$('dcard').style.display='block';$('depth').src='data:image/png;base64,'+s.depth;}
 $('ver').textContent=(s.version?'버전 v'+s.version+' · ':'')+(s.note||'');$('label').textContent=s.label||'';const p=v=>Math.max(0,Math.min(100,100*v))+'%';
 $('hv').textContent=(s.health*20).toFixed(0)+' / 20';$('hb').style.width=p(s.health);$('fv').textContent=(s.food*20).toFixed(0)+' / 20';$('fb').style.width=p(s.food);
-$('ov').textContent=(s.air*300).toFixed(0)+' / 300';$('ob').style.width=p(s.air);$('act').textContent=s.act||'';$('who').textContent=s.who||'';
+$('ov').textContent=(s.air*300).toFixed(0)+' / 300';$('ob').style.width=p(s.air);$('act').textContent=s.act||'';$('who').textContent=s.who||'';$('said').textContent=s.said||'';
 $('ls').textContent=s.life+'번째 / '+s.step;$('hurt').textContent=s.hurt.toFixed(1)+' / '+s.hurt_total.toFixed(1);$('sps').textContent=s.n+' / '+s.sps;}}catch(e){}
 setTimeout(tick,250)}tick();</script></body></html>"""
 
@@ -233,9 +410,17 @@ def main():
             send(s, dict(n=a.bodies, obs=[{k: v for k, v in o.items() if k not in ("big", "kept")} for o in first]))
             while True:
                 m = recv(s)
+                if m.get("cmd") == "voice":
+                    for i in m["which"]:
+                        pipes[i].send(("voice", m["wav"]))
+                    for i in m["which"]:
+                        pipes[i].recv()
+                    with VLOCK:
+                        VIEW["said"] = m.get("text", "")
+                    send(s, "ok"); continue
                 if m.get("cmd") == "feed":
                     for i in m["which"]:
-                        pipes[i].send(("feed", m.get("item", "bread"), int(m.get("qty", 8))))
+                        pipes[i].send(("feed", m.get("item", "bread"), int(m.get("qty", 8)), m.get("slot", "slot.hotbar.0")))
                     for i in m["which"]:
                         first[i] = pipes[i].recv()
                     send(s, [{k: v for k, v in first[i].items() if k not in ("big", "kept")} for i in m["which"]]); continue
@@ -260,7 +445,10 @@ def main():
                     p.send(int(k))
                 obs = [p.recv() for p in pipes]
                 step += 1; nstep += a.bodies; hurt_total += obs[0]["hurt"]
-                show(obs[0], ACTS[int(acts[0])], m.get("who", ""), m.get("label", ""))
+                show(obs[0], actname(int(acts[0])), m.get("who", ""), m.get("label", ""))
+                if m.get("depth"):                                   # 존재의 깊이 눈이 본 것 (뷰어에만)
+                    with VLOCK:
+                        VIEW["depth"] = base64.b64encode(m["depth"]).decode()
                 send(s, [{k: v for k, v in o.items() if k not in ("big", "kept")} for o in obs])
         except (ConnectionError, OSError, EOFError) as e:
             print("client gone:", e, flush=True)

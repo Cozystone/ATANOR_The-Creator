@@ -9,3 +9,8 @@ Order (each is safe to re-run):
 4. viewer: `bash ../mcwatch.sh` -> http://localhost:8770
 
 First run (2026-11-22): world ready in 24 s, first-person RGB 160x256, life/food 20/20, 42 steps/s (one instance).
+
+## Sound (ear)
+Malmo ships `run/options.txt` with every sound category at 0. For the ear, set them to 1.0 (music stays 0):
+`sed -i -E "s/^soundCategory_(master|record|weather|block|hostile|neutral|player|ambient|voice):0\.0/soundCategory_\1:1.0/" <minedojo>/sim/Malmo/Minecraft/run/options.txt` (original kept as options.txt.orig).
+The world server then runs each body with `ALSOFT_CONF` pointing the game's own OpenAL Soft (1.15.1) at a wave file (`ATANOR_MC_EAR=1`).

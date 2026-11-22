@@ -929,3 +929,51 @@
 - 2026-11-22 `9091adf0` creator: README position (harm memory verdict, imagination honest result)
 - 2026-11-22 `56d04913` atanor-os: clean harm-memory comparison in the combined setup - deaths 18->6.5, injuries 67->14.5 on two seeds each, no overlap; long run queued
 - 2026-11-22 `b644945c` creator: README harm-memory clean result
+- 2026-11-22 `2ac31d43` atanor-os: long run (20k) - no clear improvement across nights; harm memory fixed size overwrites old harms -> needs a slow consolidating layer
+- 2026-11-22 `e2eef35f` atanor-os: slow layer - harms pushed out of the fast 32-slot memory are consolidated into 32 fixed kinds (online k-means), recalled together; diagnostic: long run ended with 94% drowning slots, night harms lost
+- 2026-11-22 `e025238b` atanor-os: slow layer v1 blurred into one blob (168/219 moments); v2 merges the two closest kinds to make room for a new kind (no threshold); outside-harm count fixed
+- 2026-11-22 `97113235` atanor-os: depth eye from own walking (straight-ahead distance r=0.95 vs lidar, sides not), ear from the game's own sound (OpenAL wave writer), skin (touch cube, pain side, light), branch body (legs x neck x hand = 90 gestures as codes in core); runs 30-34 queued
+- 2026-11-22 `d4332c8d` tools: export mc_depth; minedojo README: unmute sound for the ear
+- 2026-11-22 `7099bf25` tools: fix sed line in minedojo README
+- 2026-11-22 `8f9111a8` atanor-os: depth-eye side viewer (8772) shows what the depth eye sees on the current run
+- 2026-11-22 `0516ec44` atanor-os: slow layer verdict - fails (fast-only 27.5 deaths vs slow 32.5, overlapping); memory kept but not turned into avoidance
+- 2026-11-22 `1ac1326c` atanor-os: breakthrough theory - learn a TD fear value (Pavlov, Rescorla-Wagner, Schultz, Mowrer two-factor) instead of only episodic harm moments; step log for the offline diagnostic
+- 2026-11-22 `9b23125e` atanor-os: founder's line - no RL objective; value probe stopped; design = anticipated-body sense (per-dim GVF) with choosing left to the bedrock; object splitting in a perception stage
+- 2026-11-22 `88fb3cc7` atanor-os: option to erase the game's crosshair from what the eye sees (ATANOR_MC_NOCROSS, inpaint from neighbours); life_gpu extra_x hook for senses made from what is felt
+- 2026-11-22 `d99a80ff` atanor-os: voice elder v0 pipeline (look ray -> Korean root word -> local Korean voice -> mixed into the being's ear), telegraphic roots; LANGUAGE_PATH.md: how people learn speech and writing, our L0-L7 path
+- 2026-11-22 `1589c69c` atanor-os: elder pipeline works end to end (Korean roots heard in the ear); judge-only metrics (mined, animal in view middle, getting closer); hold cap optional (--hold 0); runs 35-37 queued
+- 2026-11-22 `061f39b0` atanor-os: anticipation-as-sense fails in room (2 seeds); macro brain map - the missing heart is the basal ganglia's internal (homeostatic) value learning; founder decision needed
+- 2026-11-22 `37b5dc80` atanor-os: founder allows bedrock-only value learning (own wholeness change is the only reward); room test started
+- 2026-11-22 `367e3044` atanor-os: founder directive - Minecraft shell work ends with runs 35-37 + elder; only the universal core from here
+- 2026-11-22 `7b3144e8` atanor-os: diagnostic - learned harm prediction warns earlier than episodic harm memory (hard case k=5 0.815 vs 0.681)
+- 2026-11-22 `234fee55` atanor-os: bedrock-only value passes in the room - refills rise life after life (~3x), whole lives overtake later; first learning-with-experience result
+- 2026-11-22 `38b27c05` atanor-os: core.Worth - bedrock-only value organ (own wholeness change is the only reward, fixed-size replay ring), wired into life_gpu and mc_being (--worth); room reproduces (life 8: whole 0.535, refills 1.23 vs 0.40/0.41)
+- 2026-11-22 `02025310` atanor-os: Worth option - surprise-weighted replay (hippocampal prioritised replay); room test running
+- 2026-11-22 `773ee239` atanor-os: judge-only - swings into empty air, length of hitting runs (15+ needed to dig dirt)
+- 2026-11-22 `48e50db9` atanor-os: founder adopts the two visual paths (magno whole-frame 80x48 for depth/motion, parvo canon fovea for form) as general structure; Worth trust gating option (earned share by explained variance)
+- 2026-11-22 `fbd201c6` atanor-os: replay variants - prioritised replay no effect, earned trust softens only the first dip; both off by default
+- 2026-11-22 `f58547c8` atanor-os: 30-life value run rises then collapses; suspected per-scene normalisation amplifying noise; Worth now scales by typical advantage size
+- 2026-11-22 `e8f1cf42` atanor-os: depth eye sky fixed - pixels better explained as very far are pushed far (sky 0.7 -> 29.3, rest 3.4 -> 4.2, flow fit kept)
+- 2026-11-22 `6ce37b05` atanor-os: typical-size scaling does not stop the value collapse; per-life diagnostic running
+- 2026-11-22 `392e69a3` atanor-os: Worth trust earned from real outcomes (correlation of expectation with the wholeness change that came over 60 steps); diagnostic showed fit-based trust 0.9 while true prediction was ~0 and the value overrode 55% of choices
+- 2026-11-22 `b3314553` atanor-os: log - why the value wobbles (no real prediction early yet overriding over half of choices)
+- 2026-11-22 `355243da` atanor-os: value no longer erases exploration - with no core pull, follow the value only by earned trust, else try at random as before (forcing strong=True was the early-dip cause)
+- 2026-11-22 `2c25f307` atanor-os: review fixes - lidar angles in radians (Malmo; + yaw points left), value trace cut at deaths/teleports and death counts as total loss, one-body trust, done as terminal, judge resets on moves, bug skip on pitch, wave sample type; tools/smoke_mc.py fake-world test of every mc_being option
+- 2026-11-22 `005ca9c6` atanor-os: log - review pass; depth-eye side verdict withdrawn (ray units), old eye r~0.95 on all sectors
+- 2026-11-22 `6463e59f` atanor-os: founder review - imagination must be valued by multi-step wholeness, not latent likeness (water-diving cause); plan recorded; Worth action-value form (option m=, --worth_q) under room test
+- 2026-11-22 `24a81926` atanor-os: outside review recorded - proto-self tests instead of a self module (body remap, own vs world change, holding the unseen, acting on own fallibility, carry-over, new preferences)
+- 2026-11-22 `98673ece` atanor-os: developmental architecture proposal recorded (R1-R8, north-star question, three-condition language test, internet safety); R1/R2 next after the learning heart
+- 2026-11-22 `d3900957` atanor-os: head-tilt sense (neck proprioception, --neck) and tilted-head measure; run 34b queued before 35
+- 2026-11-22 `e5953be0` atanor-os: action-value Worth passes in the room (2 seeds, 30 lives: fills ~2x, no dip, no collapse); head-tilt sense; runs 34b and 40-41 queued
+- 2026-11-22 `23dca098` atanor-os: four depth eyes judged with correct rays - keep far-push 0.003 (sky right, r 0.87-0.91); still-pixel variants collapse despite best flow fit; run 34 (all senses) best so far
+- 2026-11-22 `1998e3b5` atanor-os: tool in the main hand (stone pickaxe), bread in the off hand (eating still works); runs 35-41 get it
+- 2026-11-22 `f811e888` atanor-os: runs shortened to 12000 steps and reordered by priority; parallel lanes ruled out (one world ~15GB)
+- 2026-11-22 `3db83614` atanor-os: runs were slow because 'use' holds 32 ticks even when full (can't eat) - now 1 tick when full; ~5x faster steps with use in the mix
+- 2026-11-22 `8fb221eb` atanor-os: head-tilt sense alone does not reduce head tilt (0.58 -> 0.65); 34b stopped at 12000; run 35 started with the speed fix
+- 2026-11-22 `2e16436d` atanor-os: runs 35-38 recorded - run-to-run variance is large (38's value had zero trust yet differs strongly from 35); hold-free gives 10x long hitting; elder utterances now logged (37 could not be judged)
+- 2026-11-22 `7f533273` atanor-os: founder directive - one being file cycles between room and Minecraft; common sense/action interface is the first step
+- 2026-11-22 `b26119fa` atanor-os: Minecraft wrap-up batch recorded (value inconclusive in MC, passes in room); founder - vary room conditions widely, dispositions matter; 37b elder rerun running
+- 2026-11-22 `abcf707d` atanor-os: room_vary - varied rooms (size, dividers, doors, springs, start, drain) for raising dispositions across conditions
+- 2026-11-22 `a6d06599` atanor-os: elder L2 judged - forecast does not use the elder's words (+0.1%); needs objects + a sound-thing association organ; elder speaks only known words
+- 2026-11-22 `b83f0d32` atanor-os: varied-room value carries to unseen rooms (fills +35/+70%, single-room value does not); export lists new modules
+- 2026-11-22 `d882ba37` creator: README status for 2026-11-22 (bedrock value, varied-room carry-over, two visual paths, honest failures)
