@@ -2,7 +2,7 @@
 
 판정: **VALID_BOUNDED_GAIN**  (protocol: {"frozen_at": "2026-10-24T01:58:40", "primary": "C-B completion rate on split=test, learning state frozen (no online adaptation)", "min_gain_pp": 10.0, "seeds_ge": 4, "max_cost_ratio": 3.0, "secondary": "D-C with the same thresholds (recorded, no effect on verdict); B-A and C-A reported", "split": "test", "tasks": 20, "seeds": [1, 2, 3, 4, 5], "explore_steps": 300, "budget": {"actions": 20, "nodes": 600, "depth": 12, "seconds": 10.0}, "dev_reference": "atanor_os/runs/dev1: 2 seeds x 12 dev tasks -> A 0.083, B 0.375, C 1.000, D 0.375, ORACLE 1.000", "changes_after_dev": ["planner time cap 5 -> 10 s for all conditions (D hit the cap; cost is still reported)", "council shares one signature computation per prediction (cost only, no semantic change)", "exploration 200 -> 300 steps, signature repeat limit 2 (rare successes were missing at 200)"], "invalid_if": ["env_errors > 0", "ORACLE completion < 1.0", "semantics mismatch > 0", "tests fail", "unreachable task"]})
 
-환경: `{"python": "3.13.17", "platform": "Windows-10-10.0.19045-SP0", "machine": "DESKTOP-N6RR73M", "cpus": 8, "env_version": "fsworld-1/py3.13/win32", "budget": {"actions": 20, "nodes": 600, "depth": 12, "seconds": 10.0}, "steps": 300, "tasks": 20, "seeds": [1, 2, 3, 4, 5], "split": "test", "adapt": false}`
+환경: `{"python": "3.13.17", "platform": "Windows-10-10.0.19045-SP0", "machine": "<machine>", "cpus": 8, "env_version": "fsworld-1/py3.13/win32", "budget": {"actions": 20, "nodes": 600, "depth": 12, "seconds": 10.0}, "steps": 300, "tasks": 20, "seeds": [1, 2, 3, 4, 5], "split": "test", "adapt": false}`
 
 검사: `{"semantics_checked": 300, "semantics_mismatch": 0, "tests_passed": true, "unreachable": 0, "label": "replication-hp"}`
 

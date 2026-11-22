@@ -5,14 +5,16 @@
   m = Mind(organs, contract); act = m.choose(x); m.after(x, act, x2, died, cut)   # cut: 손이 옮겼거나 다시 태어남 (사슬 끊기)
   m.save(path) / Mind.load(path, organs, contract)
 """
+import numpy as np
 import torch, torch.nn.functional as F
 from .core import Core, Worth
+from .common_senses import Z, ZF
 
 LEAK, TIRE, LOOSE = 0.95, 4.0, 0.05
 
 
 class Mind:
-    def __init__(self, organs, contract, n, dev="cuda", far=0.3, worth=2.0, try_p=0.1, harm=1.0, learn_every=50, keep=4000, lp=0.0, lp_every=1000, inner=0):
+    def __init__(self, organs, contract, n, dev="cuda", far=0.3, worth=2.0, try_p=0.1, harm=1.0, learn_every=50, keep=4000, lp=0.0, lp_every=1000, inner=0, imagine=0.0, horizon=6, rolls=2):
         self.o, self.c, self.n, self.dev = organs, contract, n, dev
         combos, C = contract.codes(); self.M = len(combos)
         # R1 이어진 내면 상태 (inner > 0): h = GRU([느낌, 방금 한 몸짓의 부호], h). 앞으로 올 느낌 (1-4걸음 앞)을 내다보며 스스로 배운다 -
@@ -23,7 +25,10 @@ class Mind:
             import torch.nn as nn
             self.gru = nn.GRUCell(organs.dx + C.shape[1], inner).to(dev)
             self.HOR = (1, 4, 16, 32)                                                    # 내다보는 거리: 어둠 (20걸음)을 건너야 맞힐 수 있게 (1-4걸음만 보면 기억할 까닭이 없었다, 2026-11-22 진단)
-            self.ahead = nn.Sequential(nn.Linear(inner + organs.dx + C.shape[1], 256), nn.ELU(), nn.Linear(256, len(self.HOR) * organs.dx)).to(dev)
+            # 기억을 바탕에 묶는다 (2026-11-22, 해마의 '어디서 먹었나'): 목표는 앞날의 느낌 전체가 아니라 '앞으로 몸 안이 얼마나 채워질까' (바탕 칸마다, 거리마다).
+            # 몸을 이렇게 하면 몇 걸음 뒤 마시는지 맞히려면 샘의 자리를 들고 있어야 하므로 쓸모 있는 기억만 자란다 (느낌 전체를 맞히면 그것이 묻혔다).
+            self.inner_target = "relief"; self.ni = organs.inside.stop - organs.inside.start
+            self.ahead = nn.Sequential(nn.Linear(inner + organs.dx + C.shape[1], 256), nn.ELU(), nn.Linear(256, len(self.HOR) * (self.ni if self.inner_target == 'relief' else organs.dx))).to(dev)
             self.iopt = torch.optim.Adam(list(self.gru.parameters()) + list(self.ahead.parameters()), lr=1e-3)
             self.h = torch.zeros(n, inner, device=dev); self.seq = []
         self.net = Core(dxe, self.M, organs.inside, slice(0, 0), codes=C).to(dev); self.net.far = far; self.net.harm_sharp = True
@@ -31,6 +36,11 @@ class Mind:
         self.wo = Worth(dxe, organs.inside, lam=worth, m=self.M).to(dev) if worth else None
         self.try_p, self.harm, self.learn_every, self.keep = try_p, harm, learn_every, keep
         self.buf = []; self.steps = 0
+        # 값으로 매기는 상상 (2026-11-22, 창립자 검토: 겉모습의 닮음이 아니라 여러 걸음 뒤 제 온전함으로): 알맹이의 내다보기를 (기억 상태까지 품고)
+        # 몸짓마다 horizon걸음 굴려, 끝을 '온전함의 바뀜 + 끝 장면의 값 (몸짓마다의 값 중 가장 나은 것)'으로 매긴다. 고름에 드는 몫 = imagine x 값이 얻은 믿음.
+        self.imagine, self.horizon, self.rolls = imagine, horizon, rolls
+        # imagine_mode: 'roll' = 알맹이 내다보기를 굴림 (실패: 한 걸음부터 몸 안 바뀜을 못 맞힘), 'ahead' = 기억 기관의 '몸짓에 따른 앞날의 채움' 머리 (빛 속에서 몸짓을 가림)
+        self.imagine_mode = "roll"
         # 둘째 바탕 (창립자 확정, E20 'ALIVE_ODD'의 다음 꼴): 배움의 진척 - 예전의 나 (lp_every걸음 전의 내다보기)보다 지금의 내가 이 걸음을 덜 틀리게 내다본 만큼.
         # 배울 수 없는 소음은 진척이 0, 다 배운 것도 0 (지루함) -> 배움이 느는 곳에만 끌림. 그 몫 lp (장부).
         self.lp, self.lp_every, self.f_old, self.lp_scale = lp, lp_every, None, None
@@ -73,13 +83,40 @@ class Mind:
             h = self.gru(torch.cat([X[t, b], self.Cc[A[t, b]]], 1), h * (~Cu[t, b]).float()[:, None])
             if k >= L // 2:
                 pred = self.ahead(torch.cat([h, X[t + 1, b], self.Cc[A[t + 1, b]]], 1)).view(len(b), len(self.HOR), -1)
-                tgt = torch.stack([X[t + 1 + j, b] for j in self.HOR], 1)
+                if self.inner_target == "relief":                          # 지금부터 j걸음 안에 몸 안이 오른 만큼 (가장 높이 찬 때 - 지금), 바탕 칸마다
+                    ins = self.o.inside
+                    tgt = torch.stack([(X[t + 1:t + 2 + j, b][:, :, ins].max(0).values - X[t + 1, b][:, ins]).clamp(min=0) * 10 for j in self.HOR], 1)
+                else:
+                    tgt = torch.stack([X[t + 1 + j, b] for j in self.HOR], 1)
                 ok = torch.stack([~Cu[t + 1:t + 2 + j, b].any(0) for j in self.HOR], 1).float()       # 사이에 끊김 (죽음, 옮김)이 없을 때만
                 loss = loss + (((pred - tgt) ** 2).mean(2) * ok).sum() / ok.sum().clamp(min=1)
         if not torch.is_tensor(loss):
             return None
         self.iopt.zero_grad(); loss.backward(); self.iopt.step()
         return float(loss)
+
+    @torch.no_grad()
+    def imagined(self, x):
+        """몸짓마다 [B, M]: 그 몸짓으로 시작해 아무 몸짓으로 이어 굴린 끝의 값 (rolls개 가운데 가장 나은 것)."""
+        B, M, R, H = x.shape[0], self.M, self.rolls, self.horizon
+        z = x[:, None, None].expand(B, M, R, x.shape[1]).reshape(-1, x.shape[1])
+        a = torch.arange(M, device=self.dev)[None, :, None].expand(B, M, R).reshape(-1)
+        w0 = self.wo.whole(z)
+        for k in range(H):
+            z = z + self.net.f(torch.cat([z, self.net.codes[a]], 1))
+            a = torch.randint(0, M, (len(z),), device=self.dev)
+        g = self.wo.gamma ** H
+        v = (self.wo.whole(z) - w0) + g * self.wo.v(z).max(1).values
+        return v.view(B, M, R).max(2).values
+
+    @torch.no_grad()
+    def fill_ahead(self, x):
+        """몸짓마다 [B, M]: 기억 기관이 내다본 '앞으로 몸 안이 얼마나 채워질까' (거리 16과 32의 합, 바탕 칸 합)."""
+        B, M, dx = x.shape[0], self.M, x.shape[1] - self.inner
+        xr, h = x[:, :dx], x[:, dx:]
+        z = torch.cat([h[:, None].expand(B, M, self.inner), xr[:, None].expand(B, M, dx), self.Cc[None].expand(B, M, self.Cc.shape[1])], 2).reshape(B * M, -1)
+        p = self.ahead(z).view(B, M, len(self.HOR), -1).sum(3)
+        return p[:, :, [self.HOR.index(16), self.HOR.index(32)]].sum(2)
 
     @torch.no_grad()
     def choose(self, x):
@@ -101,6 +138,10 @@ class Mind:
         if self.wo is not None:
             self.wo.track(x, ~self.cut)
             lw = self.wo.lean(self.net, x)
+            if lw is not None and self.imagine and self.wo.on:
+                im = self.fill_ahead(x) if self.imagine_mode == "ahead" else self.imagined(x); c = im - im.mean(1, keepdim=True)
+                s = c.std(1).mean(); self.im_scale = s if getattr(self, 'im_scale', None) is None else 0.999 * self.im_scale + 0.001 * s
+                lw = lw + self.imagine * self.wo.lam * self.wo.earned() * c / (self.im_scale + 1e-6)
             if lw is not None:
                 sc = sc + lw
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
@@ -170,6 +211,59 @@ class Mind:
                         worth_oc=(self.wo.oc.cpu() if self.wo is not None else None), organs=self.o.state(), steps=self.steps,
                         inner=(dict(n=self.inner, gru=self.gru.state_dict(), ahead=self.ahead.state_dict()) if self.inner else None)), path)
 
+    def wear(self, path):
+        """다른 몸의 존재 파일을 이 몸에 입힌다 (R2 몸 다시 짝짓기의 시작, 2026-11-22). 존재 안에 사는 눈 기관의 느낌 칸 (그림마다 z, zf, 응시, 벌레, 깊이)은
+        두 몸에서 뜻이 같으므로 그 칸의 무게를 옮기고, 알맹이·값의 가운데 층 (모양이 같음)도 옮긴다. 몸마다 다른 칸 (바탕, 날 장치)과 몸짓 갈래의 무게는
+        새로 시작 - 존재가 겪으며 스스로 짝짓는다. 겪음 기억 (rel/fnd/harm/slow)과 값의 얻은 믿음은 옮기지 않는다 (옛 몸의 것).
+        돌려줌: 옮긴 것의 요약 (재는 쪽 기록)."""
+        st = torch.load(path, map_location=self.dev, weights_only=False)
+        osig, nsig = st["signature"], self.c.signature()
+        if osig == nsig:
+            return dict(same_body=True, steps=self.load(path))
+        def eye_map(sig, depth):
+            off = sum(int(np.prod(s)) for k, s, b in sig[0] if b) + sum(int(np.prod(s)) for k, s, b in sig[0] if not b and k in ("vector", "audio"))
+            per = Z + ZF + 2 + 1 + (5 if depth else 0)
+            return [off + j * per + q for j in range(sum(1 for k, s, b in sig[0] if k == "image")) for q in range(per)], off + per * sum(1 for k, s, b in sig[0] if k == "image")
+        ndx = self.o.dx; depth = self.o.DE is not None
+        oe, odx = eye_map(osig, depth); ne, ndx2 = eye_map(nsig, depth)
+        assert ndx2 == ndx and odx == st["core"]["f.4.weight"].shape[0], "눈 칸 배치를 맞추지 못함"
+        k = min(len(oe), len(ne)); oe, ne = torch.tensor(oe[:k]), torch.tensor(ne[:k])
+        oc = st["core"]["f.0.weight"].shape[1] - odx; nc = self.net.f[0].weight.shape[1] - ndx
+        skip = ("rel_", "fnd_", "harm_", "slow_", "e2", "t2", "ascale", "oc")
+        moved = {}
+
+        def graft(new_sd, old_sd, tag):
+            out = {}
+            for name, nv in new_sd.items():
+                ov = old_sd.get(name)
+                if ov is None or name.startswith(skip) or name.split(".")[-1] in skip:
+                    continue
+                ov = ov.to(nv.device, nv.dtype)
+                if ov.shape == nv.shape and (nv.dim() < 1 or nv.shape[-1] not in (ndx, ndx + nc) or ndx == odx):
+                    out[name] = ov.clone(); moved[f"{tag}.{name}"] = "whole"; continue
+                v = nv.clone(); done = False
+                if nv.dim() == 2 and (ov.shape[1], nv.shape[1]) in ((odx, ndx), (odx + oc, ndx + nc)):        # 들어오는 칸: 눈 칸 열만
+                    if ov.shape[0] == nv.shape[0]:
+                        v[:, ne] = ov[:, oe]; done = True
+                    elif (ov.shape[0], nv.shape[0]) == (odx, ndx):
+                        v[ne[:, None], ne[None]] = ov[oe[:, None], oe[None]]; done = True
+                elif nv.dim() == 2 and (ov.shape[0], nv.shape[0]) == (odx, ndx) and ov.shape[1] == nv.shape[1]:   # 나가는 칸 (내다본 느낌): 눈 칸 행만
+                    v[ne] = ov[oe]; done = True
+                elif nv.dim() == 1 and (ov.shape[0], nv.shape[0]) == (odx, ndx):
+                    v[ne] = ov[oe]; done = True
+                if done:
+                    out[name] = v; moved[f"{tag}.{name}"] = "eye part"
+            return out
+
+        self.net.load_state_dict(graft(self.net.state_dict(), st["core"], "core"), strict=False)
+        if self.wo is not None and st.get("worth") is not None:
+            self.wo.load_state_dict(graft(self.wo.state_dict(), st["worth"], "worth"), strict=False)
+        oi = [i for i, (kk, s, b) in enumerate(osig[0]) if kk == "image"]; ni = self.o.img
+        for a, b in zip(oi, ni):                                            # 눈의 셈 (z, zf 고르기)도 옮김
+            self.o.zs[b].load(st["organs"]["z"].get(a), self.dev); self.o.fs[b].load(st["organs"]["f"].get(a), self.dev)
+        self.steps = st.get("steps", 0)                                     # 나이는 잇는다 (하나의 이어지는 존재)
+        return dict(same_body=False, steps=self.steps, eye_dims=int(k), old_dx=odx, new_dx=ndx, moved=moved)
+
     def load(self, path):
         st = torch.load(path, map_location=self.dev, weights_only=False)
         assert st["signature"] == self.c.signature(), "다른 몸 계약: 갈래가 같지 않다 (새 갈래를 붙이려면 알맹이를 키워야 함)"
@@ -179,4 +273,5 @@ class Mind:
         self.o.load(st["organs"])
         if self.inner and st.get("inner"):
             self.gru.load_state_dict(st["inner"]["gru"]); self.ahead.load_state_dict(st["inner"]["ahead"])
-        return st.get("steps", 0)
+        self.steps = st.get("steps", 0)                                    # 존재의 나이 (걸음)를 잇는다 (전에는 불러도 0부터 다시 세어, 저장하면 나이가 줄었다)
+        return self.steps

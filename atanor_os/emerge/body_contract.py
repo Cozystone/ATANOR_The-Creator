@@ -90,7 +90,7 @@ class Organs:
             parts.append(self.stats[i](raw[i].reshape(self.n, -1).float(), unbiased=self.c.sensors[i].kind != "audio"))
         for i in self.img:
             fr = raw[i].float()                                            # [n, H, W, 3] 0~255
-            r = self.ret[i].look(fr)
+            r = self.ret[i].look(fr); self.r = r                         # (뷰어가 중심야·주변야를 그리려고 읽음)
             z = self.E(r); self.z = z
             zf = self.FE(torch.cat([r[:, 0:3], r[:, 15:18]], 1))
             gaze = torch.stack([self.ret[i].cx, self.ret[i].cy], 1) * 2 - 1

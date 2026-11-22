@@ -992,3 +992,18 @@
 - 2026-11-22 `77ac3c99` atanor-os: R1 inner-state organ in the shared mind (GRU over feeling + act, learns by foreseeing 1-4 steps ahead, h joins the feeling); test in dark rooms running
 - 2026-11-22 `d52ea23d` atanor-os: R1 organ v1 - no behavioural change in dark rooms yet (8 lives, 2 seeds); next: probe whether h holds the spring direction
 - 2026-11-22 `dd081e6d` creator export: include the common-interface modules and new experiments (were missing from the public repo); scrub LAN addresses and key names
+- 2026-11-22 `a482dfe1` atanor-os: R1 probe - h barely holds the spring direction (0.61 vs feeling 0.62; 5x training no help): the all-feeling forecast target dilutes it; next tie memory to the bedrock (foresee future relief)
+- 2026-11-22 `2d42679e` atanor-os: memory organ tied to the bedrock (foresee future relief) - h now holds more than the feeling (0.658 vs 0.622, with feeling 0.676); behaviour test running
+- 2026-11-22 `adb25ee9` atanor-os: bedrock-tied memory - small gains in whole lives and fills on both seeds, but no navigation in the dark yet (choosing does not use memory; trust low); next: value-judged imagination
+- 2026-11-22 `0e981788` atanor-os: value-judged imagination (6-step rollouts of the core forecast, judged by the bedrock value, weighted by earned trust) - no gain in dark rooms (fills same / -23%, no navigation in the dark); off by default; next: check multi-step forecast accuracy
+- 2026-11-22 `95d1e1fe` atanor-os: the being moves to the HP laptop (user systemd service, continuous time, keeps its age); host viewer (first-person + room map + body levels, read-only); imagination diagnosis: the core forecast barely predicts wholeness change even 1 step ahead (corr 0.06), so rollouts were noise
+- 2026-11-22 `73c8c728` atanor-os: the laptop is a body, not a host for the maze - design (unnamed device channels, real insides as bedrock, safety fence); old laptop stack stopped on founder's order
+- 2026-11-22 `bae2a8f4` atanor-os: laptop body design follows the no-label principle - raw channels and branches only, order shuffled at birth, true wiring only in judge files, bedrock = hardware fence
+- 2026-11-22 `99303c53` atanor-os: laptop body plumbing v1 - unnamed shuffled channels and branches, hardware-fence bedrock, judge-only wiring, read-only viewer; random-lever run started
+- 2026-11-22 `b9ec30d7` atanor-os: diagnostics redone in room 2 (first ones were recorded in the hardest room - my mistake); memory head tells acts apart in light (2x fills) but not in the dark; imagine_mode='ahead' test running
+- 2026-11-22 `89c49731` atanor-os: laptop body sees and hears (camera + mic in memory only); first lever influence readings
+- 2026-11-22 `dd8f3bf4` atanor-os: the being wears the laptop body (wear(): eye-organ dims and middle layers carry across bodies, the rest is learned anew), sharper fovea (512x288 camera), sound lever free, foveated viewer
+- 2026-11-22 `128aa558` atanor-os: R1 memory-head imagination - no effect (R1 paused); laptop body: saccade lever proposal reviewed into LAPTOP_BODY.md section 6
+- 2026-11-22 `cd4c5276` atanor-os: laptop body judge - influence map read from the being's forecast vs true wiring, tempo-vs-heat; baseline right after wearing
+- 2026-11-22 `d7ce5171` creator export: include laptop body modules and new diagnostics; keep private laptop setup details out of the docs
+- 2026-11-22 `1c9445c2` creator export: scrub laptop hostname

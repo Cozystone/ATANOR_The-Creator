@@ -8,7 +8,7 @@ from atanor_os.emerge.body_contract import Organs
 from atanor_os.emerge.mind import Mind
 from atanor_os.emerge.room_vary import condition
 from atanor_os.emerge import room3d_gpu as G
-INNER, SEED = int(sys.argv[1]), int(sys.argv[2])
+INNER, SEED = int(sys.argv[1]), int(sys.argv[2]); IMAG = float(sys.argv[3]) if len(sys.argv) > 3 else 0.0
 dev, N, T, LIVES = "cuda", 128, 900, 8
 torch.manual_seed(SEED)
 O = Mi = None; t0 = time.time()
@@ -16,7 +16,7 @@ for life in range(LIVES):
     rows, drain = condition(1 + life % 8)
     B = RoomBody(N, rows, drain=drain, seed=SEED * 100 + life, device=dev); B.dark_every, B.dark_len = 60, 20
     if O is None:
-        O = Organs(B.c, N, dev=dev, depth="mc/mc_depth.pt"); Mi = Mind(O, B.c, N, dev=dev, inner=INNER)
+        O = Organs(B.c, N, dev=dev, depth="mc/mc_depth.pt"); Mi = Mind(O, B.c, N, dev=dev, inner=INNER, imagine=IMAG); Mi.imagine_mode = sys.argv[4] if len(sys.argv) > 4 else 'roll'
     O.reset(torch.ones(N, dtype=torch.bool, device=dev)); Mi.begin(torch.ones(N, dtype=torch.bool, device=dev))
     if Mi.wo is not None:
         Mi.wo.on = life >= 1
@@ -44,6 +44,6 @@ for life in range(LIVES):
             face_sum += float(vis[lit_now].float().sum()); face_n += int(lit_now.sum())
         if B.dead.all():
             break
-    print(f"inner {INNER} seed {SEED} life {life + 1} (room {1 + life % 8}): whole {float((~B.dead).float().mean()):.3f} | fills {float(fills.mean()):.2f} | "
+    print(f"inner {INNER} imagine {IMAG} {Mi.imagine_mode} seed {SEED} life {life + 1} (room {1 + life % 8}): whole {float((~B.dead).float().mean()):.3f} | fills {float(fills.mean()):.2f} | "
           f"in the dark: distance to nearest spring {dd_sum / max(dd_n, 1):+.4f}/step | spring in view as lights return {face_sum / max(face_n, 1):.2f} | {time.time() - t0:.0f}s", flush=True)
 print("DONE")
