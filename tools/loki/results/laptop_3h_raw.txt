@@ -1,0 +1,249 @@
+{
+ "beats": 14901,
+ "one_beat": {
+  "heat margin (bedrock)": {
+   "loki": 0.002062,
+   "core_f": 0.301846,
+   "last": 0.00219
+  },
+  "other vector": {
+   "loki": 0.000575,
+   "core_f": 0.00081,
+   "last": 0.000504
+  },
+  "thermal zones": {
+   "loki": 0.017278,
+   "core_f": 0.183572,
+   "last": 0.018928
+  },
+  "tempo readback": {
+   "loki": 0.052007,
+   "core_f": 0.01024,
+   "last": 0.078787
+  },
+  "backlight readback": {
+   "loki": 0.002446,
+   "core_f": 0.014948,
+   "last": 0.001632
+  },
+  "volume readback": {
+   "loki": 0.00226,
+   "core_f": 0.003433,
+   "last": 0.001478
+  },
+  "accelerometer": {
+   "loki": 0.074232,
+   "core_f": 0.269787,
+   "last": 0.123918
+  },
+  "microphone": {
+   "loki": 0.019728,
+   "core_f": 0.024418,
+   "last": 0.019262
+  },
+  "camera grid": {
+   "loki": 3.5e-05,
+   "last": 3.5e-05
+  }
+ },
+ "one_beat_n": {
+  "heat margin (bedrock)": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "other vector": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "thermal zones": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "tempo readback": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "backlight readback": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "volume readback": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "accelerometer": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "microphone": {
+   "loki": 14901,
+   "core_f": 14901,
+   "last": 14900
+  },
+  "camera grid": {
+   "loki": 14901,
+   "last": 14900
+  }
+ },
+ "k_beats": 256,
+ "k_beat": {
+  "heat margin (bedrock)": {
+   "loki": 0.010721,
+   "last": 0.016535,
+   "core_f": 0.242687
+  },
+  "other vector": {
+   "loki": 0.014502,
+   "last": 0.018281,
+   "core_f": 0.598844
+  },
+  "thermal zones": {
+   "loki": 0.07141,
+   "last": 0.081223,
+   "core_f": 0.997482
+  },
+  "tempo readback": {
+   "loki": 0.076676,
+   "last": 0.113246,
+   "core_f": 0.962463
+  },
+  "backlight readback": {
+   "loki": 0.108012,
+   "last": 0.152331,
+   "core_f": 1.009545
+  },
+  "volume readback": {
+   "loki": 0.109055,
+   "last": 0.140495,
+   "core_f": 1.005775
+  },
+  "accelerometer": {
+   "loki": 0.094516,
+   "last": 0.108787,
+   "core_f": 1.017091
+  },
+  "microphone": {
+   "loki": 0.038408,
+   "last": 0.024931,
+   "core_f": 0.943117
+  },
+  "camera grid": {
+   "loki": 0.002322,
+   "last": 0.002281
+  }
+ },
+ "k_beat_n": {
+  "heat margin (bedrock)": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "other vector": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "thermal zones": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "tempo readback": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "backlight readback": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "volume readback": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "accelerometer": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "microphone": {
+   "loki": 228,
+   "last": 228,
+   "core_f": 228
+  },
+  "camera grid": {
+   "loki": 228,
+   "last": 228
+  }
+ },
+ "k_beat_seconds": {
+  "mean": 184.6,
+  "min": 146.1,
+  "max": 228.4
+ },
+ "k_beat_gap_seconds": {
+  "mean": 60.8,
+  "min": 25.4,
+  "max": 104.4
+ },
+ "latency_ms": {
+  "mean": 10.13,
+  "p95": 6.66
+ },
+ "matrix_bytes": 253184,
+ "effect_map": {
+  "own tempo slow/normal/fast": {
+   "true_rank": 1,
+   "of": 39,
+   "top": [
+    "lever readback[2]",
+    "sysfs[5]",
+    "microphone[7]",
+    "accelerometer xyz[0]"
+   ]
+  },
+  "volume down/hold/up": {
+   "true_rank": 29,
+   "of": 39,
+   "top": [
+    "microphone[2]",
+    "accelerometer xyz[0]",
+    "microphone[9]",
+    "sysfs[1]"
+   ]
+  },
+  "sound: silent / tone 1-4": {
+   "true_rank": 2,
+   "of": 39,
+   "top": [
+    "sysfs[1]",
+    "microphone[2]",
+    "lever readback[2]",
+    "sysfs[5]"
+   ]
+  },
+  "backlight down/hold/up": {
+   "true_rank": 27,
+   "of": 39,
+   "top": [
+    "lever readback[2]",
+    "microphone[7]",
+    "sysfs[5]",
+    "accelerometer xyz[0]"
+   ]
+  }
+ },
+ "effect_path": "absolute-difference (effect readout untrained)"
+}6
+active
+
+[exited with code 0]

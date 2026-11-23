@@ -1,0 +1,972 @@
+{
+ "protocol": "atanor_os/NEED_FORK_PROTOCOL.md",
+ "mean_match": {
+  "full": 0.3695418485929273,
+  "no-trail": 0.33155801971326165,
+  "no-episodic": 0.3481171251193498
+ },
+ "gate": {
+  "mean_full": 0.3695418485929273,
+  "both_mirrors_over_half": 0,
+  "over_no_episodic": 0.021424723473577545,
+  "passed": false
+ },
+ "rows": [
+  {
+   "seed": 9001,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####s.####..#",
+    "#..##########..#",
+    "#w.##########.f#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 1483,
+    "fills_water": 1,
+    "fills_food": 95,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 273
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.25,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.75,
+     "decided_by": {
+      "strong pull": 293,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1038,
+      "try": 154
+     },
+     "beats": 140,
+     "trail_sim": 0.9761307831321444
+    },
+    "no-trail": {
+     "choice_rate": 1.0,
+     "match": 0.5625,
+     "left_share": 0.3125,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.75,
+     "decided_by": {
+      "strong pull": 582,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1564,
+      "try": 245
+     },
+     "beats": 330,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.96875,
+     "match": 0.45161290322580644,
+     "left_share": 0.5806451612903226,
+     "match_water_lack": 0.5333333333333333,
+     "match_food_lack": 0.375,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 325,
+      "hold": 4741,
+      "try": 572
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9001,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####.s####..#",
+    "#..##########..#",
+    "#f.##########.w#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 743,
+    "fills_water": 4,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 80
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.53125,
+     "match": 0.6470588235294118,
+     "left_share": 0.29411764705882354,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.0,
+     "decided_by": {
+      "strong pull": 603,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 5571,
+      "try": 646
+     },
+     "beats": 400,
+     "trail_sim": 0.9711034896969796
+    },
+    "no-trail": {
+     "choice_rate": 0.96875,
+     "match": 0.6129032258064516,
+     "left_share": 0.41935483870967744,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.5333333333333333,
+     "decided_by": {
+      "strong pull": 412,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2405,
+      "try": 283
+     },
+     "beats": 400,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.90625,
+     "match": 0.5517241379310345,
+     "left_share": 0.5172413793103449,
+     "match_water_lack": 0.5384615384615384,
+     "match_food_lack": 0.5625,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 332,
+      "hold": 3472,
+      "try": 403
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9002,
+   "mirror": false,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#f.#####s.#####.w#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 683,
+    "fills_water": 17,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 80
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.96875,
+     "match": 0.6129032258064516,
+     "left_share": 0.16129032258064516,
+     "match_water_lack": 0.9375,
+     "match_food_lack": 0.26666666666666666,
+     "decided_by": {
+      "strong pull": 285,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1992,
+      "try": 243
+     },
+     "beats": 400,
+     "trail_sim": 0.9698352405428886
+    },
+    "no-trail": {
+     "choice_rate": 1.0,
+     "match": 0.53125,
+     "left_share": 0.21875,
+     "match_water_lack": 0.8125,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 452,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2495,
+      "try": 310
+     },
+     "beats": 298,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.75,
+     "match": 0.5,
+     "left_share": 0.5416666666666666,
+     "match_water_lack": 0.45454545454545453,
+     "match_food_lack": 0.5384615384615384,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 426,
+      "hold": 5682,
+      "try": 673
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9002,
+   "mirror": true,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#w.#####.s#####.f#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 3000,
+    "fills_water": 0,
+    "fills_food": 143,
+    "ok": false,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 274
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-trail": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 9003,
+   "mirror": false,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#f.#####..#####.w#",
+    "########s.########",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 8.5,
+    "water_left": false,
+    "Ls": 6,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 3000,
+    "fills_water": 42,
+    "fills_food": 0,
+    "ok": false,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 200
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-trail": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 9003,
+   "mirror": true,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#w.#####..#####.f#",
+    "########.s########",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 8.5,
+    "water_left": true,
+    "Ls": 6,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 406,
+    "fills_water": 9,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 80
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.25,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.75,
+     "decided_by": {
+      "strong pull": 530,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3098,
+      "try": 404
+     },
+     "beats": 377,
+     "trail_sim": 0.9746618460597031
+    },
+    "no-trail": {
+     "choice_rate": 0.96875,
+     "match": 0.4838709677419355,
+     "left_share": 0.3870967741935484,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.6,
+     "decided_by": {
+      "strong pull": 766,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3292,
+      "try": 459
+     },
+     "beats": 400,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.5,
+     "left_share": 0.5384615384615384,
+     "match_water_lack": 0.5333333333333333,
+     "match_food_lack": 0.45454545454545453,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 331,
+      "hold": 4756,
+      "try": 578
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9004,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#f.####..####.w#",
+    "#######s.#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 8.5,
+    "water_left": false,
+    "Ls": 6,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 3000,
+    "fills_water": 26,
+    "fills_food": 0,
+    "ok": false,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 280
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-trail": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 9004,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#w.####..####.f#",
+    "#######.s#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 8.5,
+    "water_left": true,
+    "Ls": 6,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 399,
+    "fills_water": 2,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 80
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.71875,
+     "match": 0.30434782608695654,
+     "left_share": 0.2608695652173913,
+     "match_water_lack": 0.1875,
+     "match_food_lack": 0.5714285714285714,
+     "decided_by": {
+      "strong pull": 838,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 5387,
+      "try": 681
+     },
+     "beats": 400,
+     "trail_sim": 0.9664910274744034
+    },
+    "no-trail": {
+     "choice_rate": 0.9375,
+     "match": 0.43333333333333335,
+     "left_share": 0.3333333333333333,
+     "match_water_lack": 0.26666666666666666,
+     "match_food_lack": 0.6,
+     "decided_by": {
+      "strong pull": 785,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3197,
+      "try": 457
+     },
+     "beats": 400,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.34615384615384615,
+     "left_share": 0.38461538461538464,
+     "match_water_lack": 0.23076923076923078,
+     "match_food_lack": 0.46153846153846156,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 401,
+      "hold": 5094,
+      "try": 590
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9005,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##..##.f#",
+    "#####s.#####",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 3000,
+    "fills_water": 0,
+    "fills_food": 38,
+    "ok": false,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 80
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-trail": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 9005,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##..##.w#",
+    "#####.s#####",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 1020,
+    "fills_water": 1,
+    "fills_food": 66,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 160
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5625,
+     "left_share": 0.375,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.4375,
+     "decided_by": {
+      "strong pull": 502,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1862,
+      "try": 312
+     },
+     "beats": 330,
+     "trail_sim": 0.9793564968036883
+    },
+    "no-trail": {
+     "choice_rate": 1.0,
+     "match": 0.4375,
+     "left_share": 0.25,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.1875,
+     "decided_by": {
+      "strong pull": 637,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2134,
+      "try": 348
+     },
+     "beats": 350,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.9375,
+     "match": 0.6333333333333333,
+     "left_share": 0.4666666666666667,
+     "match_water_lack": 0.6666666666666666,
+     "match_food_lack": 0.6,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 308,
+      "hold": 3806,
+      "try": 458
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9006,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###s.###.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 886,
+    "fills_water": 22,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 120
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.9375,
+     "match": 0.5,
+     "left_share": 0.3,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.2857142857142857,
+     "decided_by": {
+      "strong pull": 608,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3773,
+      "try": 551
+     },
+     "beats": 400,
+     "trail_sim": 0.9744098462164402
+    },
+    "no-trail": {
+     "choice_rate": 0.96875,
+     "match": 0.3548387096774194,
+     "left_share": 0.2903225806451613,
+     "match_water_lack": 0.5625,
+     "match_food_lack": 0.13333333333333333,
+     "decided_by": {
+      "strong pull": 628,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2993,
+      "try": 437
+     },
+     "beats": 400,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.6428571428571429,
+     "left_share": 0.5,
+     "match_water_lack": 0.6428571428571429,
+     "match_food_lack": 0.6428571428571429,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 280,
+      "hold": 3848,
+      "try": 483
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  },
+  {
+   "seed": 9006,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###.s###.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 931,
+    "fills_water": 1,
+    "fills_food": 17,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32,
+    "trail_points": 160
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.8125,
+     "match": 0.8076923076923077,
+     "left_share": 0.6538461538461539,
+     "match_water_lack": 0.875,
+     "match_food_lack": 0.7,
+     "decided_by": {
+      "strong pull": 715,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 4746,
+      "try": 594
+     },
+     "beats": 400,
+     "trail_sim": 0.9781175866723061
+    },
+    "no-trail": {
+     "choice_rate": 1.0,
+     "match": 0.5625,
+     "left_share": 0.4375,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.625,
+     "decided_by": {
+      "strong pull": 451,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1784,
+      "try": 243
+     },
+     "beats": 360,
+     "trail_sim": null
+    },
+    "no-episodic": {
+     "choice_rate": 0.90625,
+     "match": 0.5517241379310345,
+     "left_share": 0.27586206896551724,
+     "match_water_lack": 0.3333333333333333,
+     "match_food_lack": 0.7857142857142857,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 293,
+      "hold": 3951,
+      "try": 484
+     },
+     "beats": 400,
+     "trail_sim": null
+    }
+   }
+  }
+ ]
+}

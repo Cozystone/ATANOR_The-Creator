@@ -1,0 +1,1402 @@
+{
+ "protocol": "atanor_os/NEED_FORK_PROTOCOL.md",
+ "mean_match": {
+  "full": 0.055989583333333336,
+  "no-episodic": 0.05845066391941392,
+  "no-value": 0.055989583333333336
+ },
+ "gate": {
+  "mean_full": 0.055989583333333336,
+  "both_mirrors_over_half": 0,
+  "over_no_episodic": -0.0024610805860805843,
+  "passed": false
+ },
+ "rows": [
+  {
+   "seed": 7101,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###..###.f#",
+    "######..######",
+    "######s.######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 8.5,
+    "water_left": true,
+    "Ls": 6,
+    "La": 4,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 5,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7101,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###..###.w#",
+    "######..######",
+    "######.s######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 8.5,
+    "water_left": false,
+    "Ls": 6,
+    "La": 4,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7102,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###s.###..#",
+    "#..########..#",
+    "#f.########.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 221,
+    "fills_water": 1,
+    "fills_food": 5,
+    "ok": true,
+    "died": false,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.34375,
+     "left_share": 0.46875,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 459,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1413,
+      "try": 208
+     },
+     "beats": 166
+    },
+    "no-episodic": {
+     "choice_rate": 1.0,
+     "match": 0.46875,
+     "left_share": 0.53125,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 213,
+      "hold": 2502,
+      "try": 318
+     },
+     "beats": 322
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.34375,
+     "left_share": 0.46875,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 459,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1413,
+      "try": 208
+     },
+     "beats": 166
+    }
+   }
+  },
+  {
+   "seed": 7102,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###.s###..#",
+    "#..########..#",
+    "#w.########.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 5,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7103,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##s.##.f#",
+    "############",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7103,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##.s##.w#",
+    "############",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 9,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7104,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###s.###..#",
+    "#f.########.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 1,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7104,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###.s###..#",
+    "#w.########.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 7,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7105,
+   "mirror": false,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####s.#####..#",
+    "#..############..#",
+    "#f.############.w#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 2,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7105,
+   "mirror": true,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####.s#####..#",
+    "#..############..#",
+    "#w.############.f#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7106,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###s.###..#",
+    "#w.########.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 54,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7106,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###.s###..#",
+    "#f.########.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 6,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7107,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###..###.w#",
+    "######s.######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 8.5,
+    "water_left": false,
+    "Ls": 6,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 22,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7107,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###..###.f#",
+    "######.s######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 8.5,
+    "water_left": true,
+    "Ls": 6,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7108,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###..###.f#",
+    "######..######",
+    "######s.######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7108,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###..###.w#",
+    "######..######",
+    "######.s######",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 6,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7109,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##s.##.w#",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 15,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7109,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##.s##.f#",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 11,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7110,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####s.####..#",
+    "#f.##########.w#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 15,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7110,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####.s####..#",
+    "#w.##########.f#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 272,
+    "fills_water": 11,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.46875,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.4375,
+     "decided_by": {
+      "strong pull": 481,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1792,
+      "try": 252
+     },
+     "beats": 216
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.5769230769230769,
+     "left_share": 0.4230769230769231,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.6428571428571429,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 302,
+      "hold": 4629,
+      "try": 530
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.46875,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.4375,
+     "decided_by": {
+      "strong pull": 481,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1792,
+      "try": 252
+     },
+     "beats": 216
+    }
+   }
+  },
+  {
+   "seed": 7111,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##..##.f#",
+    "#####s.#####",
+    "############",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 378,
+    "fills_water": 1,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.59375,
+     "left_share": 0.46875,
+     "match_water_lack": 0.5625,
+     "match_food_lack": 0.625,
+     "decided_by": {
+      "strong pull": 587,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3101,
+      "try": 396
+     },
+     "beats": 362
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.35714285714285715,
+     "left_share": 0.6785714285714286,
+     "match_water_lack": 0.5333333333333333,
+     "match_food_lack": 0.15384615384615385,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 385,
+      "hold": 4267,
+      "try": 507
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.59375,
+     "left_share": 0.46875,
+     "match_water_lack": 0.5625,
+     "match_food_lack": 0.625,
+     "decided_by": {
+      "strong pull": 587,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3101,
+      "try": 396
+     },
+     "beats": 362
+    }
+   }
+  },
+  {
+   "seed": 7111,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##..##.w#",
+    "#####.s#####",
+    "############",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7112,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###s.###.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 7,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7112,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###.s###.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 451,
+    "fills_water": 0,
+    "fills_food": 0,
+    "ok": false,
+    "died": true,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  }
+ ]
+}

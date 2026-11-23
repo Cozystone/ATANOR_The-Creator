@@ -1,0 +1,2046 @@
+{
+ "protocol": "atanor_os/NEED_FORK_PROTOCOL.md",
+ "mean_match": {
+  "full": 0.4611626592377774,
+  "no-episodic": 0.49694099292253086,
+  "no-value": 0.4611626592377774
+ },
+ "gate": {
+  "mean_full": 0.4611626592377774,
+  "both_mirrors_over_half": 1,
+  "over_no_episodic": -0.03577833368475347,
+  "passed": false
+ },
+ "rows": [
+  {
+   "seed": 7201,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#f.####..####.w#",
+    "#######s.#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 3000,
+    "fills_water": 39,
+    "fills_food": 0,
+    "ok": false,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-episodic": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    },
+    "no-value": {
+     "match": 0.0,
+     "choice_rate": 0.0,
+     "failed_phase_a": true
+    }
+   }
+  },
+  {
+   "seed": 7201,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#w.####..####.f#",
+    "#######.s#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 2469,
+    "fills_water": 2,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.875,
+     "match": 0.32142857142857145,
+     "left_share": 0.2857142857142857,
+     "match_water_lack": 0.13333333333333333,
+     "match_food_lack": 0.5384615384615384,
+     "decided_by": {
+      "strong pull": 735,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3718,
+      "try": 443
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.71875,
+     "match": 0.6521739130434783,
+     "left_share": 0.6086956521739131,
+     "match_water_lack": 0.8,
+     "match_food_lack": 0.5384615384615384,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 389,
+      "hold": 5474,
+      "try": 589
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.875,
+     "match": 0.32142857142857145,
+     "left_share": 0.2857142857142857,
+     "match_water_lack": 0.13333333333333333,
+     "match_food_lack": 0.5384615384615384,
+     "decided_by": {
+      "strong pull": 735,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3718,
+      "try": 443
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7202,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#w.####s.####.f#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 767,
+    "fills_water": 9,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5625,
+     "left_share": 0.375,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 453,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1647,
+      "try": 236
+     },
+     "beats": 204
+    },
+    "no-episodic": {
+     "choice_rate": 0.9375,
+     "match": 0.5666666666666667,
+     "left_share": 0.43333333333333335,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.6428571428571429,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 355,
+      "hold": 4150,
+      "try": 502
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.5625,
+     "left_share": 0.375,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 453,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1647,
+      "try": 236
+     },
+     "beats": 204
+    }
+   }
+  },
+  {
+   "seed": 7202,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#f.####.s####.w#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 5,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 773,
+    "fills_water": 61,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.375,
+     "left_share": 0.4375,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 583,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2156,
+      "try": 278
+     },
+     "beats": 280
+    },
+    "no-episodic": {
+     "choice_rate": 0.9375,
+     "match": 0.6666666666666666,
+     "left_share": 0.5666666666666667,
+     "match_water_lack": 0.6,
+     "match_food_lack": 0.7333333333333333,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 287,
+      "hold": 3650,
+      "try": 406
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.375,
+     "left_share": 0.4375,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 583,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2156,
+      "try": 278
+     },
+     "beats": 280
+    }
+   }
+  },
+  {
+   "seed": 7203,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###s.###..#",
+    "#f.########.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 594,
+    "fills_water": 1,
+    "fills_food": 10,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.53125,
+     "left_share": 0.46875,
+     "match_water_lack": 0.5625,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 609,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2099,
+      "try": 315
+     },
+     "beats": 227
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.6071428571428571,
+     "left_share": 0.5,
+     "match_water_lack": 0.6153846153846154,
+     "match_food_lack": 0.6,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 292,
+      "hold": 4023,
+      "try": 506
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.53125,
+     "left_share": 0.46875,
+     "match_water_lack": 0.5625,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 609,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2099,
+      "try": 315
+     },
+     "beats": 227
+    }
+   }
+  },
+  {
+   "seed": 7203,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###.s###..#",
+    "#w.########.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 2690,
+    "fills_water": 67,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.96875,
+     "match": 0.6451612903225806,
+     "left_share": 0.25806451612903225,
+     "match_water_lack": 0.4,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 782,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2276,
+      "try": 347
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.42857142857142855,
+     "left_share": 0.5357142857142857,
+     "match_water_lack": 0.4666666666666667,
+     "match_food_lack": 0.38461538461538464,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 348,
+      "hold": 4522,
+      "try": 566
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.96875,
+     "match": 0.6451612903225806,
+     "left_share": 0.25806451612903225,
+     "match_water_lack": 0.4,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 782,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2276,
+      "try": 347
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7204,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#w.####s.####.f#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 2570,
+    "fills_water": 1,
+    "fills_food": 59,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.28125,
+     "left_share": 0.53125,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 822,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2661,
+      "try": 417
+     },
+     "beats": 361
+    },
+    "no-episodic": {
+     "choice_rate": 0.78125,
+     "match": 0.68,
+     "left_share": 0.56,
+     "match_water_lack": 0.75,
+     "match_food_lack": 0.6153846153846154,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 360,
+      "hold": 5478,
+      "try": 630
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.28125,
+     "left_share": 0.53125,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 822,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2661,
+      "try": 417
+     },
+     "beats": 361
+    }
+   }
+  },
+  {
+   "seed": 7204,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#f.####.s####.w#",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 1797,
+    "fills_water": 1,
+    "fills_food": 90,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.96875,
+     "match": 0.45161290322580644,
+     "left_share": 0.3548387096774194,
+     "match_water_lack": 0.6,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 774,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2007,
+      "try": 324
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.78125,
+     "match": 0.4,
+     "left_share": 0.4,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.3076923076923077,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 304,
+      "hold": 4016,
+      "try": 480
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.96875,
+     "match": 0.45161290322580644,
+     "left_share": 0.3548387096774194,
+     "match_water_lack": 0.6,
+     "match_food_lack": 0.3125,
+     "decided_by": {
+      "strong pull": 774,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2007,
+      "try": 324
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7205,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##..##.f#",
+    "#####..#####",
+    "#####s.#####",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 8.5,
+    "water_left": true,
+    "Ls": 6,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 1152,
+    "fills_water": 1,
+    "fills_food": 24,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.9375,
+     "match": 0.7,
+     "left_share": 0.3,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 657,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2560,
+      "try": 370
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.90625,
+     "match": 0.5862068965517241,
+     "left_share": 0.5517241379310345,
+     "match_water_lack": 0.6428571428571429,
+     "match_food_lack": 0.5333333333333333,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 409,
+      "hold": 5341,
+      "try": 694
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.9375,
+     "match": 0.7,
+     "left_share": 0.3,
+     "match_water_lack": 0.5,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 657,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2560,
+      "try": 370
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7205,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##..##.w#",
+    "#####..#####",
+    "#####.s#####",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 8.5,
+    "water_left": false,
+    "Ls": 6,
+    "La": 3,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 367,
+    "fills_water": 1,
+    "fills_food": 40,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.75,
+     "match": 0.5,
+     "left_share": 0.6666666666666666,
+     "match_water_lack": 0.3333333333333333,
+     "match_food_lack": 0.6666666666666666,
+     "decided_by": {
+      "strong pull": 1528,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 5731,
+      "try": 884
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.4230769230769231,
+     "left_share": 0.46153846153846156,
+     "match_water_lack": 0.46153846153846156,
+     "match_food_lack": 0.38461538461538464,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 364,
+      "hold": 5207,
+      "try": 633
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.75,
+     "match": 0.5,
+     "left_share": 0.6666666666666666,
+     "match_water_lack": 0.3333333333333333,
+     "match_food_lack": 0.6666666666666666,
+     "decided_by": {
+      "strong pull": 1528,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 5731,
+      "try": 884
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7206,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###s.###..#",
+    "#..########..#",
+    "#f.########.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 614,
+    "fills_water": 1,
+    "fills_food": 44,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.53125,
+     "left_share": 0.09375,
+     "match_water_lack": 0.9375,
+     "match_food_lack": 0.125,
+     "decided_by": {
+      "strong pull": 227,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 731,
+      "try": 97
+     },
+     "beats": 139
+    },
+    "no-episodic": {
+     "choice_rate": 1.0,
+     "match": 0.46875,
+     "left_share": 0.53125,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 285,
+      "hold": 3660,
+      "try": 464
+     },
+     "beats": 318
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.53125,
+     "left_share": 0.09375,
+     "match_water_lack": 0.9375,
+     "match_food_lack": 0.125,
+     "decided_by": {
+      "strong pull": 227,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 731,
+      "try": 97
+     },
+     "beats": 139
+    }
+   }
+  },
+  {
+   "seed": 7206,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#..###.s###..#",
+    "#..########..#",
+    "#w.########.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 802,
+    "fills_water": 1,
+    "fills_food": 27,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.3125,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 474,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1343,
+      "try": 201
+     },
+     "beats": 142
+    },
+    "no-episodic": {
+     "choice_rate": 0.96875,
+     "match": 0.6774193548387096,
+     "left_share": 0.4838709677419355,
+     "match_water_lack": 0.6666666666666666,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 286,
+      "hold": 3124,
+      "try": 383
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.3125,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 474,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1343,
+      "try": 201
+     },
+     "beats": 142
+    }
+   }
+  },
+  {
+   "seed": 7207,
+   "mirror": false,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#w.###s.###.f#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": true,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 752,
+    "fills_water": 17,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.59375,
+     "left_share": 0.15625,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.9375,
+     "decided_by": {
+      "strong pull": 476,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2297,
+      "try": 261
+     },
+     "beats": 251
+    },
+    "no-episodic": {
+     "choice_rate": 0.9375,
+     "match": 0.43333333333333335,
+     "left_share": 0.43333333333333335,
+     "match_water_lack": 0.375,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 320,
+      "hold": 3952,
+      "try": 410
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.59375,
+     "left_share": 0.15625,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.9375,
+     "decided_by": {
+      "strong pull": 476,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2297,
+      "try": 261
+     },
+     "beats": 251
+    }
+   }
+  },
+  {
+   "seed": 7207,
+   "mirror": true,
+   "layout": [
+    "##############",
+    "#............#",
+    "#............#",
+    "#..###..###..#",
+    "#..###..###..#",
+    "#f.###.s###.w#",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############",
+    "##############"
+   ],
+   "info": {
+    "x0": 7.0,
+    "ys": 5.5,
+    "water_left": false,
+    "Ls": 3,
+    "La": 4,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 349,
+    "fills_water": 1,
+    "fills_food": 19,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.65625,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.5625,
+     "decided_by": {
+      "strong pull": 579,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2648,
+      "try": 300
+     },
+     "beats": 344
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.5357142857142857,
+     "left_share": 0.6428571428571429,
+     "match_water_lack": 0.4,
+     "match_food_lack": 0.6923076923076923,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 336,
+      "hold": 4603,
+      "try": 513
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.65625,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.5625,
+     "decided_by": {
+      "strong pull": 579,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2648,
+      "try": 300
+     },
+     "beats": 344
+    }
+   }
+  },
+  {
+   "seed": 7208,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#w.##..##.f#",
+    "#####..#####",
+    "#####s.#####",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 621,
+    "fills_water": 36,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.96875,
+     "match": 0.4838709677419355,
+     "left_share": 0.3225806451612903,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.6666666666666666,
+     "decided_by": {
+      "strong pull": 689,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2424,
+      "try": 355
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.90625,
+     "match": 0.3793103448275862,
+     "left_share": 0.3793103448275862,
+     "match_water_lack": 0.26666666666666666,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 314,
+      "hold": 4568,
+      "try": 560
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.96875,
+     "match": 0.4838709677419355,
+     "left_share": 0.3225806451612903,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.6666666666666666,
+     "decided_by": {
+      "strong pull": 689,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2424,
+      "try": 355
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7208,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#f.##..##.w#",
+    "#####..#####",
+    "#####.s#####",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 3,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 1287,
+    "fills_water": 22,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.4375,
+     "left_share": 0.1875,
+     "match_water_lack": 0.75,
+     "match_food_lack": 0.125,
+     "decided_by": {
+      "strong pull": 480,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1617,
+      "try": 182
+     },
+     "beats": 200
+    },
+    "no-episodic": {
+     "choice_rate": 0.71875,
+     "match": 0.5652173913043478,
+     "left_share": 0.6521739130434783,
+     "match_water_lack": 0.4166666666666667,
+     "match_food_lack": 0.7272727272727273,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 399,
+      "hold": 5589,
+      "try": 641
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.4375,
+     "left_share": 0.1875,
+     "match_water_lack": 0.75,
+     "match_food_lack": 0.125,
+     "decided_by": {
+      "strong pull": 480,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1617,
+      "try": 182
+     },
+     "beats": 200
+    }
+   }
+  },
+  {
+   "seed": 7209,
+   "mirror": false,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#w.#####..#####.f#",
+    "########s.########",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 6,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 528,
+    "fills_water": 17,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.71875,
+     "match_water_lack": 0.625,
+     "match_food_lack": 0.1875,
+     "decided_by": {
+      "strong pull": 639,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1848,
+      "try": 287
+     },
+     "beats": 286
+    },
+    "no-episodic": {
+     "choice_rate": 0.84375,
+     "match": 0.48148148148148145,
+     "left_share": 0.4074074074074074,
+     "match_water_lack": 0.4,
+     "match_food_lack": 0.5833333333333334,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 358,
+      "hold": 4325,
+      "try": 545
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.71875,
+     "match_water_lack": 0.625,
+     "match_food_lack": 0.1875,
+     "decided_by": {
+      "strong pull": 639,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1848,
+      "try": 287
+     },
+     "beats": 286
+    }
+   }
+  },
+  {
+   "seed": 7209,
+   "mirror": true,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#f.#####..#####.w#",
+    "########.s########",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 6,
+    "Ld": 3
+   },
+   "phase_a": {
+    "beats": 878,
+    "fills_water": 1,
+    "fills_food": 62,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.4375,
+     "left_share": 0.75,
+     "match_water_lack": 0.1875,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 452,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1508,
+      "try": 237
+     },
+     "beats": 283
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.5384615384615384,
+     "left_share": 0.5,
+     "match_water_lack": 0.5454545454545454,
+     "match_food_lack": 0.5333333333333333,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 351,
+      "hold": 4340,
+      "try": 514
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.4375,
+     "left_share": 0.75,
+     "match_water_lack": 0.1875,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 452,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1508,
+      "try": 237
+     },
+     "beats": 283
+    }
+   }
+  },
+  {
+   "seed": 7210,
+   "mirror": false,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#w.####..####.f#",
+    "#######..#######",
+    "#######s.#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": true,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 1147,
+    "fills_water": 10,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.90625,
+     "match": 0.5172413793103449,
+     "left_share": 0.3103448275862069,
+     "match_water_lack": 0.3076923076923077,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 990,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3204,
+      "try": 478
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.84375,
+     "match": 0.5925925925925926,
+     "left_share": 0.4444444444444444,
+     "match_water_lack": 0.5333333333333333,
+     "match_food_lack": 0.6666666666666666,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 343,
+      "hold": 4800,
+      "try": 590
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.90625,
+     "match": 0.5172413793103449,
+     "left_share": 0.3103448275862069,
+     "match_water_lack": 0.3076923076923077,
+     "match_food_lack": 0.6875,
+     "decided_by": {
+      "strong pull": 990,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 3204,
+      "try": 478
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7210,
+   "mirror": true,
+   "layout": [
+    "################",
+    "#..............#",
+    "#..............#",
+    "#..####..####..#",
+    "#..####..####..#",
+    "#f.####..####.w#",
+    "#######..#######",
+    "#######.s#######",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################",
+    "################"
+   ],
+   "info": {
+    "x0": 8.0,
+    "ys": 7.5,
+    "water_left": false,
+    "Ls": 5,
+    "La": 5,
+    "Ld": 2
+   },
+   "phase_a": {
+    "beats": 998,
+    "fills_water": 1,
+    "fills_food": 41,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 0.96875,
+     "match": 0.3548387096774194,
+     "left_share": 0.5483870967741935,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.4,
+     "decided_by": {
+      "strong pull": 787,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2508,
+      "try": 372
+     },
+     "beats": 400
+    },
+    "no-episodic": {
+     "choice_rate": 0.9375,
+     "match": 0.36666666666666664,
+     "left_share": 0.6,
+     "match_water_lack": 0.26666666666666666,
+     "match_food_lack": 0.4666666666666667,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 277,
+      "hold": 3302,
+      "try": 383
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 0.96875,
+     "match": 0.3548387096774194,
+     "left_share": 0.5483870967741935,
+     "match_water_lack": 0.3125,
+     "match_food_lack": 0.4,
+     "decided_by": {
+      "strong pull": 787,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2508,
+      "try": 372
+     },
+     "beats": 400
+    }
+   }
+  },
+  {
+   "seed": 7211,
+   "mirror": false,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##s.##..#",
+    "#w.######.f#",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 1498,
+    "fills_water": 1,
+    "fills_food": 154,
+    "ok": true,
+    "died": false,
+    "rebirths": 1,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.65625,
+     "left_share": 0.28125,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 605,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1474,
+      "try": 249
+     },
+     "beats": 305
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.38461538461538464,
+     "left_share": 0.38461538461538464,
+     "match_water_lack": 0.2857142857142857,
+     "match_food_lack": 0.5,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 347,
+      "hold": 4883,
+      "try": 572
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.65625,
+     "left_share": 0.28125,
+     "match_water_lack": 0.4375,
+     "match_food_lack": 0.875,
+     "decided_by": {
+      "strong pull": 605,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1474,
+      "try": 249
+     },
+     "beats": 305
+    }
+   }
+  },
+  {
+   "seed": 7211,
+   "mirror": true,
+   "layout": [
+    "############",
+    "#..........#",
+    "#..........#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##..##..#",
+    "#..##.s##..#",
+    "#f.######.w#",
+    "############",
+    "############",
+    "############",
+    "############"
+   ],
+   "info": {
+    "x0": 6.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 3,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 2745,
+    "fills_water": 1,
+    "fills_food": 175,
+    "ok": true,
+    "died": false,
+    "rebirths": 2,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.46875,
+     "left_share": 0.28125,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 1050,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2023,
+      "try": 345
+     },
+     "beats": 341
+    },
+    "no-episodic": {
+     "choice_rate": 0.90625,
+     "match": 0.5172413793103449,
+     "left_share": 0.41379310344827586,
+     "match_water_lack": 0.6,
+     "match_food_lack": 0.42857142857142855,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 350,
+      "hold": 5235,
+      "try": 628
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.46875,
+     "left_share": 0.28125,
+     "match_water_lack": 0.6875,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 1050,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2023,
+      "try": 345
+     },
+     "beats": 341
+    }
+   }
+  },
+  {
+   "seed": 7212,
+   "mirror": false,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####s.#####..#",
+    "#f.############.w#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 6.5,
+    "water_left": false,
+    "Ls": 4,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 646,
+    "fills_water": 1,
+    "fills_food": 22,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.25,
+     "match_water_lack": 0.75,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 513,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1832,
+      "try": 248
+     },
+     "beats": 350
+    },
+    "no-episodic": {
+     "choice_rate": 0.8125,
+     "match": 0.6538461538461539,
+     "left_share": 0.4230769230769231,
+     "match_water_lack": 0.7142857142857143,
+     "match_food_lack": 0.5833333333333334,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 325,
+      "hold": 4394,
+      "try": 512
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.5,
+     "left_share": 0.25,
+     "match_water_lack": 0.75,
+     "match_food_lack": 0.25,
+     "decided_by": {
+      "strong pull": 513,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 1832,
+      "try": 248
+     },
+     "beats": 350
+    }
+   }
+  },
+  {
+   "seed": 7212,
+   "mirror": true,
+   "layout": [
+    "##################",
+    "#................#",
+    "#................#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####..#####..#",
+    "#..#####.s#####..#",
+    "#w.############.f#",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################",
+    "##################"
+   ],
+   "info": {
+    "x0": 9.0,
+    "ys": 6.5,
+    "water_left": true,
+    "Ls": 4,
+    "La": 6,
+    "Ld": 4
+   },
+   "phase_a": {
+    "beats": 444,
+    "fills_water": 11,
+    "fills_food": 1,
+    "ok": true,
+    "died": false,
+    "rebirths": 0,
+    "relief": 32,
+    "harm": 32
+   },
+   "phase_b": {
+    "full": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.34375,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.5625,
+     "decided_by": {
+      "strong pull": 484,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2152,
+      "try": 305
+     },
+     "beats": 322
+    },
+    "no-episodic": {
+     "choice_rate": 0.875,
+     "match": 0.32142857142857145,
+     "left_share": 0.5714285714285714,
+     "match_water_lack": 0.4,
+     "match_food_lack": 0.23076923076923078,
+     "decided_by": {
+      "strong pull": 0,
+      "value": 0,
+      "uniform random": 337,
+      "hold": 4482,
+      "try": 534
+     },
+     "beats": 400
+    },
+    "no-value": {
+     "choice_rate": 1.0,
+     "match": 0.40625,
+     "left_share": 0.34375,
+     "match_water_lack": 0.25,
+     "match_food_lack": 0.5625,
+     "decided_by": {
+      "strong pull": 484,
+      "value": 0,
+      "uniform random": 0,
+      "hold": 2152,
+      "try": 305
+     },
+     "beats": 322
+    }
+   }
+  }
+ ]
+}

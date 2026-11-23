@@ -1,0 +1,1315 @@
+{
+ "protocol": "atanor_os/LOKI_V4_ROOM_PROTOCOL.md",
+ "rooms": [
+  6101,
+  6102,
+  6103,
+  6104,
+  6105,
+  6106,
+  6107,
+  6108,
+  6109,
+  6110,
+  6111,
+  6112
+ ],
+ "mean_grid": {
+  "full": 0.0095287659786815,
+  "noeff": 0.013912175803056925,
+  "inner": 0.011835163683845925,
+  "zero": 0.014493771005736159
+ },
+ "gates": {
+  "zero": {
+   "wins": 10,
+   "reduction": 0.3426,
+   "passed": true,
+   "wins_above_10": false
+  },
+  "inner": {
+   "wins": 10,
+   "reduction": 0.1949,
+   "passed": true,
+   "wins_above_10": false
+  },
+  "noeff": {
+   "wins": 10,
+   "reduction": 0.3151,
+   "passed": true,
+   "wins_above_10": false
+  }
+ },
+ "passed": true,
+ "mean_vector": {
+  "full": 0.02017429325375512,
+  "noeff": 0.02017429325375512,
+  "zero": 0.024725441427842536
+ },
+ "pairs_nonzero": 43,
+ "pairs_identical": 5,
+ "by_identity": {
+  "nonzero": {
+   "full": 0.010625796554746176,
+   "noeff": 0.015505506785577678,
+   "inner": 0.013132113868312784,
+   "zero": 0.01617909321570548
+  },
+  "identical": {
+   "full": 9.430302452528849e-05,
+   "noeff": 0.00020952935337845702,
+   "inner": 0.000681392097430944,
+   "zero": 0.0
+  }
+ },
+ "rows": [
+  {
+   "seed": 6101,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.02064191922545433,
+      "noeff": 0.019752265885472298,
+      "inner": 0.019944801926612854,
+      "zero": 0.019852271303534508
+     },
+     "vector_mse": {
+      "full": 0.025986265391111374,
+      "noeff": 0.025986265391111374,
+      "zero": 0.025975799188017845
+     },
+     "predicted_energy": 6.267111893976107e-05,
+     "true_energy": 0.019852271303534508
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.026282569393515587,
+      "noeff": 0.025955239310860634,
+      "inner": 0.02808760106563568,
+      "zero": 0.029703965410590172
+     },
+     "vector_mse": {
+      "full": 0.05378496274352074,
+      "noeff": 0.05378496274352074,
+      "zero": 0.04498468339443207
+     },
+     "predicted_energy": 0.00025122909573838115,
+     "true_energy": 0.029703965410590172
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.012005689553916454,
+      "noeff": 0.02069590426981449,
+      "inner": 0.010655861347913742,
+      "zero": 0.01912667788565159
+     },
+     "vector_mse": {
+      "full": 0.01480551715940237,
+      "noeff": 0.01480551715940237,
+      "zero": 0.01770668663084507
+     },
+     "predicted_energy": 0.0010634030913934112,
+     "true_energy": 0.01912667788565159
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.010724428109824657,
+      "noeff": 0.035807449370622635,
+      "inner": 0.03479103744029999,
+      "zero": 0.0387374646961689
+     },
+     "vector_mse": {
+      "full": 0.053326670080423355,
+      "noeff": 0.053326670080423355,
+      "zero": 0.07067672908306122
+     },
+     "predicted_energy": 0.008889037184417248,
+     "true_energy": 0.0387374646961689
+    }
+   ],
+   "grid": {
+    "full": 0.017413651570677757,
+    "noeff": 0.025552714709192514,
+    "inner": 0.023369825445115566,
+    "zero": 0.026855094823986292
+   },
+   "vector": {
+    "full": 0.03697585384361446,
+    "noeff": 0.03697585384361446,
+    "zero": 0.03983597457408905
+   }
+  },
+  {
+   "seed": 6102,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.009381349198520184,
+      "noeff": 0.008281763643026352,
+      "inner": 0.007262552622705698,
+      "zero": 0.00826855469495058
+     },
+     "vector_mse": {
+      "full": 0.008576149120926857,
+      "noeff": 0.008576149120926857,
+      "zero": 0.01112321950495243
+     },
+     "predicted_energy": 0.00024990944075398147,
+     "true_energy": 0.00826855469495058
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": true,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 8.99355873116292e-05,
+      "noeff": 7.312704110518098e-05,
+      "inner": 0.0026585760060697794,
+      "zero": 0.0
+     },
+     "vector_mse": {
+      "full": 0.0010301494039595127,
+      "noeff": 0.0010301494039595127,
+      "zero": 1.1639192962320521e-05
+     },
+     "predicted_energy": 8.99355873116292e-05,
+     "true_energy": 0.0
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.007481837645173073,
+      "noeff": 0.009375791996717453,
+      "inner": 0.009505425579845905,
+      "zero": 0.010174633003771305
+     },
+     "vector_mse": {
+      "full": 0.019185401499271393,
+      "noeff": 0.019185401499271393,
+      "zero": 0.012328007258474827
+     },
+     "predicted_energy": 0.0005634012632071972,
+     "true_energy": 0.010174633003771305
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.019520621746778488,
+      "noeff": 0.04041540250182152,
+      "inner": 0.008170279674232006,
+      "zero": 0.04256417974829674
+     },
+     "vector_mse": {
+      "full": 0.004437978845089674,
+      "noeff": 0.004437978845089674,
+      "zero": 0.013000298291444778
+     },
+     "predicted_energy": 0.004585862625390291,
+     "true_energy": 0.04256417974829674
+    }
+   ],
+   "grid": {
+    "full": 0.009118436044445843,
+    "noeff": 0.014536521295667626,
+    "inner": 0.006899208470713347,
+    "zero": 0.015251841861754656
+   },
+   "vector": {
+    "full": 0.008307419717311859,
+    "noeff": 0.008307419717311859,
+    "zero": 0.009115791061958589
+   }
+  },
+  {
+   "seed": 6103,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00038189918268471956,
+      "noeff": 0.00025837335851974785,
+      "inner": 2.651309478096664e-05,
+      "zero": 2.6380541839898797e-06
+     },
+     "vector_mse": {
+      "full": 0.01611129753291607,
+      "noeff": 0.01611129753291607,
+      "zero": 0.01400724332779646
+     },
+     "predicted_energy": 0.0003711192402988672,
+     "true_energy": 2.6380541839898797e-06
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.01110338419675827,
+      "noeff": 0.013413582928478718,
+      "inner": 0.015361589379608631,
+      "zero": 0.013497668318450451
+     },
+     "vector_mse": {
+      "full": 0.01767437532544136,
+      "noeff": 0.01767437532544136,
+      "zero": 0.02323685958981514
+     },
+     "predicted_energy": 0.0010038138134405017,
+     "true_energy": 0.013497668318450451
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": true,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00013961223885416985,
+      "noeff": 0.00034998953924514353,
+      "inner": 6.42144659650512e-05,
+      "zero": 0.0
+     },
+     "vector_mse": {
+      "full": 0.005199091043323278,
+      "noeff": 0.005199091043323278,
+      "zero": 1.381823039992014e-05
+     },
+     "predicted_energy": 0.00013961223885416985,
+     "true_energy": 0.0
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.014978195540606976,
+      "noeff": 0.023427659645676613,
+      "inner": 0.021301472559571266,
+      "zero": 0.023656195029616356
+     },
+     "vector_mse": {
+      "full": 0.028170742094516754,
+      "noeff": 0.028170742094516754,
+      "zero": 0.03408923000097275
+     },
+     "predicted_energy": 0.0014050565659999847,
+     "true_energy": 0.023656195029616356
+    }
+   ],
+   "grid": {
+    "full": 0.006650772789726034,
+    "noeff": 0.009362401367980056,
+    "inner": 0.009188447374981479,
+    "zero": 0.0092891253505627
+   },
+   "vector": {
+    "full": 0.016788876499049366,
+    "noeff": 0.016788876499049366,
+    "zero": 0.017836787787246067
+   }
+  },
+  {
+   "seed": 6104,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.005898462608456612,
+      "noeff": 0.005235877353698015,
+      "inner": 0.005011857021600008,
+      "zero": 0.004888708703219891
+     },
+     "vector_mse": {
+      "full": 0.03746819496154785,
+      "noeff": 0.03746819496154785,
+      "zero": 0.03693998232483864
+     },
+     "predicted_energy": 0.0004973369650542736,
+     "true_energy": 0.004888708703219891
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0004987665452063084,
+      "noeff": 0.00039854025817476213,
+      "inner": 0.0009072388638742268,
+      "zero": 0.0004576891369652003
+     },
+     "vector_mse": {
+      "full": 0.031873323023319244,
+      "noeff": 0.031873323023319244,
+      "zero": 0.028931373730301857
+     },
+     "predicted_energy": 0.00016350240912288427,
+     "true_energy": 0.0004576891369652003
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.015044008381664753,
+      "noeff": 0.02147115208208561,
+      "inner": 0.016899051144719124,
+      "zero": 0.02554015815258026
+     },
+     "vector_mse": {
+      "full": 0.014737313613295555,
+      "noeff": 0.014737313613295555,
+      "zero": 0.02329779788851738
+     },
+     "predicted_energy": 0.0015953819965943694,
+     "true_energy": 0.02554015815258026
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.019511772319674492,
+      "noeff": 0.04027828946709633,
+      "inner": 0.019982360303401947,
+      "zero": 0.04243136942386627
+     },
+     "vector_mse": {
+      "full": 0.03987095132470131,
+      "noeff": 0.03987095132470131,
+      "zero": 0.05216466262936592
+     },
+     "predicted_energy": 0.004584085661917925,
+     "true_energy": 0.04243136942386627
+    }
+   ],
+   "grid": {
+    "full": 0.010238252463750541,
+    "noeff": 0.01684596479026368,
+    "inner": 0.010700126833398826,
+    "zero": 0.018329481354157906
+   },
+   "vector": {
+    "full": 0.03098744573071599,
+    "noeff": 0.03098744573071599,
+    "zero": 0.03533345414325595
+   }
+  },
+  {
+   "seed": 6105,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00015280455409083515,
+      "noeff": 1.2204237464175094e-05,
+      "inner": 1.7654589100857265e-05,
+      "zero": 1.0513761480979156e-05
+     },
+     "vector_mse": {
+      "full": 0.0012302593095228076,
+      "noeff": 0.0012302593095228076,
+      "zero": 0.010175161063671112
+     },
+     "predicted_energy": 0.00012200601486256346,
+     "true_energy": 1.0513761480979156e-05
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00076314463512972,
+      "noeff": 0.00012964110646862537,
+      "inner": 0.00015903466555755585,
+      "zero": 0.00012428428453858942
+     },
+     "vector_mse": {
+      "full": 0.0007432337733916938,
+      "noeff": 0.0007432337733916938,
+      "zero": 6.236773515411187e-06
+     },
+     "predicted_energy": 0.0008818107307888567,
+     "true_energy": 0.00012428428453858942
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0030412666965276003,
+      "noeff": 0.0011459044180810452,
+      "inner": 0.0017390628345310688,
+      "zero": 0.0011230634991079569
+     },
+     "vector_mse": {
+      "full": 0.002579370280727744,
+      "noeff": 0.002579370280727744,
+      "zero": 0.007440161891281605
+     },
+     "predicted_energy": 0.0017426147824153304,
+     "true_energy": 0.0011230634991079569
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": true,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 4.945625551044941e-05,
+      "noeff": 0.0006030393415130675,
+      "inner": 0.0005689459503628314,
+      "zero": 0.0
+     },
+     "vector_mse": {
+      "full": 0.022845594212412834,
+      "noeff": 0.022845594212412834,
+      "zero": 0.023321092128753662
+     },
+     "predicted_energy": 4.945625551044941e-05,
+     "true_energy": 0.0
+    }
+   ],
+   "grid": {
+    "full": 0.0010016680353146512,
+    "noeff": 0.0004726972758817283,
+    "inner": 0.0006211745098880783,
+    "zero": 0.00031446538628188136
+   },
+   "vector": {
+    "full": 0.00684961439401377,
+    "noeff": 0.00684961439401377,
+    "zero": 0.010235662964305448
+   }
+  },
+  {
+   "seed": 6106,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.009468725882470608,
+      "noeff": 0.0162263885140419,
+      "inner": 0.014955333434045315,
+      "zero": 0.01701173186302185
+     },
+     "vector_mse": {
+      "full": 0.0019677176605910063,
+      "noeff": 0.0019677176605910063,
+      "zero": 0.0032247730996459723
+     },
+     "predicted_energy": 0.0013685753801837564,
+     "true_energy": 0.01701173186302185
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.03258416801691055,
+      "noeff": 0.030147060751914978,
+      "inner": 0.034002404659986496,
+      "zero": 0.03053659200668335
+     },
+     "vector_mse": {
+      "full": 0.023410318419337273,
+      "noeff": 0.023410318419337273,
+      "zero": 0.030439674854278564
+     },
+     "predicted_energy": 8.624120528111234e-05,
+     "true_energy": 0.03053659200668335
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.005702264606952667,
+      "noeff": 0.006617402657866478,
+      "inner": 0.010219010524451733,
+      "zero": 0.007590206805616617
+     },
+     "vector_mse": {
+      "full": 0.02977857179939747,
+      "noeff": 0.02977857179939747,
+      "zero": 0.022919870913028717
+     },
+     "predicted_energy": 0.0003409608034417033,
+     "true_energy": 0.007590206805616617
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.01824839599430561,
+      "noeff": 0.025134369730949402,
+      "inner": 0.022664641961455345,
+      "zero": 0.028095245361328125
+     },
+     "vector_mse": {
+      "full": 0.033869948238134384,
+      "noeff": 0.033869948238134384,
+      "zero": 0.038300562649965286
+     },
+     "predicted_energy": 0.0014742380008101463,
+     "true_energy": 0.028095245361328125
+    }
+   ],
+   "grid": {
+    "full": 0.01650088862515986,
+    "noeff": 0.01953130541369319,
+    "inner": 0.020460347644984722,
+    "zero": 0.020808444009162486
+   },
+   "vector": {
+    "full": 0.022256639029365033,
+    "noeff": 0.022256639029365033,
+    "zero": 0.023721220379229635
+   }
+  },
+  {
+   "seed": 6107,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0036324907559901476,
+      "noeff": 0.0035008015111088753,
+      "inner": 0.0035799711477011442,
+      "zero": 0.0036082419101148844
+     },
+     "vector_mse": {
+      "full": 0.0006828376208432019,
+      "noeff": 0.0006828376208432019,
+      "zero": 0.00888117030262947
+     },
+     "predicted_energy": 8.688655361765996e-05,
+     "true_energy": 0.0036082419101148844
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.008771364577114582,
+      "noeff": 0.01136351004242897,
+      "inner": 0.011105097830295563,
+      "zero": 0.011518701910972595
+     },
+     "vector_mse": {
+      "full": 0.007253719959408045,
+      "noeff": 0.007253719959408045,
+      "zero": 0.007177382707595825
+     },
+     "predicted_energy": 0.0007607711013406515,
+     "true_energy": 0.011518701910972595
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0008002105751074851,
+      "noeff": 0.0006717545911669731,
+      "inner": 0.0007432078127749264,
+      "zero": 0.0007917485199868679
+     },
+     "vector_mse": {
+      "full": 0.002121089957654476,
+      "noeff": 0.002121089957654476,
+      "zero": 4.533351238933392e-05
+     },
+     "predicted_energy": 0.0005245690117590129,
+     "true_energy": 0.0007917485199868679
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.03068588674068451,
+      "noeff": 0.04681645706295967,
+      "inner": 0.03734023869037628,
+      "zero": 0.04898488521575928
+     },
+     "vector_mse": {
+      "full": 0.0497727245092392,
+      "noeff": 0.0497727245092392,
+      "zero": 0.06433629989624023
+     },
+     "predicted_energy": 0.002191419480368495,
+     "true_energy": 0.04898488521575928
+    }
+   ],
+   "grid": {
+    "full": 0.010972488162224181,
+    "noeff": 0.015588130801916122,
+    "inner": 0.013192128870286979,
+    "zero": 0.016225894389208406
+   },
+   "vector": {
+    "full": 0.01495759301178623,
+    "noeff": 0.01495759301178623,
+    "zero": 0.020110046604713716
+   }
+  },
+  {
+   "seed": 6108,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0024820067919790745,
+      "noeff": 0.002362638246268034,
+      "inner": 0.0023304426576942205,
+      "zero": 0.0023537699598819017
+     },
+     "vector_mse": {
+      "full": 0.0017255906714126468,
+      "noeff": 0.0017255906714126468,
+      "zero": 0.010153905488550663
+     },
+     "predicted_energy": 0.000295470206765458,
+     "true_energy": 0.0023537699598819017
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0011678623268380761,
+      "noeff": 0.00041477009654045105,
+      "inner": 0.0002597268030513078,
+      "zero": 0.00034390913788229227
+     },
+     "vector_mse": {
+      "full": 0.001137296436354518,
+      "noeff": 0.001137296436354518,
+      "zero": 6.407892215065658e-06
+     },
+     "predicted_energy": 0.0011258900631219149,
+     "true_energy": 0.00034390913788229227
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0029134079813957214,
+      "noeff": 0.004889065865427256,
+      "inner": 0.0036467546597123146,
+      "zero": 0.0046348716132342815
+     },
+     "vector_mse": {
+      "full": 0.0026050277519971132,
+      "noeff": 0.0026050277519971132,
+      "zero": 0.007074222434312105
+     },
+     "predicted_energy": 0.002128147752955556,
+     "true_energy": 0.0046348716132342815
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.02458728849887848,
+      "noeff": 0.04239511489868164,
+      "inner": 0.03602856770157814,
+      "zero": 0.04362832382321358
+     },
+     "vector_mse": {
+      "full": 0.07092206925153732,
+      "noeff": 0.07092206925153732,
+      "zero": 0.10211770236492157
+     },
+     "predicted_energy": 0.002876417711377144,
+     "true_energy": 0.04362832382321358
+    }
+   ],
+   "grid": {
+    "full": 0.007787641399772838,
+    "noeff": 0.012515397276729345,
+    "inner": 0.010566372955508996,
+    "zero": 0.012740218633553013
+   },
+   "vector": {
+    "full": 0.0190974960278254,
+    "noeff": 0.0190974960278254,
+    "zero": 0.02983805954499985
+   }
+  },
+  {
+   "seed": 6109,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": true,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 8.944256842369214e-05,
+      "noeff": 1.897485344670713e-05,
+      "inner": 9.36930791795021e-06,
+      "zero": 0.0
+     },
+     "vector_mse": {
+      "full": 0.0001361924223601818,
+      "noeff": 0.0001361924223601818,
+      "zero": 0.0
+     },
+     "predicted_energy": 8.944256842369214e-05,
+     "true_energy": 0.0
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": true,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00010306847252650186,
+      "noeff": 2.5159915821859613e-06,
+      "inner": 0.00010585475683910772,
+      "zero": 0.0
+     },
+     "vector_mse": {
+      "full": 0.009847086854279041,
+      "noeff": 0.009847086854279041,
+      "zero": 0.002911680145189166
+     },
+     "predicted_energy": 0.00010306847252650186,
+     "true_energy": 0.0
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00016644650895614177,
+      "noeff": 0.0003742511325981468,
+      "inner": 0.00024711163132451475,
+      "zero": 0.00011034383351216093
+     },
+     "vector_mse": {
+      "full": 0.012651833705604076,
+      "noeff": 0.012651833705604076,
+      "zero": 0.012607424519956112
+     },
+     "predicted_energy": 0.00019324780441820621,
+     "true_energy": 0.00011034383351216093
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.006667615845799446,
+      "noeff": 0.02257896028459072,
+      "inner": 0.021580232307314873,
+      "zero": 0.026538724079728127
+     },
+     "vector_mse": {
+      "full": 0.010328227654099464,
+      "noeff": 0.010328227654099464,
+      "zero": 0.023082492873072624
+     },
+     "predicted_energy": 0.007712048944085836,
+     "true_energy": 0.026538724079728127
+    }
+   ],
+   "grid": {
+    "full": 0.0017566433489264455,
+    "noeff": 0.00574367556555444,
+    "inner": 0.005485642000849111,
+    "zero": 0.006662266978310072
+   },
+   "vector": {
+    "full": 0.008240835159085691,
+    "noeff": 0.008240835159085691,
+    "zero": 0.009650399384554476
+   }
+  },
+  {
+   "seed": 6110,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0108279287815094,
+      "noeff": 0.013968818821012974,
+      "inner": 0.014083071611821651,
+      "zero": 0.013910767622292042
+     },
+     "vector_mse": {
+      "full": 0.020870022475719452,
+      "noeff": 0.020870022475719452,
+      "zero": 0.022987479344010353
+     },
+     "predicted_energy": 0.0004428500251378864,
+     "true_energy": 0.013910767622292042
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.03558579459786415,
+      "noeff": 0.042105793952941895,
+      "inner": 0.04269171878695488,
+      "zero": 0.04414965584874153
+     },
+     "vector_mse": {
+      "full": 0.05707927048206329,
+      "noeff": 0.05707927048206329,
+      "zero": 0.0610722079873085
+     },
+     "predicted_energy": 0.0008739799377508461,
+     "true_energy": 0.04414965584874153
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.03246086835861206,
+      "noeff": 0.03911731019616127,
+      "inner": 0.03251666575670242,
+      "zero": 0.03901764750480652
+     },
+     "vector_mse": {
+      "full": 0.016871757805347443,
+      "noeff": 0.016871757805347443,
+      "zero": 0.03274284303188324
+     },
+     "predicted_energy": 0.0006079504382796586,
+     "true_energy": 0.03901764750480652
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0025271482300013304,
+      "noeff": 0.0026551326736807823,
+      "inner": 0.0030096862465143204,
+      "zero": 0.0024575330317020416
+     },
+     "vector_mse": {
+      "full": 0.004086985252797604,
+      "noeff": 0.004086985252797604,
+      "zero": 0.00874632690101862
+     },
+     "predicted_energy": 0.0008902554400265217,
+     "true_energy": 0.0024575330317020416
+    }
+   ],
+   "grid": {
+    "full": 0.020350434991996735,
+    "noeff": 0.02446176391094923,
+    "inner": 0.02307528560049832,
+    "zero": 0.024883901001885533
+   },
+   "vector": {
+    "full": 0.024727009003981948,
+    "noeff": 0.024727009003981948,
+    "zero": 0.03138721431605518
+   }
+  },
+  {
+   "seed": 6111,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0006920518935658038,
+      "noeff": 0.0013218767708167434,
+      "inner": 0.000892536889296025,
+      "zero": 0.0013643380952998996
+     },
+     "vector_mse": {
+      "full": 0.00046728429151698947,
+      "noeff": 0.00046728429151698947,
+      "zero": 2.9760965389868943e-06
+     },
+     "predicted_energy": 0.00047610767069272697,
+     "true_energy": 0.0013643380952998996
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.01391285378485918,
+      "noeff": 0.03667233884334564,
+      "inner": 0.029826568439602852,
+      "zero": 0.03681902214884758
+     },
+     "vector_mse": {
+      "full": 0.060312751680612564,
+      "noeff": 0.060312751680612564,
+      "zero": 0.07279714941978455
+     },
+     "predicted_energy": 0.005708978045731783,
+     "true_energy": 0.03681902214884758
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.010464467108249664,
+      "noeff": 0.006667196750640869,
+      "inner": 0.009466958232223988,
+      "zero": 0.007095487788319588
+     },
+     "vector_mse": {
+      "full": 0.06306178867816925,
+      "noeff": 0.06306178867816925,
+      "zero": 0.0870232880115509
+     },
+     "predicted_energy": 0.0032271109521389008,
+     "true_energy": 0.007095487788319588
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.022880787029862404,
+      "noeff": 0.04366713762283325,
+      "inner": 0.028458312153816223,
+      "zero": 0.04392312094569206
+     },
+     "vector_mse": {
+      "full": 0.06212026998400688,
+      "noeff": 0.06212026998400688,
+      "zero": 0.09127623587846756
+     },
+     "predicted_energy": 0.003516779514029622,
+     "true_energy": 0.04392312094569206
+    }
+   ],
+   "grid": {
+    "full": 0.011987539954134263,
+    "noeff": 0.022082137496909127,
+    "inner": 0.017161093928734772,
+    "zero": 0.022300492244539782
+   },
+   "vector": {
+    "full": 0.04649052365857642,
+    "noeff": 0.04649052365857642,
+    "zero": 0.0627749123515855
+   }
+  },
+  {
+   "seed": 6112,
+   "pairs": [
+    {
+     "beat": 128,
+     "substitutions": 4,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.001692335121333599,
+      "noeff": 0.0007990825106389821,
+      "inner": 0.0009337042574770749,
+      "zero": 0.0008360459469258785
+     },
+     "vector_mse": {
+      "full": 0.007334882393479347,
+      "noeff": 0.007334882393479347,
+      "zero": 0.007874204777181149
+     },
+     "predicted_energy": 0.0015622737118974328,
+     "true_energy": 0.0008360459469258785
+    },
+    {
+     "beat": 168,
+     "substitutions": 8,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.0003190942807123065,
+      "noeff": 1.3953907000541221e-05,
+      "inner": 0.0005756456521339715,
+      "zero": 1.3550447874877136e-05
+     },
+     "vector_mse": {
+      "full": 0.0009422805160284042,
+      "noeff": 0.0009422805160284042,
+      "zero": 5.512627467396669e-05
+     },
+     "predicted_energy": 0.0002912972413469106,
+     "true_energy": 1.3550447874877136e-05
+    },
+    {
+     "beat": 208,
+     "substitutions": 12,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 1.2623964721569791e-05,
+      "noeff": 3.749510142370127e-05,
+      "inner": 0.0005534146330319345,
+      "zero": 2.6492213578421797e-07
+     },
+     "vector_mse": {
+      "full": 0.012161926366388798,
+      "noeff": 0.012161926366388798,
+      "zero": 0.013878177851438522
+     },
+     "predicted_energy": 1.328884536633268e-05,
+     "true_energy": 2.6492213578421797e-07
+    },
+    {
+     "beat": 248,
+     "substitutions": 16,
+     "identical": false,
+     "path": {
+      "full": "v4-grid-effect (trained) + absolute difference off-grid",
+      "noeff": "absolute-difference (effect readout untrained)"
+     },
+     "grid_mse": {
+      "full": 0.00024304406542796642,
+      "noeff": 0.0001630674087209627,
+      "inner": 0.0031464777421206236,
+      "zero": 0.00020624282478820533
+     },
+     "vector_mse": {
+      "full": 0.00520976260304451,
+      "noeff": 0.00520976260304451,
+      "zero": 0.005655587185174227
+     },
+     "predicted_energy": 0.00019379088189452887,
+     "true_energy": 0.00020624282478820533
+    }
+   ],
+   "grid": {
+    "full": 0.0005667743580488604,
+    "noeff": 0.0002533997319460468,
+    "inner": 0.001302310571190901,
+    "zero": 0.0002640260354311863
+   },
+   "vector": {
+    "full": 0.006412212969735265,
+    "noeff": 0.006412212969735265,
+    "zero": 0.006865774022116966
+   }
+  }
+ ]
+}

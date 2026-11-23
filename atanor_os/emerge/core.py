@@ -198,6 +198,46 @@ class Core(nn.Module):
             more = more + self.far * sc * ((d0 - dh).clamp(min=0) - (d0 - d2).clamp(min=0)).clamp(min=0)
         return more, came > 0.05
 
+    # ---- 길 기억 (2026-11-23, 역방향 재생의 가장 작은 꼴): 몸 안이 오른 순간, 거기까지 지나온 길의 점들 (느낀 것, 한 몸짓)을 어느 모자람이 풀렸나와 함께 든다 ----
+    def enable_trail(self, k=512):
+        ni = self.inside.stop - self.inside.start; dev = self.rel_x.device
+        self.register_buffer("trl_x", torch.zeros(k, self.dx, device=dev)); self.register_buffer("trl_a", torch.zeros(k, dtype=torch.long, device=dev))
+        self.register_buffer("trl_de", torch.zeros(k, ni, device=dev)); self.register_buffer("trl_n", torch.zeros((), dtype=torch.long, device=dev))
+        self.register_buffer("trl_c", torch.zeros((), dtype=torch.long, device=dev))
+        self.trail = True
+
+    @torch.no_grad()
+    def keep_trail(self, de, xs, a):
+        """de [ni] 풀린 것, xs [p, dx] 지나온 길의 점에서 느낀 것, a [p] 그때 한 몸짓. 크기 고정: 가득 차면 가장 오래된 점부터 내준다."""
+        k = self.trl_x.shape[0]
+        for i in range(len(a)):
+            j = int(self.trl_c) % k
+            self.trl_x[j], self.trl_a[j], self.trl_de[j] = xs[i], a[i], de.clamp(min=0)
+            self.trl_c += 1; self.trl_n = torch.clamp(self.trl_n + 1, max=k)
+
+    @torch.no_grad()
+    def trail_pull(self, x):
+        """x [B, dx] -> 행동마다 길 끌림 [B, m], 뚜렷한가 [B]. 가장 급한 모자람이 풀렸던 길의 점들 가운데 지금과 닮은 점에서 그때 한 몸짓에,
+        지금이 그 점과 닮은 만큼 끌린다 (끌림 pull의 '그때 한 것'과 같은 눈금 10). 닮음의 잣대는 다침의 기억과 같다 (점들 사이 흩어짐으로 나눈 거리)."""
+        n = int(self.trl_n); B = x.shape[0]
+        if n < 2:
+            return torch.zeros(B, self.m, device=x.device), torch.zeros(B, dtype=torch.bool, device=x.device)
+        full = (1 - x[:, self.inside]).clamp(min=0); top = full.argmax(1); nv = full.max(1).values
+        dn = F.normalize(self.trl_de[:n], dim=-1)                                  # [n, ni]
+        mine = dn[:, top].t() > 0.5                                                  # [B, n] 이 모자람이 풀린 길의 점인가
+        tx = self.trl_x[:n]
+        other = torch.ones(self.dx, dtype=torch.bool, device=x.device); other[self.inside] = False
+        q = 1.0 / (tx[:, other].var(0, unbiased=False) + 0.02); wt = torch.zeros(self.dx, device=x.device); wt[other] = q / q.mean()
+        dist = ((x[:, None] - tx[None]) ** 2 * wt).sum(-1) / other.sum()           # [B, n]
+        dist = torch.where(mine, dist, torch.full_like(dist, float("inf")))
+        has = mine.any(1)
+        w = torch.softmax(-dist * 4.0, 1).nan_to_num(0.0)
+        sim = torch.exp(-dist.min(1).values.clamp(max=50) * 2.0) * has
+        self.trail_sim = sim
+        did = w @ self.same[self.trl_a[:n]]
+        s = (nv ** 2 * sim)[:, None] * 10.0 * did
+        return s, has & (nv ** 2 * sim > 0.02)
+
     # ---- 끌림 ----
     @torch.no_grad()
     def pull(self, x):

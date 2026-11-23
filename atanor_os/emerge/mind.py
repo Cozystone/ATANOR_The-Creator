@@ -131,6 +131,8 @@ class Mind:
         else:
             novel = torch.ones(n, dtype=torch.bool, device=d)
         sc, strong = self.net.pull(x)
+        if getattr(self.net, "trail", False):
+            ts, tst = self.net.trail_pull(x); sc = sc + ts; strong = strong | tst
         if self.harm and int(self.net.harm_n) > 0:
             av = self.net.avoid(x); sc = sc + self.harm * av; strong = strong | (av.abs().max(1).values > 0.02)
         sc = sc - TIRE * self.fut
@@ -145,16 +147,25 @@ class Mind:
             if lw is not None:
                 sc = sc + lw
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
-        rnd = torch.randint(0, self.M, (n,), device=d)
+        rnd = torch.randint(0, self.M, (n,), device=d); usedv = torch.zeros(n, dtype=torch.bool, device=d)
         if lw is not None:
             byv = torch.multinomial(torch.softmax(lw / LOOSE, 1), 1)[:, 0]
-            rnd = torch.where(torch.rand(n, device=d) < self.wo.earned(), byv, rnd)
+            usedv = torch.rand(n, device=d) < self.wo.earned()
+            rnd = torch.where(usedv, byv, rnd)
         pick = torch.where(strong, pick, rnd)
         gap = sc.max(1).values - sc.gather(1, self.cur[:, None])[:, 0]
         pre = strong & (gap > 2.0 * sc.std(1).clamp(min=1e-6))
         again = novel | pre | self.cut
         self.cur = torch.where(again, pick, self.cur)
-        act = torch.where(torch.rand(n, device=d) < self.try_p, torch.randint(0, self.M, (n,), device=d), self.cur)
+        tried = torch.rand(n, device=d) < self.try_p
+        act = torch.where(tried, torch.randint(0, self.M, (n,), device=d), self.cur)
+        # 재는 쪽 기록 (고름을 바꾸지 않음): 이 박자의 몸짓을 누가 정했나 - 0 강한 끌림 (기억·다침·헛됨·값을 더한 점수), 1 값 (끌림이 약할 때 믿음만큼),
+        # 2 고른 무작위 (끌림이 약할 때), 3 하던 것 유지, 4 시도
+        src = torch.where(strong, 0, torch.where(usedv, 1, 2)); src = torch.where(again, src, torch.full_like(src, 3)); src = torch.where(tried, torch.full_like(src, 4), src)
+        self.src = src
+        if getattr(self, "src_count", None) is None or self.src_count.shape[0] != n:
+            self.src_count = torch.zeros(n, 5, dtype=torch.long, device=d)
+        self.src_count[torch.arange(n, device=d), src] += 1
         self.steps += 1
         return act
 
@@ -166,6 +177,8 @@ class Mind:
             ok = ~died & ~cut & (rise > 0.01).any(1)
             if ok.any():
                 self.net.keep(rise[ok], x[ok], act[ok])
+                if getattr(self.net, "trail", False):
+                    self.keep_trail(ok, rise)
             if self.wo is not None:
                 wdrop = (self.wo.whole(x) - self.wo.whole(x2))
                 drop = torch.where(died, torch.ones_like(wdrop), wdrop.clamp(min=0))
@@ -204,6 +217,27 @@ class Mind:
             self.net.eval()
         self.prev = (x, act); self.cut = cut.clone()
 
+    def use_trail(self, L=160, S=4, k=512):
+        """길 기억을 켠다 (2026-11-23): 몸 안이 오른 순간 지난 L박자의 길에서 S박자마다 한 점씩 (느낀 것, 한 몸짓)을 든다. 한 몸이 L/2박자 안에 다시 담지 않는다 (샘에서 여러 번 마셔도 길은 하나)."""
+        self.net.enable_trail(k); self.trail_L, self.trail_S = L, S
+        self.trail_last = torch.full((self.n,), -10 ** 9, dtype=torch.long)
+
+    @torch.no_grad()
+    def keep_trail(self, ok, rise):
+        L, S = self.trail_L, self.trail_S
+        for j in torch.nonzero(ok)[:, 0].tolist():
+            if self.steps - int(self.trail_last[j]) < L // 2:
+                continue
+            xs, aa = [], []
+            for k in range(1, min(L, len(self.buf)) + 1):
+                bx, ba, _, bok = self.buf[-k]
+                if float(bok[j]) < 0.5:                                   # 끊김 (죽음·옮김) 너머는 이 길이 아니다
+                    break
+                if k % S == 0:
+                    xs.append(bx[j]); aa.append(ba[j])
+            if xs:
+                self.net.keep_trail(rise[j], torch.stack(xs), torch.stack(aa)); self.trail_last[j] = self.steps
+
     def save(self, path):
         ring = ("bx", "bx2", "br", "bd", "ba", "bp", "bi", "bn")          # 값의 되감기 고리 (해마의 단기 겪음)는 존재 파일에 넣지 않는다: 배운 것은 무게에 굳어 있다 (기억은 크기 고정, 가볍게)
         wst = {k: v for k, v in self.wo.state_dict().items() if k not in ring} if self.wo is not None else None
@@ -229,7 +263,7 @@ class Mind:
         assert ndx2 == ndx and odx == st["core"]["f.4.weight"].shape[0], "눈 칸 배치를 맞추지 못함"
         k = min(len(oe), len(ne)); oe, ne = torch.tensor(oe[:k]), torch.tensor(ne[:k])
         oc = st["core"]["f.0.weight"].shape[1] - odx; nc = self.net.f[0].weight.shape[1] - ndx
-        skip = ("rel_", "fnd_", "harm_", "slow_", "e2", "t2", "ascale", "oc")
+        skip = ("rel_", "fnd_", "harm_", "slow_", "trl_", "e2", "t2", "ascale", "oc")
         moved = {}
 
         def graft(new_sd, old_sd, tag):

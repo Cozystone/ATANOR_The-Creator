@@ -85,8 +85,17 @@ def main():
     ap.add_argument("--view_port", type=int, default=0); ap.add_argument("--out", default="being/laptop/judge.json"); ap.add_argument("--hold", type=int, default=5)
     ap.add_argument("--load", default=""); ap.add_argument("--being", default="being/atanor_laptop.pt"); ap.add_argument("--depth", default="model/mc_depth.pt")
     ap.add_argument("--threads", type=int, default=4); ap.add_argument("--save_every", type=int, default=600)
+    ap.add_argument("--loki", default="", help="LOKI v4 checkout (pinned 24e2313); empty = off (the baseline life)")
+    ap.add_argument("--loki_state", default="being/laptop/loki_v4.npz"); ap.add_argument("--loki_k", type=int, default=256)
+    ap.add_argument("--body", default="laptop", help="laptop | mock (tools/loki/mock_laptop.py, no hardware; judge-side practice)")
+    ap.add_argument("--no_sleep", action="store_true", help="mock only: do not wait the gap in real time (accelerated practice, kept apart)")
     a = ap.parse_args(); torch.set_num_threads(a.threads)
-    B = LaptopBody(seed=a.seed); view = ViewServer(a.view_port, page=PAGE) if a.view_port else None
+    if a.body == "mock":
+        from tools.loki.mock_laptop import MockLaptop
+        B = MockLaptop(seed=a.seed)
+    else:
+        B = LaptopBody(seed=a.seed)
+    view = ViewServer(a.view_port, page=PAGE) if a.view_port else None
     os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
     json.dump(B.wiring(), open(os.path.join(os.path.dirname(a.out) or ".", "judge_wiring.json"), "w"), ensure_ascii=False, indent=1)
     O = Organs(B.c, 1, dev="cpu", depth=a.depth); Mi = None
@@ -105,6 +114,28 @@ def main():
     LS, EV, XS = [], [], []; t0 = time.time(); step = 0; last_w = time.time(); last_v = 0.0
     no = torch.zeros(1, dtype=torch.bool)
     raw = B.raw(); xr = O(raw); x = Mi.feel(xr) if Mi else xr
+    LB = LE = None
+    if a.loki:                                                              # LOKI organ, judged in parallel - it does not take part in choosing
+        from .loki_bridge import LokiBridge, LokiEval
+        LB = LokiBridge(B.c, O, path=a.loki, wiring_id=B.wiring_id())
+        loaded = os.path.exists(a.loki_state) and LB.restore(a.loki_state)
+        print("loki v4 organ", "restored" if loaded else "fresh", "matrix bytes", LB.mem.state_bytes, "width", LB.width, "grid", LB.grid, flush=True)
+        LB.begin(raw, xr, B.available())
+        wi = B.wiring(); dn = []                                            # judge side: LOKI dim -> device (names never reach the organ)
+        for k in O.bed + O.vec:
+            dev = wi["sensors"][k]["device"].split(":")[0]; n = int(np.prod(B.c.sensors[k].shape)); perm = wi["sensors"][k]["within_order"] or list(range(n))
+            dn += [f"{'microphone' if dev.startswith('microphone') else dev}[{perm[q]}]" for q in range(n)]
+        nth = len(B.thermal); G = {}
+        for i, nm in enumerate(dn):
+            g = {"lever readback[0]": "backlight readback", "lever readback[1]": "volume readback", "lever readback[2]": "tempo readback", "insides[0]": "heat margin (bedrock)"}.get(nm)
+            if g is None:
+                g = ("thermal zones" if nm.startswith("sysfs[") and int(nm[6:-1]) < nth else "microphone" if nm.startswith("microphone") else
+                     "accelerometer" if nm.startswith("accelerometer") else "other vector")
+            G.setdefault(g, []).append(i)
+        G["camera grid"] = list(range(LB.width - LB.gsize, LB.width))
+        LE = LokiEval(LB, G, k=a.loki_k); last_l = time.time(); last_e = time.time(); emap = {}
+        TRUEDEV = {"backlight": ["lever readback[0]"], "volume": ["lever readback[1]"], "own": ["lever readback[2]"], "sound": [f"microphone[{q}]" for q in range(16)]}
+        true_dims = {j: [dn.index(d) for d in TRUEDEV[lv[0].split(" ")[0].rstrip(":")] if d in dn] for j, lv in enumerate(B.levers)}
     while not a.minutes or time.time() - t0 < a.minutes * 60:
         ts = time.time(); names, ev = elements(B)
         if a.mode == "random":
@@ -120,10 +151,36 @@ def main():
             sig = [lever_sig[lv[0].split(" ")[0].rstrip(":")](o) for lv, o in zip(B.levers, B.last_opts)]
         else:
             sig = [0.0] * len(B.levers)
+        if LB is not None:                                                  # forecast after the act, before the next raw
+            tl = time.time(); LB.forecast(act)
+            fpred = Mi.net.foresee(x)[0, act].detach().numpy() if (Mi is not None and act is not None) else None
+            lat = time.time() - tl
         spent = time.time() - ts
-        if spent < B.gap:
+        if spent < B.gap and not a.no_sleep:
             time.sleep(B.gap - spent)                                       # 세계가 흐른 뒤에 본다 (연속 시간)
         raw = B.raw(); xr2 = O(raw)
+        if LB is not None:                                                  # the next raw arrived: score, then learn (same raw, same O output as the Mind's)
+            tl = time.time(); scored = LB.arrive(raw, xr2, act, B.available())
+            LE.beat(scored, x, fpred, act, xr2, time.time(), gap=B.gap)
+            if scored is not None:
+                def roll(acts, z0=(Mi.feel(xr2) if Mi else xr2).clone()):
+                    with torch.no_grad():
+                        z = z0
+                        for q in acts:
+                            if q is not None:
+                                z = Mi.net.foresee(z)[:, q]
+                                z = torch.cat([z[:, :LB.nbed].clamp(0, 1), z[:, LB.nbed:].clamp(-1, 1)], 1)
+                        return z[0].numpy()
+                LE.snapshot(time.time(), scored[1], roll if Mi is not None else None)
+            LE.lat.append(1000 * (lat + time.time() - tl)); LE.lat = LE.lat[-2000:]
+            if time.time() - last_e > 300:                                  # judge: LOKI's own branch -> channel map (read-only)
+                from .loki_bridge import effect_ranks
+                last_e = time.time(); er = effect_ranks(LB, true_dims, seed=LE.t)
+                emap = {B.levers[j][0]: dict(true_rank=v["true_rank"], of=v["of"], top=[dn[i] for i in v["top"]]) for j, v in er.items()}
+            if time.time() - last_l > 60:
+                last_l = time.time(); json.dump(dict(LE.report(), effect_map=emap, effect_path=LB.effect([0], [0])[1]), open(os.path.join(os.path.dirname(a.out) or ".", "loki_eval.json"), "w"), ensure_ascii=False, indent=1)
+            if LE.t % a.save_every == 0:
+                LB.save(a.loki_state)                                       # last-sense anchors blanked (no camera / mic moment on disk)
         if Mi is not None:
             Mi.carry(xr, torch.tensor([act]), no); x2 = Mi.feel(xr2)
             Mi.after(x, torch.tensor([act]), x2, no, no); x, xr = x2, xr2
@@ -158,9 +215,13 @@ def main():
             json.dump(dict(time=time.strftime("%Y-%m-%d %H:%M:%S %z"), mode=a.mode, steps=step, age=(Mi.steps if Mi else None), window=len(LS), top_influence=B._inf,
                            lever_use=[np.bincount(L[:, j].astype(int) + 1, minlength=3).tolist() for j in range(len(B.levers))],
                            trust=(float(Mi.wo.earned()) if Mi and Mi.wo is not None else None), camera_ok=B.cam.ok, mic_ok=B.mic.ok,
+                           decided_by=(dict(zip(["strong pull", "value", "uniform random", "hold", "try"], [int(v) for v in Mi.src_count[0].tolist()]))
+                                       if Mi is not None and getattr(Mi, "src_count", None) is not None else None),
                            tempo_vs_heat=tempo_heat(B, names, L, E)), open(a.out, "w"), ensure_ascii=False, indent=1)
     if Mi is not None:
         Mi.save(a.being)
+    if LB is not None:
+        LB.save(a.loki_state); json.dump(LE.report(), open(os.path.join(os.path.dirname(a.out) or ".", "loki_eval.json"), "w"), ensure_ascii=False, indent=1)
 
 
 if __name__ == "__main__":

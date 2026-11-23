@@ -5,7 +5,7 @@
 울타리 (몸짓을 대신 고르지 않고 바닥만 막음): 밝기 바닥, 소리 크기 상한, 조용한 시간 (23-8시)엔 소리 레버가 소리를 내지 않음, 과열이면 셈을 늦춤.
 카메라·마이크: 메모리에서만 (날것을 저장하지 않고 노트북 밖으로 보내지 않음 - 뷰어는 존재가 보는 낮은 해상도만). 접근 권한이 없으면 그 칸은 0 (어둠·고요).
 입력 장치는 사건의 수만 센다 (무엇을 쳤는지 읽지 않음)."""
-import glob, os, random, struct, subprocess, threading, time
+import json, glob, os, random, struct, subprocess, threading, time
 import numpy as np
 import torch
 from .body_contract import Channel, Contract
@@ -152,6 +152,13 @@ class LaptopBody:
         return dict(sensors=[dict(slot=k, device=p[0], kind=p[1], within_order=self.perm.get(k)) for k, p in enumerate(self.phys)],
                     motors=[dict(branch=j, lever=lv[0], option_order=self.opt[j]) for j, lv in enumerate(self.levers)])
 
+    def wiring_id(self):
+        """opaque fingerprint of this body's shuffle (slot order, within-slot order, branch order, option order) - no names, no meanings.
+        Lets an organ refuse a saved state made for a differently wired body of the same shape."""
+        import hashlib
+        key = json.dumps([[p[0] for p in self.phys], {str(k): v for k, v in self.perm.items()}, [lv[0] for lv in self.levers], self.opt])
+        return hashlib.sha256(key.encode()).hexdigest()[:16]
+
     def heat(self):
         return max([_read(t) / 1000 for t in self.thermal] or [50.0])
 
@@ -193,6 +200,18 @@ class LaptopBody:
         if not self.cam.ok or self.cam.last is None:
             return np.zeros((H, W, 3), dtype=np.uint8)                       # 어둠
         return np.frombuffer(self.cam.last, dtype=np.uint8).reshape(H, W, 3)
+
+    def available(self):
+        """per slot (contract order): is the nerve delivering? camera / microphone process alive with a frame; the rest always. No names."""
+        out = []
+        for p in self.phys:
+            if p[1] == "image":
+                out.append(bool(self.cam.ok and self.cam.last is not None))
+            elif p[1] == "audio":
+                out.append(bool(self.mic.ok and self.mic.last is not None))
+            else:
+                out.append(True)
+        return out
 
     def raw(self):
         out = []; self.last_phys = []

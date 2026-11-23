@@ -1011,3 +1011,17 @@
 - 2026-11-23 `22ab076e` atanor-os: laptop 3h verdict - tempo lever only (rank 1/39), volume/backlight stalled under accelerometer noise; no rest when hot (corr confounded by tempo heating)
 - 2026-11-23 `dd12b211` senses: Stat spread over time and bodies - single-body laptop had every feeling saturated to +-1 (spread stuck at floor); explains 3h verdict pattern
 - 2026-11-23 `0f7debc0` atanor-os: laptop judge on real recent feelings + buffer dump; after spread fix volume/backlight reach rank 5/4 within 30 min
+- 2026-11-23 `77f4c1d8` creator export: include lap_diag; decode git output as utf-8
+- 2026-11-23 `72713f5f` loki v4 organ: contract-only bridge (Stat feelings -> [0,1], 4x8 grid from declared shape, one-hot branch motors), per-beat forecast/arrive in laptop_live (parallel, LOKI off = baseline), judge-side 1/256-beat eval, wiring+version bound private save, mock laptop + 13 tests
+- 2026-11-23 `281192ed` loki v4 room test: preregistration (rooms 6101-6112, gates vs zero / Inner / LOKI no-effect) before any measurement
+- 2026-11-23 `401442f2` loki v4 room test PASS (rooms 6101-6112): grid effect MSE 0.00953 vs zero 0.01449 (-34%, 10/12), Inner 0.01184 (-19%, 10/12), LOKI no-effect 0.01391 (-32%, 10/12)
+- 2026-11-23 `eba39253` loki v4: laptop effect map judge (predict_effect branch->channel ranks), record integration + room PASS in EMERGE_PLAN
+- 2026-11-23 `6f5d41f9` need fork test: preregistration (T rooms 7101-7112 + mirrors, water vs food lack at the same start) before any run; Mind.choose decision-source counters (no behaviour change)
+- 2026-11-23 `933d94bc` need fork test FAIL (mean match 0.056; 21/24 layouts died before experiencing both springs; 3 experienced at chance); decision sources show strong pull + hold, not uniform random
+- 2026-11-23 `5a42a2d9` need fork test v2: preregistration (seeds 7201-7212, drain 1/360, rebirth with memory in phase A) with written prediction, before running
+- 2026-11-23 `9a21734f` need fork v2 FAIL as predicted: experience now 23/24, junction choice at chance (0.48 full vs 0.52 no-episodic); side habits, not need; bottleneck = place/path memory (R1)
+- 2026-11-23 `80b32bb2` laptop 3h after spread fix: tempo 1, sound 4, volume 20, backlight 18 (30-min gain did not hold)
+- 2026-11-23 `42d6e2db` loki v4 laptop 3h: 256-beat forecasts beat last value in 7/9 groups (heat margin -35%, thermal -12%), core f diverges; 1-beat ~ last value; effect map tempo 1 / sound 2 / volume 29 / backlight 27
+- 2026-11-23 `061b0f75` laptop decision sources: strong pull 145 / hold 38 / try 18 / random 0 of 201 - correct the 'nearly random' reading
+- 2026-11-23 `2a450864` path memory (trail) dev probe on need fork 9001-9006: full .554 / no-trail .497 / no-episodic .522 - similarity saturated (.97), not a verdict; trail off by default; founder concern recorded (memory->action link is hand-wired)
+- 2026-11-23 `f8b843f5` export: add loki_bridge, LOKI/need-fork tools and results; scrub ext path
