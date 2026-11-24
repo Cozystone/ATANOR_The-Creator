@@ -1,0 +1,161 @@
+{
+ "protocol": "atanor_os/P1_PATH_PROTOCOL.md (D33b)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "loss": 3.861,
+   "units_with_relief": [
+    5,
+    12
+   ],
+   "reach": {
+    "map": {
+     "junction": [
+      1.0,
+      1.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      1.0,
+      0.75
+     ]
+    },
+    "other inside's map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0,
+      0.0
+     ]
+    },
+    "shuffled map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0,
+      0.0
+     ]
+    }
+   }
+  },
+  {
+   "layout": "9102_0",
+   "loss": 3.993,
+   "units_with_relief": [
+    6,
+    4
+   ],
+   "reach": {
+    "map": {
+     "junction": [
+      1.0,
+      1.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0625,
+      0.0
+     ]
+    },
+    "other inside's map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0,
+      0.0
+     ]
+    },
+    "shuffled map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0,
+      0.0
+     ]
+    }
+   }
+  },
+  {
+   "layout": "9103_0",
+   "loss": 3.863,
+   "units_with_relief": [
+    2,
+    5
+   ],
+   "reach": {
+    "map": {
+     "junction": [
+      0.6875,
+      1.0
+     ],
+     "far": [
+      0.3125,
+      0.875
+     ],
+     "stem": [
+      0.625,
+      1.0
+     ]
+    },
+    "other inside's map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0,
+      0.0
+     ]
+    },
+    "shuffled map": {
+     "junction": [
+      0.0,
+      0.0
+     ],
+     "far": [
+      0.0,
+      0.0
+     ],
+     "stem": [
+      0.0625,
+      0.0
+     ]
+    }
+   }
+  }
+ ]
+}

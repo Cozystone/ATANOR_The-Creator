@@ -1,0 +1,332 @@
+{
+ "protocol": "atanor_os/P1_PATH_PROTOCOL.md (P1a)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "arms": {
+    "own": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.19,
+       "per_cell": 0.82
+      },
+      "hungry": {
+       "per_state": 0.34,
+       "per_cell": 0.93
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.125
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0625
+      ]
+     }
+    },
+    "own-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.27,
+       "per_cell": 0.26
+      },
+      "hungry": {
+       "per_state": 0.01,
+       "per_cell": -0.38
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "travel": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.08,
+       "per_cell": 0.5
+      },
+      "hungry": {
+       "per_state": 0.59,
+       "per_cell": 0.83
+      }
+     },
+     "greedy": {
+      "junction": [
+       1.0,
+       1.0
+      ],
+      "far": [
+       0.125,
+       0.3125
+      ],
+      "stem": [
+       0.625,
+       1.0
+      ]
+     }
+    },
+    "travel-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.03,
+       "per_cell": -0.14
+      },
+      "hungry": {
+       "per_state": -0.32,
+       "per_cell": -0.18
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0625,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "layout": "9102_0",
+   "arms": {
+    "own": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.26,
+       "per_cell": 0.93
+      },
+      "hungry": {
+       "per_state": 0.31,
+       "per_cell": 0.9
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.1875,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0625,
+       0.0
+      ]
+     }
+    },
+    "own-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.13,
+       "per_cell": -0.42
+      },
+      "hungry": {
+       "per_state": 0.27,
+       "per_cell": 0.51
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "travel": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.6,
+       "per_cell": 0.85
+      },
+      "hungry": {
+       "per_state": 0.79,
+       "per_cell": 0.84
+      }
+     },
+     "greedy": {
+      "junction": [
+       1.0,
+       1.0
+      ],
+      "far": [
+       0.625,
+       0.3125
+      ],
+      "stem": [
+       1.0,
+       0.5
+      ]
+     }
+    },
+    "travel-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.58,
+       "per_cell": 0.37
+      },
+      "hungry": {
+       "per_state": 0.23,
+       "per_cell": -0.49
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.3125,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.1875,
+       0.0
+      ]
+     }
+    }
+   }
+  },
+  {
+   "layout": "9103_0",
+   "arms": {
+    "own": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.87,
+       "per_cell": 0.95
+      },
+      "hungry": {
+       "per_state": 0.41,
+       "per_cell": 0.72
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.125,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "own-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.48,
+       "per_cell": -0.61
+      },
+      "hungry": {
+       "per_state": 0.69,
+       "per_cell": 0.66
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "travel": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.55,
+       "per_cell": 0.81
+      },
+      "hungry": {
+       "per_state": 0.49,
+       "per_cell": 0.86
+      }
+     },
+     "greedy": {
+      "junction": [
+       1.0,
+       1.0
+      ],
+      "far": [
+       0.0625,
+       0.4375
+      ],
+      "stem": [
+       0.9375,
+       1.0
+      ]
+     }
+    },
+    "travel-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": 0.36,
+       "per_cell": 0.42
+      },
+      "hungry": {
+       "per_state": -0.34,
+       "per_cell": -0.19
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

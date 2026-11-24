@@ -1133,3 +1133,30 @@
 - 2026-11-24 `6113f87e` E1 not met: the roam slot decided 0% of beats (my design mistake; the relief pull is strong on every beat); E1b registered: the unfamiliarity competes in the score
 - 2026-11-24 `048da902` E1b not met (bodies stir and cover cells but make no trips; deaths up); D31 registered: the being's own value trained on a traveller's experience
 - 2026-11-24 `098804ed` D31: with a traveller's experience the value is right at the junction (.56-1.00) and still 0 from afar; summary of D25-D31, E1/E1b
+- 2026-11-24 `ae28d312` export list: D31, E1 results
+- 2026-11-24 `19fafa3a` MineLand life 17 ended (one fault recovered; deaths 509, in bursts); life 18 started
+- 2026-11-24 `5c2b4e99` D32 registered: a skill of going to a remembered place, learned from trips by hindsight
+- 2026-11-24 `a3031d17` D32 not met: a raw later sense as goal does not steer (right = wrong = zero goal); copying a traveller's gestures alone reaches 6-38% from afar
+- 2026-11-24 `57936195` D32b registered: goal as place unit, near, handed on along the map
+- 2026-11-24 `a686b43d` N1 registered: a nurtured childhood in the room, after the human way (in arms, walking after, weaning, leaving, alone)
+- 2026-11-24 `4b5f44bb` D32b not met (map steers ~2x over controls, far below bar); N1 runs with value and habit, map measured
+- 2026-11-24 `8ee5f7b1` N1 step 0: the room draws the caregiver (RoomBody.kin, default off); eye code tells it apart 1.00; N1 life tool
+- 2026-11-24 `e331b378` P1 registered: an innate path-integration organ (founder: 타고난 기관으로); P1a offline probe
+- 2026-11-24 `7ae53b81` P1: innate path organ in the being's organs (Channel.motion; off unless a body declares its own motion); smoke passes
+- 2026-11-24 `e25bcefe` P1a: with an innate place sense the own value orders the room (.72-.95 per cell) but cannot go there; travelled gestures carry a body from the stem (.5-1.0, was 0-.13)
+- 2026-11-24 `787f91c2` P1b registered: Mind.grow puts the path organ into the V3 being (starts as it was: 96% same choices); carried motion is felt; alone/nurture/still arms
+- 2026-11-24 `549246bf` Ledger: MineLand life 18 crashed on GPU memory (two room runs in parallel, my mistake); resumed from s33000; one room run at a time
+- 2026-11-24 `c43edda5` N1 not met: the young did not follow (near .08-.13) and made no trips alone; both childhoods die more than V3 alone
+- 2026-11-24 `c5e434ad` MineLand life 18 ended (deaths 198 against 509 in life 17); life 19 started
+- 2026-11-24 `6e99c3f2` P1b not met in any arm (place alone does not make it travel); D33 registered: going to a remembered place learned from own play
+- 2026-11-24 `675e90ec` D33 tool: play, hindsight skill, goal practice
+- 2026-11-24 `431108ab` D33 amended before results: follow the skill by sampling (GCSL), horizon 32, 5 practice rounds; round 0 babbling alone: chance
+- 2026-11-24 `46900507` D33: fix my input scaling bug (collapsed the skill to uniform); earlier starts void
+- 2026-11-25 `37f345fe` D33 not met: own-play skill steers near (junction up to .94, controls 0), not far; D33b registered: handed on along its own map
+- 2026-11-25 `e41b10e5` D33b tool
+- 2026-11-25 `4ee49ebb` D33b: own map + own play skill carry bodies from the stem to the needed spring (.81-1.0 in 2 of 3 layouts, controls 0-.13); wrong spring 0; bar not met
+- 2026-11-25 `113fb840` D33c: far places aliased in the path organ's code (equal-strength scales); readout fixed (scale-strength, +32-cell scale; Spearman .998)
+- 2026-11-25 `2a81b860` D33b rerun with fixed readout (result json)
+- 2026-11-25 `118d9e54` D33c2: the map linked every place to birth across play seams (my bug); transitions now inside each play
+- 2026-11-25 `c022e40d` D33b MET: own play skill + own map take bodies across the room to the spring they lack (.81-1.0 from anywhere, controls 0-.19)
+- 2026-11-25 `81345dd9` export list: D32-D33c, N1, P1a/P1b tools and results

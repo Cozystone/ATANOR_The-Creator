@@ -12,6 +12,7 @@ H, W, HORIZON = 160, 256, 102
 FY = 0.5 * 204 / math.tan(math.radians(35.0))               # 마크와 같은 초점 거리 (px)
 EYE = 1.6                                                    # 눈 높이 (칸)
 WALL_H, SPRING_H = 2.0, 1.0
+KIN_H, KIN_R, KIN_COLOR = 1.4, 0.3, (0.35, 0.85, 0.35)         # N1: another body of its kind as the eye sees it (a body-high round shape of its own colour)
 
 
 def contract():
@@ -39,6 +40,7 @@ class RoomBody:
         # 먼 단서 (2026-11-24, 세계의 성질 - 행동 규칙 아님; 창립자 '환경 잘 구성해' 위임, 검토 대상): 벽의 면마다 (북·동·남·서) 빛깔이 조금 다름 - 실제 방의 벽이
         # 저마다 다르게 보이듯. 대칭인 방에서 곳·방향을 눈으로 알 수 있게 (D15: 단서 없는 방은 그림 자체가 곳을 싣지 않음). 기본 꺼짐.
         self.cues = RoomBody.default_cues
+        self.kin = None                                                 # N1 (atanor_os/N1_NURTURE_PROTOCOL.md): [n, 2] place of the caregiver each body can see; None = no other body (default)
 
     @property
     def dead(self):
@@ -68,6 +70,15 @@ class RoomBody:
         sky, gnd = G.SKY.to(self.dev), G.GROUND.to(self.dev)
         base = torch.where((r < 0)[..., None], sky, gnd).expand(self.n, H, W, 3)
         img = torch.where(hit[..., None], col[:, None].expand(-1, H, -1, -1), base)
+        if self.kin is not None:                                                        # the other body, where no wall or spring stands in front of it
+            ang = w.head[:, None] + self.cols[None]; dxr, dyr = torch.cos(ang), torch.sin(ang)
+            ox, oy = self.kin[:, 0, None] - w.pos[:, 0, None], self.kin[:, 1, None] - w.pos[:, 1, None]
+            along = ox * dxr + oy * dyr; perp2 = ox * ox + oy * oy - along * along
+            dk = along - (KIN_R ** 2 - perp2).clamp(min=0).sqrt(); seen = (perp2 < KIN_R ** 2) & (dk > 0.05) & (dk < dist)
+            zk = (dk * torch.cos(self.cols)[None]).clamp(min=0.05); topk = -FY * (KIN_H - eye) / zk; botk = FY * eye / zk
+            m = seen[:, None, :] & (r >= topk[:, None, :]) & (r <= botk[:, None, :])
+            colk = torch.tensor(KIN_COLOR, device=self.dev)[None, None] * (1.0 - zk / 14.0).clamp(0.3, 1.0)[..., None]
+            img = torch.where(m[..., None], colk[:, None].expand(-1, H, -1, -1), img)
         if self.dark_every:
             img = img * (~self.dark())[:, None, None, None].float()
         return (img.clamp(0, 1) * 255.0)

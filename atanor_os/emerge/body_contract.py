@@ -11,7 +11,7 @@
 새 갈래가 생기면 (새 장치) 알맹이를 키워 (body_gpu.expand처럼 새 이음은 0에서) 붙일 수 있다 - 다음 일.
 """
 from dataclasses import dataclass, field, asdict
-import itertools, numpy as np, torch, torch.nn.functional as F
+import itertools, math, numpy as np, torch, torch.nn.functional as F
 from .common_senses import Enc, focus_enc, Stat, OUT, Z, ZF
 from .eye_gpu import RetinaGPU
 
@@ -21,6 +21,7 @@ class Channel:
     kind: str                     # "image" | "vector" | "audio"
     shape: tuple
     bedrock: bool = False
+    motion: bool = False          # P1 (atanor_os/P1_PATH_PROTOCOL.md): this signal is the body's own felt motion (forward, sideways, turn) - read by the innate path organ
 
 
 @dataclass
@@ -40,6 +41,31 @@ class Contract:
             for k, c in zip(self.motors, cb):
                 C[i, o + c] = 1; o += k
         return combos, C
+
+
+class PathOrgan:
+    """P1 (founder 2026-11-24, '타고난 기관으로'): innate path integration. Sums the own felt motion (forward, sideways in the frame faced, turn) from the
+    moment a life began into heading and place relative to birth; reads them out as a fixed grid-cell-like code (3 directions 60 degrees apart x 4 scales,
+    cos and sin) plus cos / sin of the heading (see SCALES for the numbers). Not learned. Where the body feels its motion exactly (the room), this is the truth; drift is later work."""
+    # D33c (2026-11-25): with 4 scales of equal strength the code's distance was ruled by the finest scale (one cell apart 3.45, two springs 9 cells
+    # apart 3.01), so places far apart looked as near as neighbours to anything that compares codes. Each scale is now as strong as its own length
+    # (s / 2 pi: for a small step every scale moves the code by about the step), and a 32-cell scale is added, so the code's distance grows with the
+    # true distance across rooms up to ~16 cells.
+    SCALES = (2.0, 4.0, 8.0, 16.0, 32.0); DIRS = ((1.0, 0.0), (0.5, 0.8660254), (-0.5, 0.8660254)); N = 32
+
+    def __init__(self, n, dev):
+        self.n, self.dev = n, dev; self.p = torch.zeros(n, 2, device=dev); self.h = torch.zeros(n, device=dev)
+        self.D = torch.tensor(self.DIRS, device=dev).T
+
+    def reset(self, which):
+        self.p[which] = 0; self.h[which] = 0
+
+    def __call__(self, felt):
+        c, s = torch.cos(self.h), torch.sin(self.h); f, sd, tn = felt[:, 0], felt[:, 1], felt[:, 2]
+        self.p = self.p + torch.stack([f * c - sd * s, f * s + sd * c], 1); self.h = (self.h + tn + math.pi) % (2 * math.pi) - math.pi
+        q = self.p @ self.D; ph = torch.cat([2 * math.pi * q / k for k in self.SCALES], 1)
+        amp = torch.tensor([k / (2 * math.pi) for k in self.SCALES for _ in range(3)], device=self.p.device)
+        return torch.cat([amp * torch.cos(ph), amp * torch.sin(ph), torch.cos(self.h)[:, None], torch.sin(self.h)[:, None]], 1)
 
 
 class Organs:
@@ -63,10 +89,16 @@ class Organs:
         self.dx = sum(int(np.prod(contract.sensors[i].shape)) for i in self.bed + self.vec) + len(self.img) * (Z + ZF + 2 + 1 + (5 if depth else 0))
         self.inside = slice(0, sum(int(np.prod(contract.sensors[i].shape)) for i in self.bed))
         self.z = None
+        mo = [i for i, ch in enumerate(contract.sensors) if getattr(ch, "motion", False)]
+        self.path = PathOrgan(n, dev) if mo else None; self.mo = mo[0] if mo else None      # P1: present only when the body declares its own motion
+        if self.path is not None:
+            self.dx += PathOrgan.N
 
     def reset(self, which):
         for r in self.ret.values():
             r.reset(which)
+        if self.path is not None:
+            self.path.reset(which)
         for i in self.img:
             if self.prev[i] is not None:
                 self.prev[i][which] = -1
@@ -99,6 +131,8 @@ class Organs:
             if self.DE is not None:
                 small = F.interpolate(fr.permute(0, 3, 1, 2) / 255.0, size=(48, 80), mode="bilinear", align_corners=False)
                 parts.append(self.DE(small))
+        if self.path is not None:
+            parts.append(self.path(raw[self.mo].reshape(self.n, -1).float()))
         return torch.cat(parts, 1)
 
     def state(self):

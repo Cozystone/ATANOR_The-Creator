@@ -204,3 +204,46 @@ What D25-D31 and E1/E1b establish together:
 3. The being makes no trips on its own; a pull toward the unfamiliar makes it stir, not travel, and costs lives.
 So reaching a far spring needs three things the being does not have: experience that contains trips, a place map built from it, and a skill of going to a
 remembered place (the map says where; something must take the body there). None is a tweak of the value or of who decides.
+
+# D32 (registered before running): can a skill of going to a remembered place be learned from trips alone, by hindsight, with no reward?
+Of the three missing things (trips, map, skill) the third has not been measured at all. Prior work: goal-conditioned learning by hindsight - what I did
+when I later found myself there (Kaelbling 1993; Andrychowicz et al. 2017; Ghosh et al. 2019, GCSL: plain supervised learning on one's own past, no reward,
+no value). It fits the rules: no reward at all, only own experience; the goal is a remembered sense state, not a symbol.
+Probe (judge-only, not a being): on the D30 traveller's stretch per layout (192,000 steps, sensed through the being's organs) train one small network:
+(outside senses now, outside senses of a state 1 - 200 beats later in the same life) -> the gesture made now. 6,000 updates, batch 512.
+Test as D31: bodies with one inside low, started at the junction, at the wrong spring, at the bottom of the stem; the goal given is the outside sense of a
+moment when that inside was relieved in the stretch (one random such memory per body, kept for the 400 beats); gesture = argmax + 10% random.
+Controls: the goal of the other inside's relief (wrong goal), and a zero goal (the same network without a place to go).
+Reading (fixed now): recovery >= .6 from the wrong spring and from the stem in at least 4 of 6 (layout x need), with the wrong-goal control at most half of
+it -> the skill is learnable from trips by hindsight alone; then the next build is a life in which trips come from a nurture stage, and relief memory picks
+the goal. Junction only -> the skill is as short-sighted as the value (per-beat sense does not carry a far goal); then the goal must be handed on along the
+map (next landmark as goal). Nothing -> the outside sense does not define a place well enough to be a goal; return to the place code.
+
+## D32 result (3 layouts x 2 needs): not met - the goal does not steer
+Recovery with the right goal: junction .13 - .31, wrong spring .06 - .38, stem .06 - .38 (bar .6). Wrong goal: .06 - .38; zero goal: 0 - .31.
+The three are the same within noise (16 bodies per cell of the table), so the network learned to move like the traveller (loss 1.95 - 1.97 against 4.50
+for chance) and ignores where it is asked to go. Registered reading: 'nothing' - the raw outside sense of a later moment does not work as a goal.
+Two things to keep apart, honestly:
+- a side finding: plain copying of the traveller's gestures, with no goal, brings 6 - 38% of bodies to the needed spring from afar within 400 beats, where
+  the value followed greedily brought 0 - 13% (D31). Moving like one who travels already beats a value that does not know the way.
+- a weakness of my probe: the traveller changes its target at least every 250 beats and one gesture in five is random, so a state up to 200 beats later
+  is often past a change of target and says little about the gesture made now. The result therefore rules out this form (raw sense, up to 200 beats),
+  not the skill itself. One follow-up is allowed by the registered reading (return to the place code): D32b below; after that I stop varying it.
+
+# D32b (registered before running): the goal in the learned place code, near, handed on along the map
+Same probe as D32 with two changes, both taken from results already in hand: the goal is a place unit of the time-contrast code (D27; 64 clusters as in
+D30, where the stitched map read the way at .67 - .77), and the skill is only asked for near goals (the state 1 - 40 beats later, given as its unit).
+At test the far goal is the unit of a relief memory; each beat the body is given the next unit on the map's way there (the neighbour unit with the highest
+map value for that inside), so the skill only ever goes to the next place. Controls: wrong inside's map; a shuffled map.
+Reading (fixed now): recovery >= .6 from the wrong spring and from the stem in at least 4 of 6, wrong-map control at most half -> map + near skill is the
+way to a remembered place, and both come from trips. Otherwise the reach-skill line is closed in this form and reported to the founder as open.
+
+## D32b result (3 layouts x 2 needs): not met - the map helps about twofold and stays far below the bar
+Recovery from the wrong spring and the stem (12 cells of 16 bodies): right map .13 - .50, mean .29; wrong inside's map 0 - .38, mean .14; shuffled map
+0 - .38, mean .17. Junction: right .06 - .38, wrong 0 - .25, shuffled 0 - .38. Bar .6 in 4 of 6: met in 0.
+So the map does steer a little (twice the controls from afar) and the near skill learned from the traveller's gestures is too weak to carry a body
+(loss 1.91 - 1.94 of 4.50, the same as with no usable goal in D32: the goal unit adds almost nothing to predicting the gesture).
+As registered: the reach-skill line is closed in this form (hindsight copying of a judge-driven traveller, raw sense or place unit as goal) and stays open
+as a problem. What is left standing for N1: a traveller's gestures are not the being's own (one in five random, target changed by the judge); in the
+walking-after stage of N1 the young makes its trips with its own gestures toward something it sees, which is a different kind of experience from any
+tried here. N1 therefore runs first with what the being already has (value, habit), and the place map is measured, not yet used for going.

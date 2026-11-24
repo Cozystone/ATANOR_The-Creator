@@ -5,6 +5,7 @@
   m = Mind(organs, contract); act = m.choose(x); m.after(x, act, x2, died, cut)   # cut: 손이 옮겼거나 다시 태어남 (사슬 끊기)
   m.save(path) / Mind.load(path, organs, contract)
 """
+import math
 import numpy as np
 import torch, torch.nn.functional as F
 from .core import Core, Worth
@@ -372,6 +373,58 @@ class Mind:
             self.o.zs[b].load(st["organs"]["z"].get(a), self.dev); self.o.fs[b].load(st["organs"]["f"].get(a), self.dev)
         self.steps = st.get("steps", 0)                                     # 나이는 잇는다 (하나의 이어지는 존재)
         return dict(same_body=False, steps=self.steps, eye_dims=int(k), old_dx=odx, new_dx=ndx, moved=moved)
+
+    def grow(self, path):
+        """P1 (atanor_os/P1_PATH_PROTOCOL.md): load a being file made before its body had the innate path organ. The organ's code sits at the end of the
+        organs' sense (columns odx .. ndx); every weight that reads the sense gets zero columns there (so the being starts as it was and learns to use its
+        new sense), every weight that predicts the sense keeps its own fresh rows there. Everything else is copied. Returns what was grown."""
+        st = torch.load(path, map_location=self.dev, weights_only=False)
+        assert st["signature"] == self.c.signature(), "다른 몸 계약"
+        ndx = self.o.dx; odx = st["core"]["f.4.weight"].shape[0]; add = ndx - odx
+        if add == 0:
+            return dict(grown=0, steps=self.load(path))
+        ring = ("bx", "bx2", "br", "bd", "ba", "ba2", "bp", "bi", "bn")
+        grown = {}
+
+        def fit(new_sd, old_sd, tag):
+            out = {}
+            for name, nv in new_sd.items():
+                ov = old_sd.get(name)
+                if ov is None or name.split(".")[-1] in ring:
+                    continue
+                ov = ov.to(nv.device, nv.dtype)
+                if ov.shape == nv.shape:
+                    out[name] = ov.clone(); continue
+                v = nv.clone(); sl = [slice(None)] * nv.dim(); ok = True
+                for d in range(nv.dim()):
+                    if nv.shape[d] - ov.shape[d] == add and ov.shape[d] >= odx:       # this dimension runs over the sense: old part, new part, the rest
+                        continue
+                    if nv.shape[d] != ov.shape[d]:
+                        ok = False
+                if not ok:
+                    continue
+                idx_new = [torch.arange(s, device=nv.device) for s in nv.shape]; idx_old = []
+                for d in range(nv.dim()):
+                    if nv.shape[d] - ov.shape[d] == add and ov.shape[d] >= odx:
+                        keep = torch.cat([torch.arange(odx, device=nv.device), torch.arange(odx + add, nv.shape[d], device=nv.device)]); idx_new[d] = keep
+                        if nv.dim() == 2 and d == 1 and name.split(".")[-1] in ("rel_x", "fnd_x", "harm_x", "slow_x"):
+                            # moments remembered before the organ: where they happened is not known. A code of a random place for each keeps the
+                            # remembered place widely spread, so it carries little weight in the pull (a zero code would read as 'always at birth').
+                            from .body_contract import PathOrgan
+                            po = PathOrgan(nv.shape[0], nv.device); po.p = (torch.rand(nv.shape[0], 2, device=nv.device) - 0.5) * 24
+                            po.h = (torch.rand(nv.shape[0], device=nv.device) - 0.5) * 2 * math.pi
+                            v[:, odx:odx + add] = po(torch.zeros(nv.shape[0], 3, device=nv.device)).to(nv.dtype)
+                        elif nv.dim() == 2 and d == 1:
+                            v[:, odx:odx + add] = 0                                       # reading the new sense: starts at zero
+                    idx_old.append(torch.arange(ov.shape[d], device=nv.device))
+                v[torch.meshgrid(*idx_new, indexing="ij")] = ov[torch.meshgrid(*idx_old, indexing="ij")]
+                out[name] = v; grown[f"{tag}.{name}"] = tuple(ov.shape)
+            return out
+        self.net.load_state_dict(fit(self.net.state_dict(), st["core"], "core"), strict=False)
+        if self.wo is not None and st.get("worth") is not None:
+            self.wo.load_state_dict(fit(self.wo.state_dict(), st["worth"], "worth"), strict=False)
+        self.o.load(st["organs"]); self.steps = st.get("steps", 0)
+        return dict(grown=add, old_dx=odx, new_dx=ndx, tensors=grown)
 
     def load(self, path):
         st = torch.load(path, map_location=self.dev, weights_only=False)

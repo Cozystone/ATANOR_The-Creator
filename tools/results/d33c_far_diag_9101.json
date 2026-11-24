@@ -1,0 +1,77 @@
+{
+ "layout": "9101_0",
+ "trace": {
+  "start_units": [
+   14,
+   60
+  ],
+  "goal_is_own_unit": 0.0,
+  "max_distance_cells": [
+   2.12,
+   2.12
+  ],
+  "units_visited": 4.8
+ },
+ "chains": {
+  "from unit 14": {
+   "water": {
+    "path": [
+     14,
+     57
+    ],
+    "ends_where_inside_rises": true,
+    "stuck": false
+   },
+   "food": {
+    "path": [
+     14,
+     43,
+     38
+    ],
+    "ends_where_inside_rises": true,
+    "stuck": false
+   }
+  },
+  "from unit 60": {
+   "water": {
+    "path": [
+     60,
+     43,
+     57
+    ],
+    "ends_where_inside_rises": true,
+    "stuck": false
+   },
+   "food": {
+    "path": [
+     60,
+     38
+    ],
+    "ends_where_inside_rises": true,
+    "stuck": false
+   }
+  }
+ },
+ "relief_units": {
+  "water": [
+   14,
+   30,
+   55,
+   57
+  ],
+  "food": [
+   12,
+   15,
+   35,
+   38,
+   46,
+   47,
+   52,
+   60
+  ]
+ },
+ "unit_play_counts_at_start": [
+  15481,
+  11368
+ ]
+}
