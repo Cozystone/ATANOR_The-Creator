@@ -1,0 +1,123 @@
+{
+ "protocol": "atanor_os/GRAIN_THEORY.md (D29)",
+ "rows": [
+  {
+   "layout": "9103_0",
+   "time_in_stem": 0.30730729166666665,
+   "maps": {
+    "raw 512": {
+     "landmarks_in_stem_share": 0.20703125,
+     "far_member_share": 0.15365625,
+     "map": {
+      "thirsty": {
+       "per_cell": -0.01,
+       "per_cell_outside_stem": -0.03,
+       "per_state": 0.32
+      },
+      "hungry": {
+       "per_cell": 0.18,
+       "per_cell_outside_stem": 0.22,
+       "per_state": -0.07
+      }
+     },
+     "shuffled": {
+      "thirsty": {
+       "per_cell": 0.19,
+       "per_cell_outside_stem": 0.2,
+       "per_state": -0.11
+      },
+      "hungry": {
+       "per_cell": -0.09,
+       "per_cell_outside_stem": -0.1,
+       "per_state": -0.15
+      }
+     }
+    },
+    "raw 128": {
+     "landmarks_in_stem_share": 0.2578125,
+     "far_member_share": 0.2711927083333333,
+     "map": {
+      "thirsty": {
+       "per_cell": -0.01,
+       "per_cell_outside_stem": -0.06,
+       "per_state": 0.28
+      },
+      "hungry": {
+       "per_cell": 0.25,
+       "per_cell_outside_stem": 0.29,
+       "per_state": -0.01
+      }
+     },
+     "shuffled": {
+      "thirsty": {
+       "per_cell": 0.02,
+       "per_cell_outside_stem": 0.0,
+       "per_state": 0.15
+      },
+      "hungry": {
+       "per_cell": 0.1,
+       "per_cell_outside_stem": 0.09,
+       "per_state": 0.09
+      }
+     }
+    },
+    "learned 512": {
+     "landmarks_in_stem_share": 0.359375,
+     "far_member_share": 0.026296875,
+     "map": {
+      "thirsty": {
+       "per_cell": 0.37,
+       "per_cell_outside_stem": 0.42,
+       "per_state": 0.25
+      },
+      "hungry": {
+       "per_cell": 0.15,
+       "per_cell_outside_stem": 0.23,
+       "per_state": -0.21
+      }
+     },
+     "shuffled": {
+      "thirsty": {
+       "per_cell": 0.06,
+       "per_cell_outside_stem": 0.1,
+       "per_state": 0.13
+      },
+      "hungry": {
+       "per_cell": 0.15,
+       "per_cell_outside_stem": 0.18,
+       "per_state": 0.15
+      }
+     }
+    },
+    "learned 128": {
+     "landmarks_in_stem_share": 0.359375,
+     "far_member_share": 0.05197916666666667,
+     "map": {
+      "thirsty": {
+       "per_cell": 0.35,
+       "per_cell_outside_stem": 0.39,
+       "per_state": 0.26
+      },
+      "hungry": {
+       "per_cell": 0.15,
+       "per_cell_outside_stem": 0.23,
+       "per_state": -0.2
+      }
+     },
+     "shuffled": {
+      "thirsty": {
+       "per_cell": 0.21,
+       "per_cell_outside_stem": 0.26,
+       "per_state": 0.11
+      },
+      "hungry": {
+       "per_cell": -0.32,
+       "per_cell_outside_stem": -0.39,
+       "per_state": -0.07
+      }
+     }
+    }
+   }
+  }
+ ]
+}

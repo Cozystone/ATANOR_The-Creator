@@ -319,6 +319,9 @@ class Worth(nn.Module):
         self.register_buffer("bx", torch.zeros(keep, dx)); self.register_buffer("bx2", torch.zeros(keep, dx))
         self.register_buffer("br", torch.zeros(keep)); self.register_buffer("bd", torch.zeros(keep)); self.register_buffer("ba", torch.zeros(keep, dtype=torch.long))
         self.register_buffer("bi", torch.zeros((), dtype=torch.long)); self.register_buffer("bn", torch.zeros((), dtype=torch.long))
+        self.register_buffer("ba2", torch.full((keep,), -1, dtype=torch.long))   # V1 (2026-11-24): 이 걸음 다음에 그 몸이 실제로 한 몸짓 (-1 = 모름: 끊김·고리 끝)
+        self.target = "max"                                         # 'max' = 다음 장면의 가장 나은 몸짓 (90갈래 최댓값 -> 부풂, D6/D7), 'sarsa' = 실제로 한 다음 몸짓
+        self._last = None                                           # 몸마다 직전 걸음의 고리 자리 (저장 안 함)
         self.register_buffer("bp", torch.ones(keep))                # 되감기의 몫: 놀라웠던 (값이 크게 어긋났던) 걸음을 더 자주 (해마가 놀랍고 중요한 일을 더 되감듯, Mattar & Daw 2018)
         self.prio = False
         self.trust_on = False                                     # 믿음: 값이 제 겪음을 얼마나 맞히는가 (설명된 흩어짐)만큼만 고름에 든다 - 덜 익은 값이 고름을 흔들지 않게 (습관이 차츰 굳듯)
@@ -336,7 +339,12 @@ class Worth(nn.Module):
         return 1 - ((1 - x[..., self.inside]).clamp(min=0) ** 2).mean(-1)
 
     @torch.no_grad()
-    def see(self, x, x2, died, a=None, extra=None):
+    def forget(self, which):
+        """끊긴 몸 (다시 태어남·옮김): 직전 걸음과 다음 걸음을 잇지 않는다."""
+        if self._last is not None:
+            self._last[which.to(self._last.device)] = -1
+
+    def see(self, x, x2, died, a=None, extra=None, who=None):
         """겪은 걸음들 x [k, dx] -> x2, died [k] (이 걸음에 죽었나), a [k] 그때 한 몸짓 (몸짓 값일 때). 보상은 온전함의 바뀜 (첫 바탕)
         + extra [k]: 둘째 바탕 (창립자 확정: 제 내다보기에 끌림 - 여기서는 배움의 진척, 몸 쪽에서 셈해 넘김)."""
         r = torch.where(died, -self.whole(x), self.whole(x2) - self.whole(x))
@@ -347,8 +355,18 @@ class Worth(nn.Module):
             return
         idx = (torch.arange(k, device=x.device) + self.bi) % self.keep
         self.bx[idx], self.bx2[idx], self.br[idx], self.bd[idx] = x, x2, r, died.float()
+        self.ba2[idx] = -1
         if a is not None:
             self.ba[idx] = a.long()
+            if who is not None:                                      # 그 몸의 직전 걸음에 '실제로 한 다음 몸짓'을 적는다
+                n = int(who.max()) + 1
+                if self._last is None or len(self._last) < n:
+                    old = self._last; self._last = torch.full((max(n, 64),), -1, dtype=torch.long, device=x.device)
+                    if old is not None:
+                        self._last[:len(old)] = old
+                prev = self._last[who]; ok = prev >= 0
+                self.ba2[prev[ok]] = a.long()[ok]
+                self._last[who] = torch.where(died, torch.full_like(idx, -1), idx)
         self.bp[idx] = self.bp[:max(int(self.bn), 1)].max()          # 새 걸음은 한 번은 꼭 되감기게
         self.bi.copy_((self.bi + k) % self.keep); self.bn.copy_(torch.clamp(self.bn + k, max=self.keep))
 
@@ -366,7 +384,10 @@ class Worth(nn.Module):
                 j = torch.randint(0, top, (batch,), device=self.bx.device)
             with torch.no_grad():
                 nxt = self.vt(self.bx2[j])
-                nxt = nxt.max(1).values if self.m else nxt[:, 0]          # 몸짓 값: 다음 장면에서 가장 나은 몸짓의 값으로
+                if self.m and self.target == "sarsa":                    # V1: 실제로 한 다음 몸짓의 값 (모르면 몸짓들의 평균)
+                    a2 = self.ba2[j]; nxt = torch.where(a2 >= 0, nxt.gather(1, a2.clamp(min=0)[:, None])[:, 0], nxt.mean(1))
+                else:
+                    nxt = nxt.max(1).values if self.m else nxt[:, 0]      # 몸짓 값: 다음 장면에서 가장 나은 몸짓의 값으로
                 tg = self.br[j] + self.gamma * nxt * (1 - self.bd[j])
             out = self.v(self.bx[j])
             err = (out.gather(1, self.ba[j][:, None])[:, 0] if self.m else out[:, 0]) - tg

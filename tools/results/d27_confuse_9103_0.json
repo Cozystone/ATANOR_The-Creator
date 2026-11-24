@@ -1,0 +1,100 @@
+{
+ "note": "D27 follow-up (description)",
+ "rows": [
+  {
+   "layout": "9103_0",
+   "time_share": {
+    "at_water": 0.176390625,
+    "at_food": 0.084796875
+   },
+   "rises": [
+    3815,
+    2342
+   ],
+   "true position units": {
+    "40": {
+     "spread": 0.4249517023563385,
+     "way": [
+      0.9531628712076611,
+      0.9690701543231982
+     ]
+    },
+    "20": {
+     "spread": 0.6040929555892944,
+     "way": [
+      0.9485164922055658,
+      0.9596514868257592
+     ]
+    },
+    "10": {
+     "spread": 0.850328803062439,
+     "way": [
+      0.9412669746404858,
+      0.955994012436087
+     ]
+    },
+    "6": {
+     "spread": 1.1087385416030884,
+     "way": [
+      0.9212144991771934,
+      0.943591309296339
+     ]
+    }
+   },
+   "one": {
+    "way": [
+     0.3742060948775861,
+     -0.22635298028229367
+    ],
+    "far_alias_share": 0.043412277701778385,
+    "relief_record_at_wrong_spring": [
+     0.01011113638277747,
+     0.02397610598470038
+    ],
+    "best unit thirsty": {
+     "to_needed": 2.0,
+     "to_other": 21.0,
+     "states": 4057
+    },
+    "best unit hungry": {
+     "to_needed": 2.0,
+     "to_other": 21.0,
+     "states": 2337
+    },
+    "nearest_neighbour_place_error_cells": {
+     "median": 0.24290835857391357,
+     "share_over_3": 0.017517366354575657
+    }
+   },
+   "carried": {
+    "way": [
+     0.33018432691626426,
+     0.039605350405255466
+    ],
+    "far_alias_share": 0.060715201778385776,
+    "relief_record_at_wrong_spring": [
+     0.004175782095872034,
+     0.010161213344930708
+    ],
+    "best unit thirsty": {
+     "to_needed": 1.0,
+     "to_other": 22.0,
+     "states": 4710
+    },
+    "best unit hungry": {
+     "to_needed": 1.0,
+     "to_other": 22.0,
+     "states": 2019
+    },
+    "nearest_neighbour_place_error_cells": {
+     "median": 0.7837310433387756,
+     "share_over_3": 0.053458169737239505
+    }
+   },
+   "raw sense nearest neighbour error": {
+    "median": 0.14680355787277222,
+    "share_over_3": 0.04892781636967684
+   }
+  }
+ ]
+}

@@ -14,7 +14,7 @@ LEAK, TIRE, LOOSE = 0.95, 4.0, 0.05
 
 
 class Mind:
-    def __init__(self, organs, contract, n, dev="cuda", far=0.3, worth=2.0, try_p=0.1, harm=1.0, learn_every=50, keep=4000, lp=0.0, lp_every=1000, inner=0, imagine=0.0, horizon=6, rolls=2):
+    def __init__(self, organs, contract, n, dev="cuda", far=0.3, worth=2.0, try_p=0.1, harm=1.0, learn_every=50, keep=4000, lp=0.0, lp_every=1000, inner=0, imagine=0.0, horizon=6, rolls=2, value_arm="worth", value_target="max", arbitrate=False):
         self.o, self.c, self.n, self.dev = organs, contract, n, dev
         combos, C = contract.codes(); self.M = len(combos)
         # R1 이어진 내면 상태 (inner > 0): h = GRU([느낌, 방금 한 몸짓의 부호], h). 앞으로 올 느낌 (1-4걸음 앞)을 내다보며 스스로 배운다 -
@@ -33,8 +33,22 @@ class Mind:
             self.h = torch.zeros(n, inner, device=dev); self.seq = []
         self.net = Core(dxe, self.M, organs.inside, slice(0, 0), codes=C).to(dev); self.net.far = far; self.net.harm_sharp = True
         self.opt = torch.optim.AdamW(self.net.parameters(), lr=1e-3)
-        self.wo = Worth(dxe, organs.inside, lam=worth, m=self.M).to(dev) if worth else None
+        # value_arm (A1 시험, 2026-11-23): 'worth' = 기존 값 (기본, 주 줄기), 'bedrock' / 'aux' = 채널별 앞날 (channel_worth.py, 기본 꺼짐)
+        if worth and value_arm == "relief":                                   # 잠재 학습 값 (D17-D23): 채널별 '풀린 몫' 앞날 x 지금의 결핍 (기본 꺼짐, V2 시험)
+            from .channel_worth import ReliefWorth
+            self.wo = ReliefWorth(dxe, organs.inside, m=self.M, lam=worth).to(dev)
+        elif worth and value_arm != "worth":
+            from .channel_worth import ChannelWorth
+            self.wo = ChannelWorth(dxe, organs.inside, lam=worth, m=self.M, mode=value_arm).to(dev)
+        else:
+            self.wo = Worth(dxe, organs.inside, lam=worth, m=self.M).to(dev) if worth else None
+        if self.wo is not None and hasattr(self.wo, "target"):
+            self.wo.target = value_target                                       # V1: 'sarsa' = 값이 실제로 한 다음 몸짓에서 배움
         self.try_p, self.harm, self.learn_every, self.keep = try_p, harm, learn_every, keep
+        # V4 (2026-11-24): who decides between the habit-like relief pull and the value, by each one's own track record (Daw, Niv & Dayan 2005:
+        # the more reliable controller takes over). The pull's record = how well its expectation (its strongest score) foretold the wholeness change
+        # over the next K beats, tracked like the value's own earned trust. No hand-set weight. Default off.
+        self.arbitrate = arbitrate; self.ptrace = None; self.poc = torch.zeros(5, device=dev); self.pK = 60
         self.buf = []; self.steps = 0
         # 값으로 매기는 상상 (2026-11-22, 창립자 검토: 겉모습의 닮음이 아니라 여러 걸음 뒤 제 온전함으로): 알맹이의 내다보기를 (기억 상태까지 품고)
         # 몸짓마다 horizon걸음 굴려, 끝을 '온전함의 바뀜 + 끝 장면의 값 (몸짓마다의 값 중 가장 나은 것)'으로 매긴다. 고름에 드는 몫 = imagine x 값이 얻은 믿음.
@@ -52,6 +66,8 @@ class Mind:
             self.fut = torch.zeros(n, self.M, device=d); self.s_m = torch.zeros(n, device=d); self.s_v = torch.full((n,), 1e-4, device=d)
             self.cur = torch.zeros(n, dtype=torch.long, device=d); self.prev = None; self.cut = torch.ones(n, dtype=torch.bool, device=d)
         self.fut[which] = 0; self.cut |= which
+        if getattr(self, "wo", None) is not None and hasattr(self.wo, "forget"):
+            self.wo.forget(torch.nonzero(which)[:, 0])
         if getattr(self, "inner", 0):
             self.h[which] = 0
 
@@ -110,6 +126,28 @@ class Mind:
         return v.view(B, M, R).max(2).values
 
     @torch.no_grad()
+    def unfamiliar(self, x, H=4, k=4):
+        """E1 (atanor_os/E1_ROAM_PROTOCOL.md; default off). Per gesture [B, M]: how little the being's own memory of recently sensed states knows the state it
+        foresees after holding that gesture H beats (distance to the k-th nearest remembered state, outside senses only), standardised per body."""
+        B, M, dx = x.shape[0], self.M, x.shape[1]; a = torch.arange(M, device=self.dev)[None].expand(B, M).reshape(-1)
+        z = x[:, None].expand(B, M, dx).reshape(-1, dx)
+        for _ in range(H):
+            z = z + self.net.f(torch.cat([z, self.net.codes[a]], 1))
+        mem = self.pm[:self.pm_n]; sd = mem.std(0) + 1e-6; q = (z[:, self.pm_out] / sd); m = mem / sd
+        dk = torch.cat([torch.cdist(q[j:j + 2048], m).topk(k, dim=1, largest=False).values[:, -1] for j in range(0, len(q), 2048)]).view(B, M)
+        return (dk - dk.mean(1, keepdim=True)) / (dk.std(1, keepdim=True) + 1e-6)
+
+    @torch.no_grad()
+    def remember_place(self, x, live):
+        """E1: one sensed state per beat (a random living body's) into a bounded ring of 4,096; the oldest is replaced."""
+        if not hasattr(self, "pm"):
+            ins = self.net.inside; out = [i for i in range(x.shape[1]) if not (ins.start <= i < ins.stop)]
+            self.pm_out = torch.tensor(out, device=self.dev); self.pm = torch.zeros(4096, len(out), device=self.dev); self.pm_n = 0; self.pm_i = 0
+        idx = torch.nonzero(live)[:, 0]
+        if len(idx):
+            j = idx[int(torch.randint(0, len(idx), (1,)))]; self.pm[self.pm_i] = x[j, self.pm_out]; self.pm_i = (self.pm_i + 1) % 4096; self.pm_n = min(4096, self.pm_n + 1)
+
+    @torch.no_grad()
     def fill_ahead(self, x):
         """몸짓마다 [B, M]: 기억 기관이 내다본 '앞으로 몸 안이 얼마나 채워질까' (거리 16과 32의 합, 바탕 칸 합)."""
         B, M, dx = x.shape[0], self.M, x.shape[1] - self.inner
@@ -148,14 +186,25 @@ class Mind:
                 sc = sc + lw
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
         rnd = torch.randint(0, self.M, (n,), device=d); usedv = torch.zeros(n, dtype=torch.bool, device=d)
+        if getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256:        # E1: with no strong pull, drawn to the gesture whose foreseen state its place memory knows least
+            rnd = torch.multinomial(torch.softmax(self.roam * self.unfamiliar(x), 1), 1)[:, 0]
         if lw is not None:
             byv = torch.multinomial(torch.softmax(lw / LOOSE, 1), 1)[:, 0]
             usedv = torch.rand(n, device=d) < self.wo.earned()
             rnd = torch.where(usedv, byv, rnd)
         pick = torch.where(strong, pick, rnd)
+        if self.arbitrate and lw is not None:
+            self._track_pull(x, torch.where(strong, sc.max(1).values, torch.zeros(n, device=d)), ~self.cut)
+            ev, ep = self.wo.earned(), self.pull_earned(); pv = ev / max(ev + ep, 1e-6) if (ev + ep) > 0 else 0.0
+            take = strong & (torch.rand(n, device=d) < pv)           # on a strong beat the value decides with the share its record earns
+            pick = torch.where(take, byv, pick); usedv = usedv | take; strong = strong & ~take
         gap = sc.max(1).values - sc.gather(1, self.cur[:, None])[:, 0]
         pre = strong & (gap > 2.0 * sc.std(1).clamp(min=1e-6))
         again = novel | pre | self.cut
+        force = getattr(self, "force", None)                                  # 판정 쪽 탐침 (A1 유지 진단): 이 박자만 새로 고르게. 기본 없음
+        if force is not None:
+            again = again | force; self.force = None
+        self.again, self.lw_last = again, lw                                # 재는 쪽 기록만
         self.cur = torch.where(again, pick, self.cur)
         tried = torch.rand(n, device=d) < self.try_p
         act = torch.where(tried, torch.randint(0, self.M, (n,), device=d), self.cur)
@@ -195,10 +244,12 @@ class Mind:
                     s = prog.mean() + 1e-6
                     self.lp_scale = s if self.lp_scale is None else 0.99 * self.lp_scale + 0.01 * s
                     extra = (self.lp * 0.01 * prog / self.lp_scale)[live]           # 온전함의 한 걸음 바뀜 (약 0.01)과 같은 눈금으로
-                self.wo.see(x[live], x2[live], died[live], a=act[live], extra=extra)
+                self.wo.see(x[live], x2[live], died[live], a=act[live], extra=extra, who=torch.nonzero(live)[:, 0])
                 if self.steps % 20 == 0:
                     with torch.enable_grad():
                         self.wo.learn()
+        if getattr(self, "roam", 0):
+            self.remember_place(x2, ~died & ~cut)
         self.buf.append((x, act, x2, (~died).float() * (~cut).float())); self.buf = self.buf[-self.keep:]
         if self.lp and self.steps % self.lp_every == 0:
             import copy
@@ -216,6 +267,27 @@ class Mind:
                 loss = self.net.loss(X[i], A[i], X2[i], OK[i]); self.opt.zero_grad(); loss.backward(); self.opt.step()
             self.net.eval()
         self.prev = (x, act); self.cut = cut.clone()
+
+    @torch.no_grad()
+    def _track_pull(self, x, e, alive):
+        n, K = len(x), self.pK
+        if self.ptrace is None or self.ptrace["v"].shape[1] != n:
+            self.ptrace = dict(v=torch.zeros(K, n, device=x.device), w=torch.zeros(K, n, device=x.device), a=torch.zeros(K, n, device=x.device), t=0)
+        tr = self.ptrace; i = tr["t"] % K; g_ = self.wo.gamma
+        if tr["t"] >= K:
+            idx = [(i + k) % K for k in range(K)]; a_ = tr["a"][idx]; alive_k = torch.cumprod(a_, 0); w_ = tr["w"][idx] * alive_k
+            w_end = torch.cat([w_[1:], (torch.where(alive, self.wo.whole(x), torch.zeros(n, device=x.device)) * alive_k[-1])[None]])
+            disc = g_ ** torch.arange(K, device=x.device, dtype=torch.float32)[:, None]; gsum = (disc * (w_end - w_) * alive_k).sum(0)
+            ok = (a_[0] > 0) & (tr["v"][i] != 0)
+            if ok.sum() >= 1:
+                v = tr["v"][i][ok]; gg = gsum[ok]; m = torch.stack([v.mean(), gg.mean(), (v * v).mean(), (gg * gg).mean(), (v * gg).mean()])
+                self.poc.copy_(m if float(self.poc[2]) == 0 else 0.99 * self.poc + 0.01 * m)
+        tr["v"][i] = e; tr["w"][i] = self.wo.whole(x); tr["a"][i] = alive.float(); tr["t"] += 1
+
+    def pull_earned(self):
+        ev, eg, ev2, eg2, evg = [float(z) for z in self.poc]
+        c = (evg - ev * eg) / max(((ev2 - ev * ev) * (eg2 - eg * eg)) ** 0.5, 1e-9)
+        return max(0.0, min(1.0, c))
 
     def use_trail(self, L=160, S=4, k=512):
         """길 기억을 켠다 (2026-11-23): 몸 안이 오른 순간 지난 L박자의 길에서 S박자마다 한 점씩 (느낀 것, 한 몸짓)을 든다. 한 몸이 L/2박자 안에 다시 담지 않는다 (샘에서 여러 번 마셔도 길은 하나)."""
@@ -239,7 +311,7 @@ class Mind:
                 self.net.keep_trail(rise[j], torch.stack(xs), torch.stack(aa)); self.trail_last[j] = self.steps
 
     def save(self, path):
-        ring = ("bx", "bx2", "br", "bd", "ba", "bp", "bi", "bn")          # 값의 되감기 고리 (해마의 단기 겪음)는 존재 파일에 넣지 않는다: 배운 것은 무게에 굳어 있다 (기억은 크기 고정, 가볍게)
+        ring = ("bx", "bx2", "br", "bd", "ba", "ba2", "bp", "bi", "bn")          # 값의 되감기 고리 (해마의 단기 겪음)는 존재 파일에 넣지 않는다: 배운 것은 무게에 굳어 있다 (기억은 크기 고정, 가볍게)
         wst = {k: v for k, v in self.wo.state_dict().items() if k not in ring} if self.wo is not None else None
         torch.save(dict(signature=self.c.signature(), core=self.net.state_dict(), worth=wst,
                         worth_oc=(self.wo.oc.cpu() if self.wo is not None else None), organs=self.o.state(), steps=self.steps,

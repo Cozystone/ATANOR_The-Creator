@@ -33,8 +33,11 @@ def parse(rows):
 
 
 class World:
-    def __init__(self, n, rows, device="cuda", seed=0, drain=1 / 240.0):
+    def __init__(self, n, rows, device="cuda", seed=0, drain=1 / 240.0, regrow=None):
         self.n, self.dev, self.drain = n, device, drain
+        # 샘의 고갈 (2026-11-23, 세계의 성질 - 행동 규칙 아님): regrow가 있으면 샘마다 남은 양 (0-1)이 있어, 마신 만큼 줄고 초당 regrow만큼 다시 찬다.
+        # 없으면 예전 그대로 (쓰면 늘 가득).
+        self.regrow = regrow
         base, spots, start = parse(rows)
         self.S = base.shape[0]
         self.gen = torch.Generator(device=device).manual_seed(seed)
@@ -51,6 +54,7 @@ class World:
             self.pos = torch.zeros(self.n, 2, device=self.dev); self.head = torch.zeros(self.n, device=self.dev)
             self.store = torch.zeros(self.n, 2, device=self.dev); self.dead = torch.zeros(self.n, dtype=torch.bool, device=self.dev)
             self.clock = torch.zeros(self.n, device=self.dev); self.felt = torch.zeros(self.n, 6, device=self.dev)
+            self.stock = torch.ones(self.n, 2, device=self.dev)
         idx = which.nonzero()[:, 0]
         self.map[idx] = self.base
         for k, kind in enumerate((WATER, FOOD)):
@@ -58,7 +62,7 @@ class World:
             self.src[idx, k] = c; self.map[idx, c[:, 0], c[:, 1]] = kind
         self.pos[idx] = self.start; self.head[idx] = 0.0
         self.store[idx] = 0.5 + 0.5 * torch.rand(n, 2, device=self.dev, generator=self.gen)
-        self.dead[idx] = False; self.clock[idx] = 0; self.felt[idx] = 0
+        self.dead[idx] = False; self.clock[idx] = 0; self.felt[idx] = 0; self.stock[idx] = 1.0
 
     def cell(self, p):
         x = p[:, 0].long().clamp(0, self.S - 1); y = p[:, 1].long().clamp(0, self.S - 1)
@@ -88,9 +92,16 @@ class World:
             for j, kind in enumerate((WATER, FOOD)):
                 hit = do & alive & (k == kind) & (dist <= REACH)
                 if hit.any():
-                    filled[:, j] = hit
-                    self.store[hit, j] = 1.0
+                    if self.regrow is None:
+                        filled[:, j] = hit
+                        self.store[hit, j] = 1.0
+                    else:
+                        give = torch.minimum(self.stock[:, j], 1.0 - self.store[:, j]) * hit
+                        self.store[:, j] += give; self.stock[:, j] -= give
+                        filled[:, j] = hit & (give > 0.01)
                     self._move(hit, j, kind)
+        if self.regrow is not None:
+            self.stock = (self.stock + self.regrow * TICK).clamp(max=1.0)
         self.clock += TICK * alive
         self.dead |= (self.store <= 0).any(1)
         self.store.clamp_(min=0)

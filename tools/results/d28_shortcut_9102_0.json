@@ -1,0 +1,66 @@
+{
+ "protocol": "atanor_os/GRAIN_THEORY.md (D28)",
+ "rows": [
+  {
+   "layout": "9102_0",
+   "k": {
+    "64": {
+     "far_share": 0.036645833333333336,
+     "as is": [
+      0.15,
+      0.58
+     ],
+     "judge-purged": [
+      0.33,
+      0.56
+     ],
+     "continuity": [
+      0.23,
+      0.62
+     ],
+     "continuity + rare links dropped": [
+      0.15,
+      0.42
+     ],
+     "continuity shuffled": [
+      0.15,
+      0.02
+     ],
+     "continuity + rare shuffled": [
+      0.03,
+      0.13
+     ],
+     "flips removed by continuity": 0.10396875
+    },
+    "256": {
+     "far_share": 0.017119791666666665,
+     "as is": [
+      0.2,
+      0.62
+     ],
+     "judge-purged": [
+      0.56,
+      0.57
+     ],
+     "continuity": [
+      0.29,
+      0.68
+     ],
+     "continuity + rare links dropped": [
+      -0.24,
+      0.34
+     ],
+     "continuity shuffled": [
+      0.28,
+      -0.0
+     ],
+     "continuity + rare shuffled": [
+      0.23,
+      0.13
+     ],
+     "flips removed by continuity": 0.200828125
+    }
+   }
+  }
+ ]
+}

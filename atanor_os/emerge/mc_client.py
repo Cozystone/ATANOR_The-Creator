@@ -76,6 +76,14 @@ class MCWorld:
             self.obs[i] = o; self.felt[i] = 0
         return got
 
+    def exec(self, which, cmds, settle=2, label=""):
+        """판정 쪽 세계 명령 (계곡 짓기, 시간, 몸 옮기기): 몸마다 명령들을 차례로, 그 뒤 settle걸음 그대로. 존재의 고름이 아니다."""
+        _send(self.s, dict(cmd="exec", which=list(which), cmds=list(cmds), settle=settle, label=label))
+        got = _recv(self.s)
+        for i, o in zip(which, got):
+            self.obs[i] = o; self.felt[i] = 0
+        return got
+
     def feed(self, which, item="bread", qty=8, slot="slot.hotbar.0"):
         """부모가 손에 무언가를 쥐여 준다 (돌봄 단계, 장부, 차츰 뗌): 먹을 것, 또는 도구. slot: 주 손 slot.hotbar.0 / 다른 손 slot.weapon.offhand."""
         _send(self.s, dict(cmd="feed", which=list(which), item=item, qty=qty, slot=slot))

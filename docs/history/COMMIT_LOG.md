@@ -1025,3 +1025,107 @@
 - 2026-11-23 `061b0f75` laptop decision sources: strong pull 145 / hold 38 / try 18 / random 0 of 201 - correct the 'nearly random' reading
 - 2026-11-23 `2a450864` path memory (trail) dev probe on need fork 9001-9006: full .554 / no-trail .497 / no-episodic .522 - similarity saturated (.97), not a verdict; trail off by default; founder concern recorded (memory->action link is hand-wired)
 - 2026-11-23 `f8b843f5` export: add loki_bridge, LOKI/need-fork tools and results; scrub ext path
+- 2026-11-23 `bbfe36e8` D0 replay diagnostic (dev 9001-9006): perfect replay does not make Worth need-dependent (value probe .434 vs none .528, shuffled .485; being .558/.493/.505); second spring lived once; next candidate = per-channel value x bedrock gradient
+- 2026-11-23 `a28faab4` A1 channel-outcome test: preregistration (arms Worth / split-outcome aux / split-outcome x bedrock formula; exact wholeness difference primary; dev 9001-9012, sealed 7501-7512), before any run
+- 2026-11-23 `e1835dfa` A1: channel predictor + arms (aux / bedrock, off by default), judge chain tool; dev run started (9001-9012)
+- 2026-11-23 `01f81877` A1 dev (9001-9012): all arms at chance; break at step 1 (channel prediction .553 = shuffled); sealed not run yet; MineLand installed and validated; MineDojo valley probe void
+- 2026-11-23 `02988389` A1 registration recorded as failed (sealed seeds unused); trip count: rare spring reached by exactly one successful trip per layout -> experience too thin; MineLand valley built with viewer
+- 2026-11-23 `bed811ee` spring depletion option (regrow, off by default) in World and RoomBody; trip counter with fixed length and live room viewer; valley sky view flipped, longer nights
+- 2026-11-23 `5151d791` MineLand body: nerves only (shuffled unnamed slots and branches, no meaning matched); room being wears it and lives with learning on; valley viewer back to original size
+- 2026-11-23 `c58cd3e9` A1 v2 preregistration: same arms and chain, world with spring depletion + fixed 12,000-beat phase A, sleep from the value ring; dev 9101-9112, sealed 7701-7712 (before any v2 run)
+- 2026-11-23 `e21bdcfa` MineLand: valley ends opened via judge command file, being continues from its saved file, head-level measure; A1 v2 tool changes (fixed phase A with depletion, ring replay)
+- 2026-11-23 `94e3660e` MineLand body trait: resting neck tone (head sinks back toward level while the head is not moved; not a reflex); danger now enters the opened valley
+- 2026-11-23 `da7d30a6` MineLand body: last leg option is jump-forward (was sprint by mistake, so the body could not climb out of a pit); one recorded care move; neck tone raised head-level share .07-.14 -> .52-.58
+- 2026-11-23 `ecba4d35` MineLand body v2: dig in hand + stone pickaxe (care), vestibular-like motion (5 dims); being re-paired by wear
+- 2026-11-23 `94125902` MineLand body trait: neck joint limit +-60 degrees (the view flipped past 90)
+- 2026-11-23 `d175545b` MineLand: both bodies dug themselves into shafts and froze; care hand lifts a body still for 300 steps (founder's Minecraft pit rule), counted
+- 2026-11-23 `5b8b5794` MineLand world: fast hunger (Hunger III), regrowing cakes on the dark side, hard difficulty, night zombies at both open ends
+- 2026-11-23 `9a8fc9fc` MineLand world shaping: hollows around the valley filled, bedrock right under the top ground block (no pit deeper than one block)
+- 2026-11-23 `4e2b49bc` Ledger: A1 v2 dev failed G1-G3 (chain breaks at value -> first choice); MineLand run froze at ~17,500 steps, being file marked contaminated
+- 2026-11-23 `033a69ec` Ledger: correct the MineLand 'world froze' claim (digging went on; stats freeze vs standing still undetermined); A1 v2 closed as failed
+- 2026-11-23 `5b175b71` A1 hold diagnostic registered before running: clone the commit beat, compare original / hold released / value only (probe); Mind records again and value lean, one-beat forced re-pick hook (default off)
+- 2026-11-23 `6ab25de8` MineLand guard: server tick / body readings / commands checked apart; learning and checkpoints stop on a fault; a file per healthy window; recovery = fresh mind from the last healthy file after probation; world restart via serve_loop.sh; effort cost (hand work burns food); test: cut link and stale readings both recovered, 0 steps learned across or inside a gap
+- 2026-11-23 `86170a69` Ledger: A1 hold diagnostic registered; MineLand guard tests (cut link, stale readings, world restart) all recovered with no learning across gaps; effort cost; new guarded life ml_live_9
+- 2026-11-23 `1260c897` Ledger: mirror test parked until the screen-eye stage (digital mirror, replay control, mark test)
+- 2026-11-23 `541003b4` MineLand: bodies were kicked for attacking invalid entities (MineLand fix: living targets only), base hunger III -> II under the effort cost, guard needs two mismatches in a row; ml_live_10 continues from the last healthy file
+- 2026-11-23 `c9144797` MineLand: hung step (world waits forever on a body killed mid-dig) - body actions capped at 2 s in MineLand, guard treats a 90 s step as a fault and asks the supervisor to restart; zombie look checked (full model in the renderer)
+- 2026-11-23 `6c216e55` Ledger: LOKI integration plan (I0 side scoring with persistence baseline -> I1 as a felt sense -> I2 sleep replay -> I3 imagination -> I4 one memory across bodies); laptop I0 numbers
+- 2026-11-23 `88963968` LOKI I0 in the MineLand life: one pinned v4 organ per body beside the being, guard rules (no feeding when unhealthy, saved and restored with healthy files, cuts); ml_live_12 first window
+- 2026-11-23 `f080666f` MineLand: respawn point set to the valley centre (bodies respawned 150+ blocks away, some in water)
+- 2026-11-24 `6481b411` D1 registered before running: does the value know what holding each combo does at the A1 fork (theory: one-beat Q vs held actions); caches phase-A minds and arms
+- 2026-11-24 `48429c8b` D1: one clone per combo and no 300k ring (shared GPU), amended before running
+- 2026-11-24 `72316f3e` D2 registered before running: one-beat vs held-action value target on the same lived ring, judged against held-combo truth at the A1 fork
+- 2026-11-24 `7ef66637` Background trimmed for the founder's game: A1 hold diagnostic stopped at 8 layouts, MineLand life paused at healthy file s14500 (with LOKI)
+- 2026-11-24 `c1b4e92f` D1 result (value ranking ~unrelated to held-combo outcomes, truth noisy); D2 truth strengthened before running (two clones + reliability, noise-free hold-entry truth)
+- 2026-11-24 `3b1db72e` D2 done (target alone not the break); D3 registered before running: per-branch value parts (contract's motor branches) vs per-combo heads
+- 2026-11-24 `251bfec3` D3 done (per-branch heads no gain); D4 registered before running: judge a held combo by rolling the body predictor and a state value
+- 2026-11-24 `07e63722` D4 done (rollouts diverge 47x, state value blind to landed places); D5 registered: are the two arms the same to the being's senses (aliasing)
+- 2026-11-24 `87062660` D5 (aliasing falsified), D6 (lived Q inflated to 5-20 by max bias, arm 3 stuck); D7 registered: double / sarsa / held+sarsa targets
+- 2026-11-24 `5cabe43d` D7 done (SARSA fixes the max bias, ranking still 0); D8 registered before running: choosing from recalled episodes (episodic control, bedrock only)
+- 2026-11-24 `b5312d1d` D8 done (episodic by index no gain; 59 junction-like moments, 19-37 of 90 combos tried); D9 registered before running: actions known by their felt effects
+- 2026-11-24 `5626553c` D9 failed (effect kinship drowned by eye noise); D10 registered: effects weighted by what the being controls (eta^2)
+- 2026-11-24 `554fa39c` D10 failed; own mistake recorded (12-beat hold truth mismatched the being's 3.5-beat holds); V1 registered: SARSA target in the being's value, judged ecologically
+- 2026-11-24 `d17a1905` V1: SARSA option in the being's value (records the combo each body really did next; cuts break the link), default max until adopted; A/B tool
+- 2026-11-24 `30215caa` Ledger: roadmap to completion under the founder's goal (honest, emergent, no workarounds)
+- 2026-11-24 `7a444ddf` Ledger: one-beat felt effects are 95% neck, 1% legs - movement units must form from multi-beat effects
+- 2026-11-24 `98dcd276` Ledger: correct own claim (legs do control felt forward/side, eta .20; neck turning .37; hand nothing in the room)
+- 2026-11-24 `d1b4ae17` D11 registered before running: recall pooled over controlled dims (shuffle test), ecological 3-beat ruler; V1 tool runs in parts
+- 2026-11-24 `bfd28d18` Prior-work directions in the ledger; D12 registered before running: successor-feature arm 3 with SARSA futures (its score was stuck by the max bias)
+- 2026-11-24 `01a28d26` D11 done: controlled dims found (felt motion), recall ranking still below the bar; junction problem handed to stage 2
+- 2026-11-24 `a1390f31` D13 registered before running: a recalled goal (own relief scene for the current lack) that persists, steered by learned beats-to-goal (hindsight, contrastive-style), with a swapped-goal control
+- 2026-11-24 `5b10c1e2` D13 tool
+- 2026-11-24 `0d29cd5c` D13 failure explained (eye scenes do not carry place); D14 registered: a place sense from predicting what comes next
+- 2026-11-24 `2cfaf43f` D12 (SF saturation fixed, value knows place x need, choice not better - not adopted) and D13 (goal steering fails, no place sense) recorded
+- 2026-11-24 `f04b6b65` D14 tool
+- 2026-11-24 `41d9e387` D14 first run: no place read-out (registered reading not met); post-hoc check with spread hold-out blocks added, labelled
+- 2026-11-24 `945dcc7c` D14 post-hoc: no place from near prediction (h no better than random); D14b registered: far (16/32 beats) action-conditioned prediction
+- 2026-11-24 `7924c997` V1 done: SARSA fixes the value scale and first choice (+.17) but fills drop 22% and trust does not rise - not adopted (registered criteria)
+- 2026-11-24 `3fd54c15` D14b: precompute cumulative sums (was recomputed every beat), save lived streams; same registered design
+- 2026-11-24 `3b8ccc9f` ml_live: --loki-load continues LOKI's memory with the being
+- 2026-11-24 `e6a006d9` ml_live_13 done (40k steps, all healthy, no survival trend); ml_live_14 continues being and LOKI memory
+- 2026-11-24 `bd1f013e` D14c registered before running: nonlinear read-out of place from the feelings alone
+- 2026-11-24 `028027dd` D14c: place mostly lost in the eye summary (nonlinear pos R2 .18-.55, heading <= .26); D15 registered: a magno whole-frame code grown by action-conditioned next-frame prediction
+- 2026-11-24 `7d3f0fdc` Ledger: D14/D14c findings, D15 launched
+- 2026-11-24 `98c8338b` D15: the uncued T room itself does not show place (raw frame R2 low); world option: wall faces tinted by direction (distal cues, default off); D16 registered
+- 2026-11-24 `30d71973` RoomBody.default_cues switch
+- 2026-11-24 `fc375869` A1 v3 registered before running (cued room; life value, SF-SARSA arm 3, 1f, shuffled controls; A1 v2 gate)
+- 2026-11-24 `42737f45` ml_live: link errors during judge commands (reset, lift) handled by the guard (ml_live_14 crashed there)
+- 2026-11-24 `b9b79f3e` Ledger: ml_live_14 stopped by a missing potion texture (renderer) and a guard hole at judge commands; both fixed; ml_live_15 continues
+- 2026-11-24 `0256a0f3` D16 passed: distal cues make heading (R2 .81-.86) and position (.51-.68) visible in the raw frame; A1 v3 starts
+- 2026-11-24 `743af2a3` Camping finding (fills almost never at the lower store); D17 registered before running: futures as the share of a lack relieved (latent learning); cued-life cache tool
+- 2026-11-24 `2d7d792d` D17 tool (ReliefWorth: relief-share and loss futures, SARSA)
+- 2026-11-24 `a9f7772c` Ledger: own mistake (GPU overloaded, A1 v3 part a crashed); D14b B stopped unfinished; A1 v3 part a resumed with --skip
+- 2026-11-24 `abfa9604` Ledger: stage 5 reference - grey parrot word learning (model/rival, social gating)
+- 2026-11-24 `becf0f68` Ledger: founder - start model/rival sound learning once the parrot-level gates are met (gates and design sketch)
+- 2026-11-24 `e8f69be9` A1 v3 dev failed G1-G3 (cued room; value preference independent of need); sealed seeds untouched
+- 2026-11-24 `a6dc1cae` Own mistake: value maps used fresh sense organs (D6, D12 gap numbers unreliable); D17 map fixed to load the being's organ state
+- 2026-11-24 `58187ee6` D17 not met (relief-share map 8/12, value never decides alone); D18 registered: fork with the pull silenced (probe)
+- 2026-11-24 `08751d6d` D18: the value alone steers at chance (pull was giving the recovery); D19 registered before running: nurture stage - the T room grows with the being
+- 2026-11-24 `389da9da` D20 registered before running: one mind in 64 bodies (is it the amount of experience?), tool smoke-tested
+- 2026-11-24 `fdc055a6` D19 done: graded rooms do not carry (need-directed visits 6.2 -> 0.3 per 3000 beats as the room grows); D20 running
+- 2026-11-24 `e636bcc6` D21 registered before running: relief-share (latent) arm on the 64-body ring; junction fork and far fork (from the wrong spring)
+- 2026-11-24 `5e561f0c` D20 done: 64x experience alone does not give need-directed choice (the fork's state never occurs in the life); D21 queued
+- 2026-11-24 `912ff29e` D21: arm buffer sized to the ring (crash fix, no design change); offline tool on the saved 64-body lives
+- 2026-11-24 `9d4683f6` D21 first 3 layouts: relief-share arm on 64-body experience closest so far (recovery .62 vs .35 shuffled), below the registered bar; mirrors running
+- 2026-11-24 `739ae966` D21 final (not met; relief arm recovery +.26 over shuffled, prefers the needed side 9/12); D22 probe registered: greedy following of the relief score
+- 2026-11-24 `f6c9ac9e` D22 probe: the relief score is a signpost at the junction (enters the needed arm ~.9 in 4/6) but not a route; D23 registered: longer horizons
+- 2026-11-24 `e0d2fb63` D23: relief-share futures at gamma .99 take the being to the needed arm (first .74 vs .54, recovery .72 vs .27 shuffled); V2 registered: the being lives with ReliefWorth (option, default off)
+- 2026-11-24 `48d830c5` Room eye height as a world setting (default unchanged; next world 1.1 after a place-reading check); ledger: no social behaviour in MineLand (one mind, two bodies)
+- 2026-11-24 `081bf54f` Ledger: founder decision - social learning by watching two models exchange (model/rival)
+- 2026-11-24 `330c675c` V2 not adopted (deaths -6%, fork .35); need-directed visits x4 within life, trust .48; V2b registered: offline training on V2's own rings
+- 2026-11-24 `3b1c446b` horizon tool: CACHE_ROOT for V2b
+- 2026-11-24 `af2be920` V2b: offline on V2's own rings chooses .68 (online .35) - the learning schedule is the gap; V3 registered: sleep consolidation (replay at rest)
+- 2026-11-24 `ac7aee56` V3: sleep replay - the being's own value goes to the needed arm (fork .73 / .69, far .46, need-directed visits x6.6, trust .65); deaths -12% (adoption bar -20% not met); A1 gate check registered
+- 2026-11-24 `ff569d42` V3 A1 gate G1 not met (.58); D24 registered: judge-side cause of each death
+- 2026-11-24 `b073a644` Room viewer takes any saved being; now shows V3 (relief + sleep)
+- 2026-11-24 `370a57a9` MineLand: dig-down limit lifted (bedrock layer off, founder); ledger: start-of-life circling found in the viewer (measurement gap: forks never started from the stem)
+- 2026-11-24 `6cf4e532` D24: deaths = camping at the other spring (62%) and circling at the start (36%), 92% never fill the lacked store; V4 registered: track-record arbitration between the relief pull and the value (Daw et al. 2005), stem-start fork
+- 2026-11-24 `2a17fbc8` Grain theory registered: the being chooses at muscle grain what is a place-sized question (action gap O(step); HIQL; hippocampal goal sequences); D25 diagnostic before results
+- 2026-11-24 `38a261d1` D25: the value does not know the way (map missing; my grain prediction did not hold); V4 not adopted, branch closed; D26 registered: a stitched place map from the same lived steps
+- 2026-11-24 `d50220a9` V4 forks recorded (junction .68/.57, far .17, stem .31)
+- 2026-11-24 `17e0ab61` D26: with true cells the lived steps hold the map (.81-1.00) though no spring-to-spring trip was lived; the being's place code is the gap; D27 registered (place sense: one state / short past / carried state)
+- 2026-11-24 `52878587` D27: no place code passes; the eye tells places apart, coarse units are fine, relief leak ruled out; D28 registered: false shortcuts and the body's own continuity
+- 2026-11-24 `b39db3af` D28: false shortcuts are part, not the whole; dwell-time clustering starves rare places of units; D29 registered: landmarks kept by novelty
+- 2026-11-24 `79e5f999` D29: novelty landmarks do not make the map work; ceiling sensitivity: 0.2-1% wrong places break it, the way hangs on 1-17 crossings; D30 registered: a judge-driven traveller probe
+- 2026-11-24 `341b169f` D30: with travel the being's own place map reads the way at .67-.77 per cell (own stretches .11-.53); registered bar (4 of 6 >= .7) missed at 3 of 6; next = what makes the being travel
+- 2026-11-24 `d4a8aaed` E1 registered: drawn to where its own place memory is thin (Mind.roam, default off); life tool

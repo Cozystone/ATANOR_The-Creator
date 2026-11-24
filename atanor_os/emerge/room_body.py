@@ -20,9 +20,12 @@ def contract():
 
 
 class RoomBody:
-    def __init__(self, n, rows, drain=1 / 240.0, seed=0, device="cuda"):
+    default_cues = False                                                # a run can switch distal cues on for every room body it makes
+    default_eye = EYE                                                   # eye height (cells); founder 2026-11-24: lower it from the next world (1.1), checked first
+
+    def __init__(self, n, rows, drain=1 / 240.0, seed=0, device="cuda", regrow=None):
         self.n, self.dev = n, device
-        self.w = G.World(n, rows, device, seed=seed, drain=drain)
+        self.w = G.World(n, rows, device, seed=seed, drain=drain, regrow=regrow)
         self.c = contract()
         self.combos, _ = self.c.codes()
         cb = torch.tensor(self.combos, device=device)              # [90, 3]
@@ -33,6 +36,9 @@ class RoomBody:
         # 어둠 (R1: 세계가 기억을 요구하게 - 불이 꺼지면 눈으로는 아무것도 보이지 않고, 샘이 어디 있는지는 들고 있는 것으로만 안다). 몸마다 다른 때에.
         self.dark_every, self.dark_len = 0, 0
         self.dark_phase = torch.randint(0, 10 ** 6, (n,), device=device); self.t = 0
+        # 먼 단서 (2026-11-24, 세계의 성질 - 행동 규칙 아님; 창립자 '환경 잘 구성해' 위임, 검토 대상): 벽의 면마다 (북·동·남·서) 빛깔이 조금 다름 - 실제 방의 벽이
+        # 저마다 다르게 보이듯. 대칭인 방에서 곳·방향을 눈으로 알 수 있게 (D15: 단서 없는 방은 그림 자체가 곳을 싣지 않음). 기본 꺼짐.
+        self.cues = RoomBody.default_cues
 
     @property
     def dead(self):
@@ -47,10 +53,18 @@ class RoomBody:
         kind, dist = w.cast(w.head[:, None] + self.cols[None], step=0.05)
         z = (dist * torch.cos(self.cols)[None]).clamp(min=0.05)                       # [n, W]
         hgt = torch.where(kind == G.WALL, torch.full_like(z, WALL_H), torch.full_like(z, SPRING_H))
-        top = -FY * (hgt - EYE) / z; bot = FY * EYE / z                                # 화면에서 수평선 위아래로 (px)
+        eye = RoomBody.default_eye; top = -FY * (hgt - eye) / z; bot = FY * eye / z                                # 화면에서 수평선 위아래로 (px)
         r = self.rows[None]                                                             # [1, H, 1]
         hit = (r >= top[:, None, :]) & (r <= bot[:, None, :]) & (dist[:, None, :] < 90)
         col = G.COLOR.to(self.dev)[kind.long()] * (1.0 - z / 14.0).clamp(0.3, 1.0)[..., None]
+        if self.cues:                                                                   # which face of the wall the ray met (from the ray direction and the hit cell's side)
+            ang = w.head[:, None] + self.cols[None]; dxr, dyr = torch.cos(ang), torch.sin(ang)
+            hx = w.pos[:, 0, None] + dxr * dist; hy = w.pos[:, 1, None] + dyr * dist
+            px, py = hx - dxr * 0.05, hy - dyr * 0.05
+            xface = hx.floor() != px.floor()                                             # crossed a vertical cell boundary -> an east / west face
+            face = torch.where(xface, torch.where(dxr > 0, 3, 1), torch.where(dyr > 0, 0, 2))     # 0 north face, 1 east, 2 south, 3 west
+            tint = torch.tensor([[1.15, 0.95, 0.80], [0.80, 1.10, 0.85], [0.80, 0.90, 1.20], [1.10, 0.85, 1.10]], device=self.dev)[face]
+            col = torch.where((kind == G.WALL)[..., None], col * tint, col)
         sky, gnd = G.SKY.to(self.dev), G.GROUND.to(self.dev)
         base = torch.where((r < 0)[..., None], sky, gnd).expand(self.n, H, W, 3)
         img = torch.where(hit[..., None], col[:, None].expand(-1, H, -1, -1), base)
@@ -109,7 +123,14 @@ class RoomBody:
             for j, kind in enumerate((G.WATER, G.FOOD)):
                 hit = do & alive & (k == kind) & (dist <= G.REACH)
                 if hit.any():
-                    filled[:, j] = hit; w.store[hit, j] = 1.0; w._move(hit, j, kind)
+                    if w.regrow is None:
+                        filled[:, j] = hit; w.store[hit, j] = 1.0
+                    else:                                                   # 샘의 고갈 (세계의 성질): 남은 만큼만 준다
+                        give = torch.minimum(w.stock[:, j], 1.0 - w.store[:, j]) * hit
+                        w.store[:, j] += give; w.stock[:, j] -= give; filled[:, j] = hit & (give > 0.01)
+                    w._move(hit, j, kind)
+        if w.regrow is not None:
+            w.stock = (w.stock + w.regrow * TICK).clamp(max=1.0)
         w.clock += TICK * alive
         self.t += 1
         w.dead |= (w.store <= 0).any(1); w.store.clamp_(min=0)

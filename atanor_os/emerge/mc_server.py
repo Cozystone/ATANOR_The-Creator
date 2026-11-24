@@ -99,7 +99,8 @@ def body(conn, seed, h, w, small, big):
     ELDER = os.environ.get("ATANOR_MC_ELDER") == "1"            # 목소리 어른이 '아기가 바라보는 것'을 알려고 (어른만 기호를 안다, 존재의 마음에는 들어가지 않는다)
     if ELDER:
         extra.update(use_lidar=True, lidar_rays=list(extra.get("lidar_rays", [])) + [(0.0, 0.0, 24.0), (float(np.radians(-12.0)), 0.0, 24.0), (float(np.radians(12.0)), 0.0, 24.0)])
-    env = minedojo.make(task_id="open-ended", image_size=(h, w), generate_world_type="default", world_seed=seed, allow_mob_spawn=True,
+    WTYPE = os.environ.get("ATANOR_MC_WORLD", "default")         # 판정 쪽 세계 꼴 (2026-11-23 계곡: 'flat' 위에 판정 명령으로 짓는다)
+    env = minedojo.make(task_id="open-ended", image_size=(h, w), generate_world_type=WTYPE, world_seed=seed, allow_mob_spawn=True,
                         **({"start_food": int(food0)} if food0 else {}), **extra)
 
     def skin(obs, yaw):
@@ -240,6 +241,13 @@ def body(conn, seed, h, w, small, big):
             ex = getattr(env, "execute_cmd", None) or env.unwrapped.execute_cmd
             obs, _, done, _ = ex(f"/spreadplayers {x} {z} 0 8 false @p")
             for _ in range(10):                                   # 떨어져 자리 잡을 때까지 몇 걸음 그대로
+                obs, _, done, _ = env.step(env.action_space.no_op())
+            conn.send(pack(obs, done, 0.0)); continue
+        if isinstance(cmd, tuple) and cmd[0] == "exec":       # 판정 쪽 세계 명령 (계곡 짓기, 시간, 몸 옮기기). 존재의 고름이 아니다
+            ex = getattr(env, "execute_cmd", None) or env.unwrapped.execute_cmd
+            for c in cmd[1]:
+                obs, _, done, _ = ex(c)
+            for _ in range(int(cmd[2]) if len(cmd) > 2 else 2):
                 obs, _, done, _ = env.step(env.action_space.no_op())
             conn.send(pack(obs, done, 0.0)); continue
         if isinstance(cmd, tuple) and cmd[0] == "voice":     # 어른의 목소리를 이 몸의 귀에 (세계는 한 걸음도 가지 않는다)
@@ -425,6 +433,14 @@ def main():
                         pipes[i].send(("feed", m.get("item", "bread"), int(m.get("qty", 8)), m.get("slot", "slot.hotbar.0")))
                     for i in m["which"]:
                         first[i] = pipes[i].recv()
+                    send(s, [{k: v for k, v in first[i].items() if k not in ("big", "kept")} for i in m["which"]]); continue
+                if m.get("cmd") == "exec":
+                    for i in m["which"]:
+                        pipes[i].send(("exec", list(m["cmds"]), int(m.get("settle", 2))))
+                    for i in m["which"]:
+                        first[i] = pipes[i].recv()
+                    if 0 in m["which"]:
+                        show(first[0], "", "실험자 (판정 쪽 세계 명령)", m.get("label", ""))
                     send(s, [{k: v for k, v in first[i].items() if k not in ("big", "kept")} for i in m["which"]]); continue
                 if m.get("cmd") == "move":
                     for i in m["which"]:
