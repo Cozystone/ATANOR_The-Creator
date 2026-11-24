@@ -1,0 +1,99 @@
+{
+ "protocol": "atanor_os/GRAIN_THEORY.md (D31)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "ring": 191936,
+   "arms": {
+    "travel": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.19,
+       "per_cell": 0.52
+      },
+      "hungry": {
+       "per_state": 0.03,
+       "per_cell": 0.64
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.875,
+       1.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.125
+      ]
+     },
+     "being": {
+      "junction_first": [
+       1.0,
+       0.13333333333333333
+      ],
+      "junction_recover": [
+       1.0,
+       0.3125
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.125,
+       0.25
+      ]
+     }
+    },
+    "travel-shuf": {
+     "way": {
+      "thirsty": {
+       "per_state": -0.11,
+       "per_cell": -0.39
+      },
+      "hungry": {
+       "per_state": -0.02,
+       "per_cell": 0.25
+      }
+     },
+     "greedy": {
+      "junction": [
+       0.0,
+       0.0
+      ],
+      "far": [
+       0.0,
+       0.0
+      ],
+      "stem": [
+       0.0,
+       0.0
+      ]
+     },
+     "being": {
+      "junction_first": [
+       0.3333333333333333,
+       0.75
+      ],
+      "junction_recover": [
+       0.25,
+       0.3125
+      ],
+      "far": [
+       0.1875,
+       0.25
+      ],
+      "stem": [
+       0.125,
+       0.5
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

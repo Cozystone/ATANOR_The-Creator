@@ -169,3 +169,38 @@ stretch to a reliable map (.67 -> clearly above .7) may need the stricter linkin
 Next (to be registered before running): the being itself must do the travelling. Candidate, from its existing second bedrock (drawn to where its own
 prediction fails - until now only about its insides): the same pull applied to its place code, i.e. drawn to where its own place memory is still thin.
 Novelty is local (the unfamiliar is always next to the familiar), so unlike the far spring it can steer a muscle-sized choice.
+
+## E1 / E1b (atanor_os/E1_ROAM_PROTOCOL.md): the place-unfamiliarity pull did not make the being travel
+E1 put the pull in a slot that decided 0% of beats (my mistake). E1b put it in the score: the bodies stir more and cover every cell (least-crossed link
+71 - 125), yet make no trips (spring-to-spring .01 - .27 per 1,000 body-beats), die more in two layouts, and the being-side map stays at -.04 - .42.
+So covering cells is not what was missing; the traveller of D30 differed by going somewhere and arriving.
+
+# D31 (registered before running): given a traveller's experience, does the being's own value learn the way and steer?
+D30 asked this of the stitched map (yes, .67 - .77). The same question for the value the being already has (relief-share futures, SARSA, gamma .99):
+trained offline, 10,000 updates, on the traveller's 192,000 steps per layout (sensed through the being's organs, the traveller's own gestures as actions),
+with a shuffled-outcome control. Measured:
+- the way (as D25 c): Spearman of the state value with the true path distance to the needed spring over the being's own V3 stretch (per lived state, and per true cell);
+- steering: the value followed greedily with 10% random gestures (judge-only probe, as D22) from the junction, from the wrong spring and from the bottom of the stem;
+- the being's own choosing with this value plugged in (as D21 / V4): junction fork, far fork, stem fork.
+Reading (fixed now): way >= .5 per state and >= .7 per cell, and greedy recovery >= .6 from the wrong spring and from the stem (control far below) ->
+experience is the one root for the value path as well: the value organ, as it is, learns the route once the experience contains trips. Then the question is
+no longer value -> choice but how a young being first gets such experience (the founder's nurture stage: led or carried through its range early in life,
+removed gradually), and whether its own choosing can then keep it up.
+Way learned but greedy does not arrive -> the knowledge is there and the per-beat choice cannot follow it (the grain question returns, now with a value that knows).
+Way not learned -> the value organ cannot learn the route even from good experience; the map organ is the only road.
+
+## D31 result (3 layouts x 2 needs): with a traveller's experience the value learns the side and part of the way, and still cannot steer from afar
+Way, per true cell: .52 / .64, .56 / .48, .72 / .70 (shuffled control -.41 - .50; the value from the being's own experience, D25, was .13 - .38 per state);
+per lived state: -.35 - .37 (bar .5: not met; the being's own stretch is mostly the stem, where the order of a few cells decides this number).
+Greedy + 10% random (judge-only probe): from the junction .88 / 1.00, .69 / .88, 1.00 / .56 (control 0 - .25) - the clearest junction result so far;
+from the wrong spring 0 / 0, 0 / 0, 0 / .06; from the bottom of the stem 0 / .13, .13 / 0, 0 / .06.
+The being's own choosing with this value: junction first 1.0 / .13, 1.0 / 1.0, .12 / .07; far 0 - .06; stem 0 - .25.
+Registered reading: bar not met (way per state, and greedy from afar). Between the two other branches: the way is partly learned (per cell .5 - .7) and the
+value does not carry a body from afar under any experience tried - at the junction one choice decides and it is right; from afar it is 0.
+What D25-D31 and E1/E1b establish together:
+1. The value organ answers 'which side' at a decision point, with own experience weakly, with travelled experience strongly. It does not carry a body across
+   the room, with either.
+2. A stitched place map from the being's own sense reads the way across the room (.67 - .77 per cell) when the experience contains trips, and not otherwise.
+3. The being makes no trips on its own; a pull toward the unfamiliar makes it stir, not travel, and costs lives.
+So reaching a far spring needs three things the being does not have: experience that contains trips, a place map built from it, and a skill of going to a
+remembered place (the map says where; something must take the body there). None is a tweak of the value or of who decides.

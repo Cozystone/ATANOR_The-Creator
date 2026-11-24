@@ -1129,3 +1129,7 @@
 - 2026-11-24 `79e5f999` D29: novelty landmarks do not make the map work; ceiling sensitivity: 0.2-1% wrong places break it, the way hangs on 1-17 crossings; D30 registered: a judge-driven traveller probe
 - 2026-11-24 `341b169f` D30: with travel the being's own place map reads the way at .67-.77 per cell (own stretches .11-.53); registered bar (4 of 6 >= .7) missed at 3 of 6; next = what makes the being travel
 - 2026-11-24 `d4a8aaed` E1 registered: drawn to where its own place memory is thin (Mind.roam, default off); life tool
+- 2026-11-24 `4ce60a5a` Ledger: V4 closed, D25-D30, E1 registered; export list widened (value/map diagnostics)
+- 2026-11-24 `6113f87e` E1 not met: the roam slot decided 0% of beats (my design mistake; the relief pull is strong on every beat); E1b registered: the unfamiliarity competes in the score
+- 2026-11-24 `048da902` E1b not met (bodies stir and cover cells but make no trips; deaths up); D31 registered: the being's own value trained on a traveller's experience
+- 2026-11-24 `098804ed` D31: with a traveller's experience the value is right at the junction (.56-1.00) and still 0 from afar; summary of D25-D31, E1/E1b

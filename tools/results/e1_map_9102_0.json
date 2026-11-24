@@ -1,0 +1,95 @@
+{
+ "protocol": "atanor_os/GRAIN_THEORY.md (D30)",
+ "rows": [
+  {
+   "layout": "9102_0",
+   "deaths": 1026,
+   "rises": [
+    282,
+    3795
+   ],
+   "ceiling": {
+    "clean": [
+     0.99,
+     0.98
+    ],
+    "0.002 wrong": [
+     0.99,
+     0.59
+    ],
+    "0.01 wrong": [
+     0.83,
+     0.37
+    ],
+    "0.03 wrong": [
+     0.76,
+     0.22
+    ]
+   },
+   "least_crossed_link": 60,
+   "median_link": 420,
+   "maps": {
+    "raw landmarks 512": {
+     "map": [
+      0.21,
+      -0.01
+     ],
+     "shuffled": [
+      -0.24,
+      -0.13
+     ]
+    },
+    "raw landmarks 128": {
+     "map": [
+      0.11,
+      0.12
+     ],
+     "shuffled": [
+      0.24,
+      -0.01
+     ]
+    },
+    "raw clusters 64": {
+     "map": [
+      0.14,
+      0.04
+     ],
+     "shuffled": [
+      0.19,
+      0.14
+     ]
+    },
+    "learned landmarks 512": {
+     "map": [
+      0.28,
+      0.14
+     ],
+     "shuffled": [
+      -0.23,
+      0.08
+     ]
+    },
+    "learned landmarks 128": {
+     "map": [
+      0.18,
+      0.16
+     ],
+     "shuffled": [
+      0.11,
+      0.12
+     ]
+    },
+    "learned clusters 64": {
+     "map": [
+      0.31,
+      0.11
+     ],
+     "shuffled": [
+      -0.56,
+      -0.17
+     ]
+    }
+   }
+  }
+ ]
+}

@@ -184,9 +184,12 @@ class Mind:
                 lw = lw + self.imagine * self.wo.lam * self.wo.earned() * c / (self.im_scale + 1e-6)
             if lw is not None:
                 sc = sc + lw
+        roam_on = getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256
+        if roam_on and getattr(self, "roam_mode", "slot") == "score":            # E1b: the unfamiliarity competes in the score, as the value and harm do
+            sc = sc + self.roam * self.unfamiliar(x)
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
         rnd = torch.randint(0, self.M, (n,), device=d); usedv = torch.zeros(n, dtype=torch.bool, device=d)
-        if getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256:        # E1: with no strong pull, drawn to the gesture whose foreseen state its place memory knows least
+        if roam_on and getattr(self, "roam_mode", "slot") == "slot":             # E1: with no strong pull, drawn to the gesture whose foreseen state its place memory knows least
             rnd = torch.multinomial(torch.softmax(self.roam * self.unfamiliar(x), 1), 1)[:, 0]
         if lw is not None:
             byv = torch.multinomial(torch.softmax(lw / LOOSE, 1), 1)[:, 0]

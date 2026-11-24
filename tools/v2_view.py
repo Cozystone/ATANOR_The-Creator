@@ -14,8 +14,10 @@ lay = sys.argv[1] if len(sys.argv) > 1 else "9101_0"; seed, mirror = map(int, la
 V2["on"] = True; RoomBody.default_cues = True; VIEW.start()
 rows, info = t_room(seed, bool(mirror)); root = sys.argv[2] if len(sys.argv) > 2 else "a1cache_many_relief"; name = sys.argv[3] if len(sys.argv) > 3 else "V2: 잠재 학습 값 (ReliefWorth)"
 ck = f"{root}/{lay}/mind.pt"
+if not __import__("os").path.exists(ck):
+    ck = f"{root}/{lay}_mind.pt"
 B = RoomBody(1, rows, drain=V2["drain"], seed=seed, device=DEV, regrow=V2["regrow"]); O = Organs(B.c, 1, dev=DEV, depth=DEPTH)
-Mi = Mind(O, B.c, 1, dev=DEV, value_arm="relief"); Mi.load(ck); Mi.wo.on = True
+Mi = Mind(O, B.c, 1, dev=DEV, value_arm="relief"); Mi.load(ck); Mi.wo.on = True; Mi.roam = float(sys.argv[4]) if len(sys.argv) > 4 else 0.0        # E1: the place-unfamiliarity pull, when the saved being lived with it
 one = torch.ones(1, dtype=torch.bool, device=DEV); B.w.store[:] = 0.75; place(B, info); O.reset(one); Mi.begin(one); x = O(B.raw())
 got = np.zeros(2, int); need = np.zeros(2, int); deaths = 0; t = 0; SRC = ["강한 끌림", "값", "무작위", "유지", "시도"]
 while True:

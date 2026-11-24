@@ -1,0 +1,100 @@
+{
+ "protocol": "atanor_os/E1_ROAM_PROTOCOL.md",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "roam": 1.0,
+   "quarters": [
+    {
+     "fills": [
+      264,
+      334
+     ],
+     "need_fills": [
+      0,
+      5
+     ],
+     "deaths": 251,
+     "src": [
+      75716,
+      0,
+      0,
+      96906,
+      19378
+     ],
+     "new_pick_share": 0.43872395833333333,
+     "time_in_stem": 0.4577291666666667
+    },
+    {
+     "fills": [
+      3,
+      0
+     ],
+     "need_fills": [
+      0,
+      0
+     ],
+     "deaths": 261,
+     "src": [
+      107314,
+      0,
+      0,
+      65424,
+      19262
+     ],
+     "new_pick_share": 0.6213072916666667,
+     "time_in_stem": 0.6784583333333334
+    },
+    {
+     "fills": [
+      643,
+      623
+     ],
+     "need_fills": [
+      40,
+      28
+     ],
+     "deaths": 267,
+     "src": [
+      64385,
+      0,
+      0,
+      108474,
+      19141
+     ],
+     "new_pick_share": 0.3723125,
+     "time_in_stem": 0.4310572916666667
+    },
+    {
+     "fills": [
+      890,
+      295
+     ],
+     "need_fills": [
+      35,
+      27
+     ],
+     "deaths": 235,
+     "src": [
+      60814,
+      0,
+      0,
+      112088,
+      19098
+     ],
+     "new_pick_share": 0.3519322916666667,
+     "time_in_stem": 0.565390625
+    }
+   ],
+   "last_quarter": {
+    "deaths_per_body": 3.671875,
+    "need_fills_per_body": 0.96875,
+    "time_in_stem": 0.565390625
+   },
+   "travel_last_3000": {
+    "leave_arm_per_1000": 3.3854166666666665,
+    "spring_to_spring_per_1000": 0.2708333333333333
+   }
+  }
+ ]
+}
