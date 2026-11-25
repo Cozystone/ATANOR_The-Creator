@@ -185,6 +185,11 @@ class Mind:
                 lw = lw + self.imagine * self.wo.lam * self.wo.earned() * c / (self.im_scale + 1e-6)
             if lw is not None:
                 sc = sc + lw
+        go = getattr(self, "going", None)
+        if go is not None:                                                     # L1: the lean of the lack toward its next place (atanor_os/emerge/going.py)
+            gl = go.lean(x)
+            if gl is not None:
+                sc = sc + gl
         roam_on = getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256
         if roam_on and getattr(self, "roam_mode", "slot") == "score":            # E1b: the unfamiliarity competes in the score, as the value and harm do
             sc = sc + self.roam * self.unfamiliar(x)
@@ -225,6 +230,8 @@ class Mind:
     def after(self, x, act, x2, died, cut):
         """한 걸음의 겪음. died [n] bool: 이 걸음에 죽음. cut [n] bool: 다음 걸음과 잇지 않음 (손이 옮김, 다시 태어남)."""
         ins = self.net.inside
+        if getattr(self, "going", None) is not None:                           # L1: the going organ keeps its own place memory and ring
+            self.going.observe(x, act, x2, died | cut)
         with torch.no_grad():
             rise = (x2[:, ins] - x[:, ins]).clamp(min=0)
             ok = ~died & ~cut & (rise > 0.01).any(1)

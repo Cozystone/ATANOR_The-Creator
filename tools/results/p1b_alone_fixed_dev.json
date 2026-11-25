@@ -1,0 +1,326 @@
+{
+ "protocol": "atanor_os/N1_NURTURE_PROTOCOL.md",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "arm": "alone",
+   "path": true,
+   "quarters": [
+    {
+     "fills": [
+      367,
+      260
+     ],
+     "need_fills": [
+      9,
+      4
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 244,
+     "src": [
+      51830,
+      0,
+      0,
+      120695,
+      19475
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      116,
+      93
+     ],
+     "need_fills": [
+      50,
+      20
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 263,
+     "src": [
+      39958,
+      0,
+      0,
+      132854,
+      19188
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      1536,
+      1163
+     ],
+     "need_fills": [
+      516,
+      513
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 5,
+     "src": [
+      27763,
+      0,
+      0,
+      144959,
+      19278
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      638,
+      721
+     ],
+     "need_fills": [
+      143,
+      122
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 168,
+     "src": [
+      55141,
+      0,
+      0,
+      117798,
+      19061
+     ],
+     "near_share": 0.0
+    }
+   ],
+   "alone": {
+    "deaths_per_body": 2.625,
+    "need_fills_per_body": 4.140625
+   },
+   "travel_alone": {
+    "leave_arm_per_1000": 2.4479166666666665,
+    "spring_to_spring_per_1000": 1.0260416666666667
+   }
+  },
+  {
+   "layout": "9102_0",
+   "arm": "alone",
+   "path": true,
+   "quarters": [
+    {
+     "fills": [
+      747,
+      791
+     ],
+     "need_fills": [
+      128,
+      87
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 147,
+     "src": [
+      61234,
+      0,
+      0,
+      111701,
+      19065
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      1409,
+      987
+     ],
+     "need_fills": [
+      474,
+      475
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 3,
+     "src": [
+      29843,
+      0,
+      0,
+      142852,
+      19305
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      1836,
+      993
+     ],
+     "need_fills": [
+      622,
+      632
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 0,
+     "src": [
+      27728,
+      0,
+      0,
+      145003,
+      19269
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      1126,
+      1404
+     ],
+     "need_fills": [
+      562,
+      563
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 2,
+     "src": [
+      32543,
+      0,
+      0,
+      140179,
+      19278
+     ],
+     "near_share": 0.0
+    }
+   ],
+   "alone": {
+    "deaths_per_body": 0.03125,
+    "need_fills_per_body": 17.578125
+   },
+   "travel_alone": {
+    "leave_arm_per_1000": 7.296875,
+    "spring_to_spring_per_1000": 4.9375
+   }
+  },
+  {
+   "layout": "9103_0",
+   "arm": "alone",
+   "path": true,
+   "quarters": [
+    {
+     "fills": [
+      596,
+      1135
+     ],
+     "need_fills": [
+      50,
+      69
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 175,
+     "src": [
+      56090,
+      0,
+      0,
+      116729,
+      19181
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      133,
+      1592
+     ],
+     "need_fills": [
+      6,
+      0
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 276,
+     "src": [
+      42801,
+      0,
+      0,
+      129976,
+      19223
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      809,
+      1962
+     ],
+     "need_fills": [
+      142,
+      130
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 147,
+     "src": [
+      43151,
+      0,
+      0,
+      129582,
+      19267
+     ],
+     "near_share": 0.0
+    },
+    {
+     "fills": [
+      1266,
+      1199
+     ],
+     "need_fills": [
+      306,
+      273
+     ],
+     "fed": [
+      0.0,
+      0.0
+     ],
+     "deaths": 48,
+     "src": [
+      42416,
+      0,
+      0,
+      130523,
+      19061
+     ],
+     "near_share": 0.0
+    }
+   ],
+   "alone": {
+    "deaths_per_body": 0.75,
+    "need_fills_per_body": 9.046875
+   },
+   "travel_alone": {
+    "leave_arm_per_1000": 4.140625,
+    "spring_to_spring_per_1000": 2.9322916666666665
+   }
+  }
+ ]
+}

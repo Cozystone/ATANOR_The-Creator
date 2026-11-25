@@ -1,0 +1,146 @@
+{
+ "protocol": "atanor_os/P1_PATH_PROTOCOL.md (D34b)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "far_map_end_cells_from_needed_spring": [
+    1.41,
+    1.41
+   ],
+   "far_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "far_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    1.41,
+    1.41
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "stem_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     10.5,
+     5.5
+    ],
+    "food": [
+     1.5,
+     5.5
+    ]
+   },
+   "springs": {
+    "f": [
+     1.5,
+     5.5
+    ],
+    "w": [
+     10.5,
+     5.5
+    ]
+   }
+  },
+  {
+   "layout": "9102_0",
+   "far_map_end_cells_from_needed_spring": [
+    1.41,
+    0.0
+   ],
+   "far_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "far_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    1.41,
+    0.0
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "stem_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     1.5,
+     4.5
+    ],
+    "food": [
+     16.5,
+     4.5
+    ]
+   },
+   "springs": {
+    "w": [
+     1.5,
+     4.5
+    ],
+    "f": [
+     16.5,
+     4.5
+    ]
+   }
+  },
+  {
+   "layout": "9103_0",
+   "far_map_end_cells_from_needed_spring": [
+    1.41,
+    0.0
+   ],
+   "far_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "far_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    1.41,
+    0.0
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "stem_skill_waypoints": [
+    1.0,
+    1.0
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     14.5,
+     6.5
+    ],
+    "food": [
+     1.5,
+     6.5
+    ]
+   },
+   "springs": {
+    "f": [
+     1.5,
+     6.5
+    ],
+    "w": [
+     14.5,
+     6.5
+    ]
+   }
+  }
+ ]
+}

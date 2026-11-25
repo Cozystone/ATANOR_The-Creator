@@ -1160,3 +1160,14 @@
 - 2026-11-25 `118d9e54` D33c2: the map linked every place to birth across play seams (my bug); transitions now inside each play
 - 2026-11-25 `c022e40d` D33b MET: own play skill + own map take bodies across the room to the spring they lack (.81-1.0 from anywhere, controls 0-.19)
 - 2026-11-25 `81345dd9` export list: D32-D33c, N1, P1a/P1b tools and results
+- 2026-11-25 `740aabb1` L1 registered: the going as the being's own organ (place memory, hindsight skill, lean of the lack), in a life with a protected childhood
+- 2026-11-25 `2663322e` L1: the going organ (place memory, hindsight skill, lean of the lack) and the life tool
+- 2026-11-25 `1c049528` MineLand life 19 ended (deaths 378); life 20 started
+- 2026-11-25 `d0e75c06` L1 not met; D34/D34b: the going organ as grown in a life is weak (drifting place units, unfading visits, recent-only ring); L1b registered with the organ mended
+- 2026-11-25 `f6e71983` L1b not met (skill mended by reservoir, map still coarse: all units born at birth); L1c registered: place units born at novel places
+- 2026-11-25 `9efe6134` L1c not met; D34c: goal 4 hops ahead works where the map is sound; found path drift from re-reading senses after rebirth (my loop bug); L1d registered
+- 2026-11-25 `ed4c8409` L1d MET: the going organ in a life - 0 deaths in the last half, 6-7 trips per 1,000, forks 5 of 6; controls registered next
+- 2026-11-25 `8359ed91` MineLand life 20 ended (deaths 1,044, step change near 20,000); life 21 started
+- 2026-11-25 `e32d7b97` L1d controls: new rooms pass all bars; W=0 control passes the life bars too - the lean adds recovery from put places (forks 5/6 vs 1/6), daily survival comes mostly from the corrected place sense; MineLand death record (judge side)
+- 2026-11-25 `e955c9fd` MineLand death causes read: zombies 13, creeper 2, starved 3 of 18 (no falls/suffocation); judge-side death-message record; P1b-fixed registered
+- 2026-11-25 `a4e67a46` P1b-fixed: place sense alone carries much of daily life but not steadily; ladder alone/childhood/lean = 168,2,48 / 4,1,97 / 0,0,0

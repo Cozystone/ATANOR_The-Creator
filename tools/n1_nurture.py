@@ -114,7 +114,7 @@ def life(rows, info, seed, arm, path=False, n=64, beats=12000, keep_last=3000, s
             dd = B.dead.clone(); idx = torch.nonzero(dd)[:, 0]; B.w.dead[idx] = False; B.w.store[idx] = 0.75; place(B, info, which=idx)
             if stg != "alone" and arm == "nurture":
                 B.w.pos[idx] = C.B.w.pos[idx]
-            O.reset(dd); Mi.begin(dd); x = O(B.raw()); lifeid[idx.cpu().numpy()] += 1
+            O.reset(dd); Mi.begin(dd); B.felt[:] = 0; x = O(B.raw()); lifeid[idx.cpu().numpy()] += 1   # felt zeroed: the drift fix (P1_PATH_PROTOCOL L1d)
     for q in Q:
         q["src"] = q["src"].tolist(); q["near_share"] = q.pop("near") / max(1, q.pop("seen")); q.pop("beats")
     ins_ = Mi.o.inside; ins = list(range(x.shape[1]))[ins_] if isinstance(ins_, slice) else [int(v) for v in ins_]

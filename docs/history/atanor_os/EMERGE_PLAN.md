@@ -4603,3 +4603,17 @@ D31 여행자 겪음으로 존재의 값을 기름: 갈림목에서는 가장 �
 - 2026-11-24 저녁: D32 / D32b not met (a goal, as raw sense or as place unit along the map, does not carry a body; map gives ~2x over controls, .29 vs .6 bar). Founder chose nurture, "after the human way". N1 registered (atanor_os/N1_NURTURE_PROTOCOL.md): in arms -> walking after -> weaning -> leaving -> alone; pass = keeps travelling alone. Next: step 0, the room draws a caregiver body in the eye.
 - 2026-11-24 22:28: MineLand life 18 crashed at step ~33,000 with CUDA out of memory - my mistake: I ran two room lives (N1 control, P1b) in parallel beside it, the GPU was at 14.9 of 16.3 GB. Steps 0 - 33,000 are healthy (66 windows, 0 faults). Resumed from mineland12/s33000 for the last 7,000 steps (into mineland12b) once the N1 control finished. From now on: one room run at a time beside MineLand. Old room viewer (E1) stopped with the founder's OK to free RAM (60.5 -> 57.7 of 61.7 GB).
 - MineLand life 18 ended (40,000 steps = 33,000 + 7,000 resumed after the GPU crash): 0 faults, 80 healthy windows, deaths 162 + 36 = 198 (life 17: 509, life 16 and before: see above). The fall is large; deaths still come in bursts (10 in one window of the resumed part). Not yet read by cause. Life 19 started from mineland12b/s7000 into mineland13.
+- MineLand life 19 ended (40,000 steps, 0 faults, 80 healthy windows): deaths 378 (first half 215, second 163); lives 17 / 18 / 19: 509 / 198 / 378 - no steady fall; bursts remain (22 in one window at 37,500). Life 20 started from mineland13/s40000 into mineland14.
+- MineLand life 20 ended (40,000 steps, 1 fault at 32,310 recovered from s32000, 79 of 80 windows healthy): deaths 1,044 (first half 185, second 859).
+  Per 5,000 steps: 29 / 32 / 35 / 89 / 212 / 250 / 185 / 212 - a step change near 20,000, from ~30 to ~200 per block, with more walking and less
+  standing still. Lives 17-20: 509 / 198 / 378 / 1,044. Not read by cause: the server log carries no death messages (only the hunger effect and
+  digging errors); reading causes needs the death reason kept per body - registered as later work. Life 21 started from mineland14/s40000 into mineland15.
+- MineLand death causes, read (founder 2026-11-25 asked: digging down, falling, suffocation, hunger?). Judge-side record added: each death's height,
+  food, air, life just before and after, and the server's own message naming the body (MineLand's Mineflayer 'messagestr' -> events -> body server
+  'said' -> ml_live window 'said'). Life 21 was restarted twice for this (from s40000, then resumed from mineland15/s7000 and mineland15b/s500).
+  First 1,500 steps on the new record: 18 deaths, MineLand's own death event 18 times (all real, none a counting error), causes:
+  slain by Zombie 11, by Zombie Villager 2, blown up by Creeper 2, starved 3. No falls, no suffocation, no drowning, nothing below the map.
+  The "full life one step before" readings in the first record were the step being long enough for a mob to kill; the body reappears at the
+  world spawn ~180-310 blocks away. The pit at y=37 (founder's screen) is where the bodies are when mobs find them, not what kills them.
+  Hypothesis for the step change in life 20 (~30 -> ~200 deaths per 5,000 steps from ~20,000): Minecraft's local difficulty grows with the time
+  bodies spend in the same chunks (more and stronger mobs at night) - to be checked against day/night and the world's inhabited time, not assumed.

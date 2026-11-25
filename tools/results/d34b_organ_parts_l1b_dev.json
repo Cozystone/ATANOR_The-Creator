@@ -1,0 +1,146 @@
+{
+ "protocol": "atanor_os/P1_PATH_PROTOCOL.md (D34b)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "far_map_end_cells_from_needed_spring": [
+    1.41,
+    5.39
+   ],
+   "far_map_chain_ends_within_1.5": [
+    1.0,
+    0.0
+   ],
+   "far_skill_waypoints": [
+    0.9375,
+    0.6875
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    1.41,
+    5.39
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    1.0,
+    0.0
+   ],
+   "stem_skill_waypoints": [
+    0.96875,
+    0.875
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     9.5,
+     4.5
+    ],
+    "food": [
+     6.5,
+     7.5
+    ]
+   },
+   "springs": {
+    "f": [
+     1.5,
+     5.5
+    ],
+    "w": [
+     10.5,
+     5.5
+    ]
+   }
+  },
+  {
+   "layout": "9102_0",
+   "far_map_end_cells_from_needed_spring": [
+    8.06,
+    3.61
+   ],
+   "far_map_chain_ends_within_1.5": [
+    0.0,
+    0.0
+   ],
+   "far_skill_waypoints": [
+    0.8125,
+    0.53125
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    8.06,
+    3.61
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    0.0,
+    0.0
+   ],
+   "stem_skill_waypoints": [
+    0.75,
+    0.375
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     4.5,
+     2.5
+    ],
+    "food": [
+     13.5,
+     2.5
+    ]
+   },
+   "springs": {
+    "w": [
+     1.5,
+     4.5
+    ],
+    "f": [
+     16.5,
+     4.5
+    ]
+   }
+  },
+  {
+   "layout": "9103_0",
+   "far_map_end_cells_from_needed_spring": [
+    1.0,
+    1.0
+   ],
+   "far_map_chain_ends_within_1.5": [
+    1.0,
+    1.0
+   ],
+   "far_skill_waypoints": [
+    0.65625,
+    0.8125
+   ],
+   "stem_map_end_cells_from_needed_spring": [
+    7.07,
+    1.0
+   ],
+   "stem_map_chain_ends_within_1.5": [
+    0.0,
+    1.0
+   ],
+   "stem_skill_waypoints": [
+    0.9375,
+    0.96875
+   ],
+   "best_relief_unit_place": {
+    "water": [
+     7.5,
+     5.5
+    ],
+    "food": [
+     8.5,
+     5.5
+    ]
+   },
+   "springs": {
+    "f": [
+     1.5,
+     6.5
+    ],
+    "w": [
+     14.5,
+     6.5
+    ]
+   }
+  }
+ ]
+}

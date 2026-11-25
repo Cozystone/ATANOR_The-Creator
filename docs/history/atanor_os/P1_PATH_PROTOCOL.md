@@ -153,3 +153,199 @@ What is established, with what it rests on, said plainly:
   probe's loop. The life build must make all of this the being's own: play in a protected childhood, relief remembered with its place in its bounded
   memory, and the lacking inside's pressure choosing the next place on its own map, every beat - registered next (L1) before it runs.
 - In the room the organ is exact. Drift is later work.
+
+# L1 (registered 2026-11-25, before any run): the going, made the being's own, in a life
+D33b showed the parts work in a probe. L1 puts them inside the being (atanor_os/emerge/going.py, an organ of the mind) and lets it live.
+The organ, all learned except the path organ it reads:
+- place memory (bounded): 64 place units by online k-means of its own place code; transition counts between units it walked (decayed, so it stays a
+  fixed size); for each inside, how often that inside rose in each unit (its relief, remembered with its place);
+- the going skill: the D33 network (sense + place code + goal place -> gesture), trained by hindsight on a bounded ring of its own recent beats in
+  sleep (every 1,000 beats), never by reward;
+- the pull of the lack: each beat, for the inside that is lowest, the next unit on its own map toward where that inside was relieved (the map's value
+  V = (I - .99 T)^-1 r, best neighbour); the skill's preference over gestures for going there enters the mind's choice score as a lean,
+  lean = W x lack x (log p - mean log p), lack = 1 - lowest inside, W = 1 (fixed now). It competes with the pull, harm and value as the value lean does;
+  nothing else in the mind changes (the hold re-picks when the lean opens a large gap, as for any other strong difference).
+Life: the grown V3 being with the path organ; childhood = first 3,000 beats protected (stores do not drain): 1,000 beats of babbling (uniform gestures),
+then practice: each body goes, by the skill, to a place drawn from its own place memory (new place on arrival or after 200 beats); the skill is
+retrained every 1,000 beats. Then 9,000 beats of ordinary life with drain (V2 world), the mind choosing with the lean. 3 dev layouts, 64 bodies.
+Bars, last quarter (fixed now): spring to spring >= 1 per 1,000 body-beats; arm leavings >= 5; deaths per body at least 20% below V3 (181 / 250 / 242);
+and from the being as it lives at the end (frozen copy, judge-put at the wrong spring and the stem with one inside low, its own choosing with the lean):
+recovery >= .6 in 4 of 6. Controls: the same life with W = 0 (the organ learns but does not lean), and P1b alone (no childhood, no organ of going).
+Readings: met -> the going is the being's own; next the nurture/community stages on top. Life bars missed but forks met -> the going works when
+lacking, and something in daily life (camping, deaths) eats it; report. Forks missed -> the lean in the mind's choosing does not carry what the
+probe's loop did; report with the source counts (who decided each beat).
+
+## L1 result (3 dev layouts, 12,000 beats, 64 bodies): not met
+Last quarter, lean (W = 1) vs organ silent (W = 0) vs V3:
+| layout | trips/1,000 | arm leavings/1,000 | deaths (V3) | forks far [food-low, water-low] | forks stem |
+|---|---|---|---|---|---|
+| 9101 | .29 / .35 | 4.85 / 1.83 | 254 / 255 (181) | .47, 0 / .03, 0 | .81, 0 / .94, .16 |
+| 9102 | .06 / .08 | 4.96 / 1.15 | 277 / 281 (250) | 0, .13 / 0, .84 | .06, .34 / 0, 1.0 |
+| 9103 | .12 / .20 | 3.46 / 1.49 | 284 / 272 (242) | .03, .19 / 0, 0 | .44, .84 / 0, 0 |
+- Every life bar is missed. The lean makes the bodies leave their arm 2.5-4x more often than the silent organ, but they do not arrive, and they die
+  no less (more than V3: the childhood without drain and the late start of value learning cost it).
+- Forks: 1 of 6 (averaging the two halves) with the lean, 0 of 6 silent; the silent organ sometimes does as well, so the fork numbers are near noise.
+- Who decided each beat, last quarter: kept what it was doing .75, strong pull .15, a try .10, value 0, random 0. In the forks: strong pull .86-.90.
+  The lean only enters the choice score; the mind re-picks only on a surprise or a large gap, and 3 beats in 4 it holds the gesture it had.
+  The probe of D33b re-asked the skill every beat. This is the registered reading "the lean in the mind's choosing does not carry what the probe's
+  loop did" - but which part eats it (the hold, the other pulls, or the organ as grown in this life) is not yet known.
+
+# D34 (registered before running): where the going is lost in the mind's choosing
+On the three L1 beings as saved at the end (W = 1; frozen; the same fork test, same seeds), three arms:
+- A organ alone: each beat the gesture is drawn from the organ's own skill toward its own next place (as in D33b, but with the map, relief and skill
+  this life grew);
+- B the mind as is (L1's fork numbers, rerun for the same seeds);
+- C the mind, but re-picking every beat (a judge-side probe that only sets the mind's "choose again now"; nothing in the score changes).
+Readings: A low -> the organ as grown in a life is worse than in the probe (map/relief/skill); the next fix is in the organ. A high, C high, B low ->
+the hold eats the going. A high, C low -> the other pulls outweigh the lean (its scale). Mean recovery over 6 (3 layouts x far/stem); "high" >= .6.
+- D34 amendment, before running: arm C is the same as B in the fork test. That test never calls the mind's after(), so the mind treats every beat
+  as new and re-picks every beat already (my L1 fork test design). C is replaced by a reading inside B: the share of beats on which adding the
+  lean changes the best gesture of the memory pull (how much the lean can weigh against it). The hold in daily life is read from L1's source counts.
+
+## D34 result (3 saved L1 beings): the organ as grown in the life is itself weak
+| layout | A organ alone far / stem | B mind far / stem | lean changes the best gesture |
+|---|---|---|---|
+| 9101 | .47, 0 / .72, .06 | .34, 0 / .63, .19 | .95 |
+| 9102 | 0, .53 / .03, .47 | 0, .41 / 0, .31 | .95 |
+| 9103 | .16, .13 / .34, .47 | .06, .03 / .63, .72 | .96 |
+- Mean over 6: A .26 / .27 / .27 per layout-start, none >= .6 averaged. The lean is not too weak (it changes the best gesture on 95% of beats);
+  the organ it carries is weak. Reading registered: the next fix is in the organ (map, relief or skill as grown in a life, versus the probe).
+- In daily life the hold (.75 of beats) also blunts it; that is a second, later question.
+
+# D34b (registered before running): which part of the organ fails
+On the same saved beings: (a) the map's own chain from each start toward the needed inside - where it ends, in cells from the needed spring (by the
+true place each unit stands for); (b) the life-grown skill with judge-given waypoints 4 cells ahead on the true route. Readings: (a) ends far and
+(b) high -> the map / relief grown in the life is wrong (fix there); (a) near and (b) low -> the skill grown in the life is weak (its ring of 1,024
+recent beats holds mostly camping; fix there); both bad -> both.
+
+## D34b result: both parts fail, and the map's failure is my bug
+| layout | map chain ends within 1.5 cells of the needed spring, far [need water, need food] / stem | skill on judge waypoints, far / stem |
+|---|---|---|
+| 9101 | 1.0, 0 / 1.0, 0 | 1.0, .19 / 1.0, .56 |
+| 9102 | 0, 0 / 0, 1.0 | .38, .34 / .41, .75 |
+| 9103 | 1.0, 0 / 1.0, 0 | .50, .59 / .94, .88 |
+- The map: in 4 of 6 needs the chain ends 5-15 cells from the needed spring. Relief is remembered at the wrong spring (9102: water "rose" most
+  in units at the food spring, R 14.9 vs 3.1 at the water spring; 9101: food at the water side).
+- Cause (my design error): the place units never settle. Their online k-means step had a floor (+.01 a beat), so units keep drifting across the
+  room all life, while the relief and transitions they remember stay tied to the unit, not to the place. Second, relief per unit was divided by a
+  visit count that never fades while the relief itself fades (decay .9995), so the old, much-visited springs are under-counted.
+- The skill: on waypoints the life-grown skill carries bodies 19-100%; weaker than the probe's (D33 near hops ~.9). Its training ring holds only the
+  last 1,024 beats, which in daily life are mostly holding still or camping.
+
+# L1b (registered before running): the going organ with the three faults mended, the same life
+- Place units: running mean (step 1 / visits, no floor) - they settle where the being has been, like place fields that stabilise; the relief and
+  transitions stay tied to a place.
+- Relief rate: relief per unit divided by a visit count that fades exactly as the relief does.
+- The skill's memory: the same bounded size (15 pieces of 64 beats, plus the piece being lived), kept by reservoir sampling over the whole life
+  (every 64-beat piece of the life equally likely to be held), not just the latest beats - like consolidation keeping a spread of the past.
+Everything else as L1 (W = 1, same seeds, childhood, bars). Control: L1's W = 0 life (the organ's lean was off there, so its numbers stand).
+Readings as L1. Also reported: D34 arm A and D34b on the new beings.
+
+## L1b result (3 dev layouts): not met; the skill is mended, the map is not
+| layout | trips/1,000 | arm leavings | deaths (V3) | forks far [need water, need food] | forks stem |
+|---|---|---|---|---|---|
+| 9101 | .42 | 3.63 | 246 (181) | 1.0, 0 | .97, 0 |
+| 9102 | .21 | 3.18 | 273 (250) | .25, .03 | .31, 0 |
+| 9103 | .22 | 2.61 | 258 (242) | .38, .06 | .22, 0 |
+- Forks 1 of 6 averaged (9101 water-need halves at 1.0 and .97 from both starts; food-need halves near 0 everywhere).
+- D34 on these beings: organ alone 9101 .84 / .91 (water need), others .06-.47. D34b: the skill on waypoints now .38-.97 (9 of 12 >= .65;
+  L1 was .19-1.0 with 5 of 12) - the reservoir mended it. The map: the chain reaches the needed spring in 5 of 12 (L1: 5 of 12).
+- Why the map is still wrong (read from the saved units): the nearest unit to a spring stands 1-3.6 cells from it, and the units with the most food
+  relief stand 5-12 cells from the food spring. All 64 units were born at the birth place (the first places the bodies were in); with a settling
+  mean, the few that won early were pulled out and now each covers a stretch of several cells, while many stay unused near the birth place.
+  So a unit spans a spring and the corridor beside it, and its relief is smeared along the corridor. This is my design error in how units are born.
+
+# L1c (registered before running): place units born where the being finds itself far from every unit it has
+- One unit exists at the start of life (where it is born). Whenever a body stands farther than one cell's worth of code from every unit it has
+  (the distance the innate code moves for one cell of travel, read from the path organ itself), a free unit is born there, until all 64 are used
+  (bounded: then units only settle). Like place cells recruited by novel places. Units then settle by running mean as in L1b.
+- Everything else as L1b. Bars and readings as L1. Also reported: D34 arm A, D34b.
+
+## L1c result (3 dev layouts): not met; skill and map now mostly right, the organ still does not carry
+| layout | trips/1,000 | arm leavings | deaths (V3) | forks far [need water, need food] | forks stem |
+|---|---|---|---|---|---|
+| 9101 | .28 | 3.29 | 254 (181) | .09, 0 | .44, .47 |
+| 9102 | .67 | 4.02 | 210 (250) | .28, .28 | .81, .69 |
+| 9103 | .16 | 2.52 | 278 (242) | 0, .03 | .28, .63 |
+- 9102 dies 16% less than V3 and travels .67 (best so far), still under the bars. Forks 1 of 6 averaged (9102 stem .75).
+- D34b: skill on waypoints .72-1.0 in all 12 (mended); the map chain ends at the needed spring in 7 of 12 (L1b 5); 9103 all 4 right.
+- But in 9103, with map and skill both right, the organ alone reaches only 0-.41 (D34 arm A). So a third thing is wrong in how the two are joined:
+  the organ aims at the very next unit (about one cell away), while the skill was checked on goals 4 cells ahead.
+
+# D34c (registered before running): how far ahead along its own chain should the goal be
+On the L1c beings, organ alone (D34 arm A), the goal = the unit k hops ahead along its own next-unit chain, k = 1 (as now), 2, 4, 8.
+Reading: recovery rising with k -> the join is the fault (aim farther along its own map; the k that works is fixed into the organ before a new life);
+flat -> something else (report).
+
+## D34c result: aiming farther along its own chain helps where the map is sound; and a drift bug in my life loop
+Organ alone, goal k hops ahead (far [need water, need food] / stem):
+| layout | k=1 | k=2 | k=4 | k=8 |
+|---|---|---|---|---|
+| 9101 | .16, .03 / .59, .19 | .06, .22 / .72, .41 | .03, .84 / .91, .81 | .22, .84 / 1.0, .78 |
+| 9102 | .41, .03 / .78, .34 | .50, .75 / .72, .97 | .94, .91 / .94, .94 | .63, .88 / .84, .94 |
+| 9103 | 0, .06 / .22, .41 | .03, .16 / .19, .78 | .03, .16 / .31, .25 | .06, .03 / .22, .09 |
+- Reading: the join was a fault (k = 4 is best; fixed into the organ now). 9103 stays low - traced: its chain from the food spring jumps to two
+  units that stand 7-9 code units from any true place (the birth radius is 2.55), i.e. places the being believes it was but no cell is.
+- Cause (my bug, in the judge-side life loop of P1b / N1 / L1, not in the being): when any body dies, the loop re-reads the senses after the rebirth,
+  and that second read integrates every body's last felt motion a second time. Checked: 2,000 beats with deaths, organ vs truth 0.80 cells off on
+  average as the loop was, 0.00 with the felt motion zeroed for the second read. So in every life so far the bodies' innate sense of place drifted
+  a little at each of the others' deaths. (The D33 probes had no deaths, hence they were exact.)
+
+# L1d (registered before running): L1c with the drift bug fixed and the goal 4 hops ahead
+- Loop fix: on the second read after a rebirth, no felt motion (nothing moved).
+- Organ: the lean aims at the unit 4 hops ahead along its own chain (k from D34c, fixed now).
+Everything else as L1c. Bars and readings as L1. Also reported: D34 arm A and D34b.
+
+## L1d result (3 dev layouts): MET on every registered bar
+| layout | trips/1,000 (>= 1) | arm leavings (>= 5) | deaths, last quarter (V3) | forks far [need water, need food] | forks stem |
+|---|---|---|---|---|---|
+| 9101 | 7.41 | 10.57 | 0 (181) | .94, .91 | .75, .28 |
+| 9102 | 6.47 | 8.69 | 0 (250) | 1.0, 1.0 | 1.0, 1.0 |
+| 9103 | 6.06 | 8.29 | 0 (242) | 1.0, 1.0 | 1.0, 1.0 |
+- Forks 5 of 6 averaged >= .6 (9101 stem .52). No body died in the last half of life in any layout (third quarter 0 too); deaths only while
+  young (second quarter 153 / 6 / 74). Time in the stem fell to .01-.05: the bodies live by going between the two springs.
+- D34 arm A (organ alone, 4 hops): 1.0 in all 12. D34b: map chains end at the needed spring 12 of 12, skill on waypoints 1.0 in 12 of 12,
+  best-relief units at the springs.
+- Who decided the beat, last quarter: hold .77-.79, strong pull (score with the lean) .11-.13, try .10. The going rides inside the ordinary
+  choosing; nothing was given a slot of its own.
+- Not yet shown: that the lean is what does it in this fixed loop (L1's W = 0 control ran with the drift bug), and that it holds in rooms never
+  used in this line of work. Registered next, run before any claim:
+  - L1d-0: the same life with W = 0 (organ learns, does not lean), drift fix in.
+  - L1d-new: W = 1 on three dev layouts never used before (9104_0, 9105_1, 9106_0), same bars.
+
+## L1d controls: the new rooms pass; the W = 0 control passes the life bars too
+| arm | layout | trips/1,000 | arm leavings | deaths last quarter (V3) | forks far | forks stem |
+|---|---|---|---|---|---|---|
+| L1d-new, W = 1 | 9104 | 6.13 | 7.64 | 1 | .88, 1.0 | .41, .91 |
+| | 9105 | 6.40 | 9.01 | 0 | .94, 1.0 | .63, 1.0 |
+| | 9106 | 6.79 | 8.90 | 0 | .72, .66 | .28, .34 |
+| L1d-0, W = 0 | 9101 | 5.88 | 9.80 | 4 (181) | .41, .75 | .16, 0 |
+| | 9102 | 5.72 | 8.19 | 1 (250) | 1.0, 1.0 | .22, .13 |
+| | 9103 | 2.76 | 5.38 | 97 (242) | 0, 0 | 0, 0 |
+- New rooms (never used before): every life bar met in all three; forks 5 of 6 averaged (9106 stem .31). L1d holds outside the rooms it was mended in.
+- W = 0 (the organ learns and drives the childhood practice, but never leans in daily choosing): the life bars are met in all three rooms too
+  (9103 more weakly: 97 deaths, 2.76 trips). So daily survival in these rooms does NOT mainly come from the lean. What carries it: the being's
+  ordinary mind (memory pull + value learning) now reading a correct place sense (the drift fix), plus a childhood spent going to places.
+- What the lean adds, measured: recovery when put somewhere with one inside low - forks 5 of 6 (W = 1) vs 1 of 6 (W = 0) on 9101-9103 (stem
+  starts .52-1.0 vs 0-.22), and in the weakest room (9103) deaths 0 vs 97 and trips 6.06 vs 2.76.
+- Verdict, stated narrowly: L1d MET as registered. The claim is "a learned going (own map, own relief memory, own skill) lets the lack take the
+  body to where it was relieved, from places it is put", not "the lean is why the bodies live". The bigger lesson is mine: the innate place sense
+  was being corrupted by my loop, and most earlier failures (P1b, N1, L1) were measured on a drifting sense; they should be re-read, not trusted.
+
+# P1b-fixed (registered before running): the being alone with the innate place sense, drift fixed - no childhood, no going organ
+P1b's "alone" arm rerun with only the drift fix (tools/n1_nurture.py --arm alone --path), 9101-9103. Same life bars as L1.
+Reading: met -> the place sense alone (in the ordinary mind) is enough for daily life in these rooms; the going organ's role is the recovery from
+put places (forks). Missed -> the childhood with the organ (L1d-0) is what carries daily life.
+
+## P1b-fixed result: the place sense alone carries much of daily life, but not steadily
+| layout | trips/1,000 | arm leavings | deaths by quarter (last; V3) |
+|---|---|---|---|
+| 9101 | 1.03 | 2.45 | 244 / 263 / 5 / 168 (181) |
+| 9102 | 4.94 | 7.30 | 147 / 3 / 0 / 2 (250) |
+| 9103 | 2.93 | 4.14 | 175 / 276 / 147 / 48 (242) |
+- Not met as a whole (arm leavings < 5 in 9101 and 9103; 9101's deaths only 7% below V3 - it lived well in the third quarter, then fell back).
+- The ladder, deaths in the last quarter over the three rooms: alone, place sense only 168 / 2 / 48; + a childhood going to places with the organ
+  (W = 0) 4 / 1 / 97; + the lean of the lack 0 / 0 / 0. Each added part helps; the fixed place sense is the largest single step (P1b with the
+  drifting sense: 235 / 257 / 250).
+- Re-reading the earlier failures (P1b, N1, L1): they were measured on a drifting place sense. Their verdicts stand as recorded, but their causes
+  as written then (no going, the hold, etc.) are not trustworthy; the drift was the first cause.
