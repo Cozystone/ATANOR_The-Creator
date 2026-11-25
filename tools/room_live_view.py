@@ -35,7 +35,7 @@ TRAIL = []
 def push(eye, rows, pos, head, stores, stock, label, text):
     e = Image.fromarray(np.asarray(eye, np.uint8)); b = io.BytesIO(); e.save(b, format="JPEG", quality=80)
     S = len(rows); c = 16; im = Image.new("RGB", (S * c, S * c), (25, 25, 25)); d = ImageDraw.Draw(im)
-    col = {"#": (90, 90, 90), "w": (60, 120, 255), "f": (230, 150, 40)}
+    col = {"#": (90, 90, 90), "w": (60, 120, 255), "f": (230, 150, 40), "p": (150, 20, 20)}
     for y, row in enumerate(rows):
         for x, ch in enumerate(row):
             if ch in col:

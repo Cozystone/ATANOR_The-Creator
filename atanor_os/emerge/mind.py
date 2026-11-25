@@ -14,6 +14,38 @@ from .common_senses import Z, ZF
 LEAK, TIRE, LOOSE = 0.95, 4.0, 0.05
 
 
+class Earned:
+    """D37e: a controller's earned trust - correlation between how hard it pushed (e [n]) and the wholeness change over the next K beats (a death
+    = losing all wholeness), discounted, kept as running moments (same form as Mind._track_pull)."""
+
+    def __init__(self, K=60, gamma=0.97):
+        self.K, self.g, self.tr, self.oc = K, gamma, None, None
+
+    @torch.no_grad()
+    def track(self, e, whole, alive):
+        n, K = len(e), self.K
+        if self.tr is None or self.tr["v"].shape[1] != n:
+            z = lambda: torch.zeros(K, n, device=e.device)
+            self.tr = dict(v=z(), w=z(), a=z(), t=0); self.oc = torch.zeros(5, device=e.device)
+        tr = self.tr; i = tr["t"] % K
+        if tr["t"] >= K:
+            idx = [(i + k) % K for k in range(K)]; a_ = tr["a"][idx]; alive_k = torch.cumprod(a_, 0); w_ = tr["w"][idx] * alive_k
+            w_end = torch.cat([w_[1:], (torch.where(alive, whole, torch.zeros_like(whole)) * alive_k[-1])[None]])
+            disc = self.g ** torch.arange(K, device=e.device, dtype=torch.float32)[:, None]; gsum = (disc * (w_end - w_)).sum(0)
+            ok = a_[0] > 0
+            if ok.sum() >= 1:
+                v = tr["v"][i][ok]; gg = gsum[ok]; m = torch.stack([v.mean(), gg.mean(), (v * v).mean(), (gg * gg).mean(), (v * gg).mean()])
+                self.oc.copy_(m if float(self.oc[2]) == 0 else 0.99 * self.oc + 0.01 * m)
+        tr["v"][i] = e; tr["w"][i] = whole; tr["a"][i] = alive.float(); tr["t"] += 1
+
+    def weight(self):
+        if self.oc is None or self.tr["t"] < 2 * self.K or float(self.oc[2]) == 0:
+            return 1.0
+        ev, eg, ev2, eg2, evg = [float(z) for z in self.oc]
+        c = (evg - ev * eg) / max(((ev2 - ev * ev) * (eg2 - eg * eg)) ** 0.5, 1e-9)
+        return max(0.1, min(1.0, c))
+
+
 class Mind:
     def __init__(self, organs, contract, n, dev="cuda", far=0.3, worth=2.0, try_p=0.1, harm=1.0, learn_every=50, keep=4000, lp=0.0, lp_every=1000, inner=0, imagine=0.0, horizon=6, rolls=2, value_arm="worth", value_target="max", arbitrate=False):
         self.o, self.c, self.n, self.dev = organs, contract, n, dev
@@ -50,6 +82,10 @@ class Mind:
         # the more reliable controller takes over). The pull's record = how well its expectation (its strongest score) foretold the wholeness change
         # over the next K beats, tracked like the value's own earned trust. No hand-set weight. Default off.
         self.arbitrate = arbitrate; self.ptrace = None; self.poc = torch.zeros(5, device=dev); self.pK = 60
+        # D37b (atanor_os/FEAR_PROTOCOL.md, founder 2026-11-25): conflict monitoring (Botvinick et al. 2001) - when the learned value leans against the
+        # gesture being held by more than `conflict` (in the lean's own units), this beat is a new choice (the usual choosing makes it). It weakens no
+        # habit and names no place: it only lets a strong value-act conflict call for re-choosing. 0 = off (as before).
+        self.conflict = 0.0; self.conflict_n = 0
         self.buf = []; self.steps = 0
         # 값으로 매기는 상상 (2026-11-22, 창립자 검토: 겉모습의 닮음이 아니라 여러 걸음 뒤 제 온전함으로): 알맹이의 내다보기를 (기억 상태까지 품고)
         # 몸짓마다 horizon걸음 굴려, 끝을 '온전함의 바뀜 + 끝 장면의 값 (몸짓마다의 값 중 가장 나은 것)'으로 매긴다. 고름에 드는 몫 = imagine x 값이 얻은 믿음.
@@ -169,12 +205,16 @@ class Mind:
             self.fut[novel] = 0; self.s_m = self.s_m + 0.02 * (odd - self.s_m); self.s_v = self.s_v + 0.02 * ((odd - self.s_m) ** 2 - self.s_v)
         else:
             novel = torch.ones(n, dtype=torch.bool, device=d)
-        sc, strong = self.net.pull(x)
+        sc, strong = self.net.pull(x); rec = getattr(self, "record_parts", False); parts = {"pull": sc.clone()} if rec else None
         if getattr(self.net, "trail", False):
             ts, tst = self.net.trail_pull(x); sc = sc + ts; strong = strong | tst
         if self.harm and int(self.net.harm_n) > 0:
             av = self.net.avoid(x); sc = sc + self.harm * av; strong = strong | (av.abs().max(1).values > 0.02)
+            if rec:
+                parts["harm"] = self.harm * av
         sc = sc - TIRE * self.fut
+        if rec:
+            parts["futile"] = -TIRE * self.fut
         lw = None
         if self.wo is not None:
             self.wo.track(x, ~self.cut)
@@ -185,11 +225,20 @@ class Mind:
                 lw = lw + self.imagine * self.wo.lam * self.wo.earned() * c / (self.im_scale + 1e-6)
             if lw is not None:
                 sc = sc + lw
+                if rec:
+                    parts["value"] = lw
         go = getattr(self, "going", None)
         if go is not None:                                                     # L1: the lean of the lack toward its next place (atanor_os/emerge/going.py)
             gl = go.lean(x)
+            if gl is not None and getattr(self, "going_earned", None) is not None and self.wo is not None:   # D37e: the lean weighed by its own record
+                self.going_earned.track(gl.max(1).values - gl.mean(1), self.wo.whole(x), ~self.cut)
+                gl = gl * self.going_earned.weight()
             if gl is not None:
                 sc = sc + gl
+                if rec:
+                    parts["going"] = gl
+        if rec:
+            parts["total"] = sc.clone(); parts["strong"] = strong.clone(); self.parts = parts
         roam_on = getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256
         if roam_on and getattr(self, "roam_mode", "slot") == "score":            # E1b: the unfamiliarity competes in the score, as the value and harm do
             sc = sc + self.roam * self.unfamiliar(x)
@@ -210,6 +259,9 @@ class Mind:
         gap = sc.max(1).values - sc.gather(1, self.cur[:, None])[:, 0]
         pre = strong & (gap > 2.0 * sc.std(1).clamp(min=1e-6))
         again = novel | pre | self.cut
+        if self.conflict and lw is not None:
+            clash = (lw.mean(1) - lw.gather(1, self.cur[:, None])[:, 0]) > self.conflict
+            self.clash = clash; self.conflict_n += int((clash & ~again).sum()); again = again | clash
         force = getattr(self, "force", None)                                  # 판정 쪽 탐침 (A1 유지 진단): 이 박자만 새로 고르게. 기본 없음
         if force is not None:
             again = again | force; self.force = None

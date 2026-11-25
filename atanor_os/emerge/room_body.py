@@ -79,6 +79,8 @@ class RoomBody:
             m = seen[:, None, :] & (r >= topk[:, None, :]) & (r <= botk[:, None, :])
             colk = torch.tensor(KIN_COLOR, device=self.dev)[None, None] * (1.0 - zk / 14.0).clamp(0.3, 1.0)[..., None]
             img = torch.where(m[..., None], colk[:, None].expand(-1, H, -1, -1), img)
+            near = (ox[:, 0] ** 2 + oy[:, 0] ** 2).sqrt() <= 6.0              # S4 (S3_S4_PROTOCOL.md): the other is in view and near enough for its state to be seen
+            self.kin_seen = seen.any(1) & near & ~self.dark()
         if self.dark_every:
             img = img * (~self.dark())[:, None, None, None].float()
         return (img.clamp(0, 1) * 255.0)
@@ -95,12 +97,25 @@ class RoomBody:
         st = w.store
         bed = torch.stack([torch.ones(n, device=d), st[:, 1], st[:, 0]], 1)            # 바탕 셋 (빈 칸, 먹이, 물)
         ang = w.head[:, None] + torch.tensor([0.0, math.pi / 2, math.pi, -math.pi / 2], device=d)[None]    # 앞·오른쪽·뒤·왼쪽 (방의 head는 + 가 왼쪽으로 돎이 아니라 각 증가)
-        _, near = w.cast(ang, step=0.02, far=0.8)
-        touch = (1.0 - (near - 0.15) / 0.6).clamp(0, 1)
+        kind, near = w.cast(ang, step=0.02, far=0.8)
+        close = (1.0 - (near - 0.15) / 0.6).clamp(0, 1)
+        drop = kind == G.PIT                                                            # ground touch (founder 2026-11-25): a drop is not touched - the ground is felt missing
+        touch = torch.where(drop, torch.zeros_like(close), close)
         skin = torch.zeros(n, 20, device=d); skin[:, 0:4] = touch; skin[:, 4:8] = touch; skin[:, 8] = 1.0
+        skin[:, 9:13] = torch.where(drop, close, torch.zeros_like(close))                # no ground just ahead / right / behind / left (feet, whiskers)
+        ga = w.head[:, None] + torch.tensor([math.pi / 4, -math.pi / 4], device=d)[None]       # D37g: and on the two forward diagonals
+        gk, gn = w.cast(ga, step=0.02, far=0.8)
+        skin[:, 13:15] = torch.where(gk == G.PIT, (1.0 - (gn - 0.15) / 0.6).clamp(0, 1), torch.zeros_like(gn))
         lit = (~self.dark()).float()
         skin[:, 15] = 0.5 * lit; skin[:, 16] = lit; skin[:, 17] = lit; skin[:, 18] = 0.5      # 밝음·하늘빛·해 (어둠이면 0)·따뜻함, 비 없음
         ear = torch.full((n, 16), -9.0, device=d)                                       # 고요 (마크 귀의 소리 없음과 같은 값)
+        cp = getattr(self, "call_pos", None); con = getattr(self, "call_on", None)
+        if cp is not None and con is not None and bool(con.any()):                        # S4p: another of its kind calls; heard by two ears (bands 0-7, 8-15), louder when near and on the facing side
+            dv = cp - w.pos; dist = dv.norm(dim=1); rel = torch.atan2(dv[:, 1], dv[:, 0]) - w.head
+            loud = 1.0 / (1.0 + dist ** 2); ga = 0.55 + 0.45 * torch.sin(rel); gb = 0.55 - 0.45 * torch.sin(rel)
+            spec = torch.tensor([0.1, 0.4, 1.0, 1.0, 0.6, 0.3, 0.1, 0.05], device=d)
+            heard = torch.cat([(loud * ga)[:, None] * spec, (loud * gb)[:, None] * spec], 1)
+            ear = torch.where(con[:, None], torch.log(heard + 1e-4).clamp(min=-9.0), ear)
         return [bed, torch.zeros(n, 1, device=d), self.felt.clone(), skin, torch.zeros(n, 1, device=d), ear, self.render()]
 
     @torch.no_grad()
@@ -125,7 +140,7 @@ class RoomBody:
             nx = w.pos + mv
             for ax in (0, 1):
                 trial = w.pos.clone(); trial[:, ax] = nx[:, ax]
-                ok = w.cell(trial) == G.FLOOR
+                ok = (w.cell(trial) == G.FLOOR) | (w.cell(trial) == G.PIT)
                 w.pos = torch.where(ok[:, None], trial, w.pos)
         w.store = w.store - w.drain * TICK * alive[:, None]
         filled = torch.zeros(self.n, 2, dtype=torch.bool, device=self.dev)
@@ -145,6 +160,7 @@ class RoomBody:
         w.clock += TICK * alive
         self.t += 1
         w.dead |= (w.store <= 0).any(1); w.store.clamp_(min=0)
+        fell = alive & (w.cell(w.pos) == G.PIT); self.fell = fell; w.dead |= fell                   # D37: walked into a drop
         dp = w.pos - was; c, s = torch.cos(h0), torch.sin(h0)
         self.felt = torch.stack([dp[:, 0] * c + dp[:, 1] * s, -dp[:, 0] * s + dp[:, 1] * c, ((w.head - h0 + math.pi) % (2 * math.pi)) - math.pi], 1)
         return filled

@@ -9,8 +9,9 @@ import torch
 import torch.nn.functional as F
 
 FLOOR, WALL, WATER, FOOD = 0, 1, 2, 3
-COLOR = torch.tensor([[0.0, 0.0, 0.0], [0.62, 0.60, 0.56], [0.20, 0.45, 0.95], [0.90, 0.35, 0.25], [0.25, 0.75, 0.30]])      # 마지막: 다른 몸 (같은 종)
+COLOR = torch.tensor([[0.0, 0.0, 0.0], [0.62, 0.60, 0.56], [0.20, 0.45, 0.95], [0.90, 0.35, 0.25], [0.25, 0.75, 0.30], [0.07, 0.05, 0.05]])      # 4: 다른 몸 (같은 종), 5: 구덩이
 MATE = 4
+PIT = 5                                                                # D37 (atanor_os/FEAR_PROTOCOL.md): a drop - seen as a dark low rim, walked into, it kills
 SKY, GROUND = torch.tensor([0.82, 0.84, 0.86]), torch.tensor([0.38, 0.40, 0.34])
 FOV = math.radians(80)
 SPEED, TURN, REACH, TICK = 2.0, math.radians(120), 1.2, 0.2
@@ -25,6 +26,8 @@ def parse(rows):
         for x, ch in enumerate(row):
             if ch == "#":
                 m[x, y] = WALL
+            elif ch == "p":
+                m[x, y] = PIT
             elif ch in "wf":
                 spots[WATER if ch == "w" else FOOD].append((x, y))
             elif ch == "s":

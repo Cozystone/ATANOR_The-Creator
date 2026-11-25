@@ -1,0 +1,65 @@
+{
+ "protocol": "atanor_os/S3_S4_PROTOCOL.md (S4)",
+ "rows": [
+  {
+   "arm": "b",
+   "carry": 3000,
+   "parent": 4,
+   "nurse": 0.0,
+   "nursed": 0,
+   "waited": 110603,
+   "near_child": 0.8,
+   "rep": 0,
+   "layout": "9101_0",
+   "elder": "s3_a",
+   "early_deaths": 0.87,
+   "last_deaths": 0.0,
+   "early_need": 1.47,
+   "last_need": 6.74,
+   "near_share": 0.178,
+   "seen_share": 0.035,
+   "resonance_events": 17.0,
+   "forks": {
+    "far": [
+     1.0,
+     0.96875
+    ],
+    "stem": [
+     1.0,
+     1.0
+    ]
+   },
+   "seconds": 957
+  },
+  {
+   "arm": "b",
+   "carry": 3000,
+   "parent": 4,
+   "nurse": 0.0,
+   "nursed": 0,
+   "waited": 125500,
+   "near_child": 0.823,
+   "rep": 0,
+   "layout": "9104_0",
+   "elder": "s3_b",
+   "early_deaths": 1.02,
+   "last_deaths": 0.12,
+   "early_need": 0.7,
+   "last_need": 3.98,
+   "near_share": 0.183,
+   "seen_share": 0.038,
+   "resonance_events": 38.0,
+   "forks": {
+    "far": [
+     0.4375,
+     0.4375
+    ],
+    "stem": [
+     0.28125,
+     0.90625
+    ]
+   },
+   "seconds": 971
+  }
+ ]
+}

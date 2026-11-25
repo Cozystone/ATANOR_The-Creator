@@ -1,0 +1,143 @@
+{
+ "protocol": "atanor_os/DEVELOPMENTAL_MAP.md (D38)",
+ "rows": [
+  {
+   "layout": "9101_0",
+   "being": "s3_a",
+   "gain": 0.7,
+   "groups": {
+    "still": {
+     "first": {
+      "seen": 0.02268,
+      "unseen": 0.00923,
+      "excess": 0.01345,
+      "seen_share": 0.04,
+      "seen_moved": 0.02427,
+      "seen_still": 0.0138,
+      "still_share": 0.152
+     },
+     "last": {
+      "seen": 0.02097,
+      "unseen": 0.00898,
+      "excess": 0.01199,
+      "seen_share": 0.024,
+      "seen_moved": 0.02311,
+      "seen_still": 0.00995,
+      "still_share": 0.163
+     }
+    },
+    "responsive": {
+     "first": {
+      "seen": 0.02025,
+      "unseen": 0.0092,
+      "excess": 0.01105,
+      "seen_share": 0.131,
+      "seen_moved": 0.01942,
+      "seen_still": 0.02592,
+      "still_share": 0.128
+     },
+     "last": {
+      "seen": 0.01806,
+      "unseen": 0.00899,
+      "excess": 0.00907,
+      "seen_share": 0.116,
+      "seen_moved": 0.01791,
+      "seen_still": 0.01909,
+      "still_share": 0.127
+     }
+    },
+    "yoked": {
+     "first": {
+      "seen": 0.0205,
+      "unseen": 0.00879,
+      "excess": 0.0117,
+      "seen_share": 0.082,
+      "seen_moved": 0.02046,
+      "seen_still": 0.02074,
+      "still_share": 0.128
+     },
+     "last": {
+      "seen": 0.02157,
+      "unseen": 0.00883,
+      "excess": 0.01274,
+      "seen_share": 0.084,
+      "seen_moved": 0.02131,
+      "seen_still": 0.02397,
+      "still_share": 0.096
+     }
+    }
+   },
+   "deaths": 0,
+   "seconds": 327
+  },
+  {
+   "layout": "9104_0",
+   "being": "s3_b",
+   "gain": 0.7,
+   "groups": {
+    "still": {
+     "first": {
+      "seen": 0.02185,
+      "unseen": 0.00892,
+      "excess": 0.01293,
+      "seen_share": 0.048,
+      "seen_moved": 0.02259,
+      "seen_still": 0.01454,
+      "still_share": 0.092
+     },
+     "last": {
+      "seen": 0.01927,
+      "unseen": 0.0095,
+      "excess": 0.00977,
+      "seen_share": 0.048,
+      "seen_moved": 0.02097,
+      "seen_still": 0.0061,
+      "still_share": 0.114
+     }
+    },
+    "responsive": {
+     "first": {
+      "seen": 0.02051,
+      "unseen": 0.0092,
+      "excess": 0.01131,
+      "seen_share": 0.115,
+      "seen_moved": 0.02014,
+      "seen_still": 0.02392,
+      "still_share": 0.097
+     },
+     "last": {
+      "seen": 0.01767,
+      "unseen": 0.00944,
+      "excess": 0.00823,
+      "seen_share": 0.13,
+      "seen_moved": 0.01729,
+      "seen_still": 0.02272,
+      "still_share": 0.07
+     }
+    },
+    "yoked": {
+     "first": {
+      "seen": 0.02156,
+      "unseen": 0.00912,
+      "excess": 0.01243,
+      "seen_share": 0.077,
+      "seen_moved": 0.02154,
+      "seen_still": 0.02177,
+      "still_share": 0.066
+     },
+     "last": {
+      "seen": 0.01918,
+      "unseen": 0.00953,
+      "excess": 0.00965,
+      "seen_share": 0.087,
+      "seen_moved": 0.01922,
+      "seen_still": 0.0187,
+      "still_share": 0.092
+     }
+    }
+   },
+   "deaths": 1,
+   "seconds": 330
+  }
+ ]
+}

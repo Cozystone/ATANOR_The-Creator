@@ -4617,3 +4617,27 @@ D31 여행자 겪음으로 존재의 값을 기름: 갈림목에서는 가장 �
   world spawn ~180-310 blocks away. The pit at y=37 (founder's screen) is where the bodies are when mobs find them, not what kills them.
   Hypothesis for the step change in life 20 (~30 -> ~200 deaths per 5,000 steps from ~20,000): Minecraft's local difficulty grows with the time
   bodies spend in the same chunks (more and stronger mobs at night) - to be checked against day/night and the world's inhabited time, not assumed.
+- Judge intervention (founder 2026-11-25: "얘들이 파내려가고 있는데를 그냥 바닥까지 뚫어봐"): one command, run once in life 21 (resumed part 21d, between steps
+  1,000 and 1,500): under any body standing below y 62, open a 1x1 shaft down to y -63. It opened under body 1, which fell to y -51.5 and died
+  ("fell from a high place"), then came back at the centre. The shaft stays open in the valley (a new deadly place in its world). Marked in the
+  D35 record as a world change at 21d step ~1,000-1,500.
+- Judge intervention 2 (founder: "몸 하나 말고 그 구덩이 전체를 다 뚫어봐"), life 21d between steps 2,500 and 3,000: every trench column (x -11..-3,
+  z -16..26) whose floor block (y 63) had been dug out was opened down to y -63 (387 conditional commands, all sent; the first attempt was read
+  empty by the server while the file was being written - now written aside and moved in). Next windows: 3,000: 14 deaths (zombies 6+, fall 1);
+  3,500: 2 (both falls); 4,000: 11 (falls 8 of the 8 named). The pit is now the main killer. Watched next: whether the falls thin out as the
+  being's harm memory learns the place (it once cut MineLand deaths 38%), or whether the bodies keep walking in. D35 is confounded from here.
+- Respawn moved (founder 2026-11-25: "리스폰 포인트 바꿔"): world spawn and both bodies' spawn points set to place A (-7 64 -10), and the judge's rebirth
+  and lift put bodies at A (ml_live --home -10). Found on the way: Minecraft's own respawn had been putting dead bodies ~200-300 blocks away (near the
+  world's original spawn), where the judge's teleport did not reach them (issued while dead), and body 0 kept falling into a deep cave there. Judge
+  hand added: a body more than 40 blocks from home is put back. First window after (21f, 500 steps): 45 deaths - falls ~35, lava 10 - the open pit
+  now reaches lava at the bottom and home is next to it. The valley is a death trap since the shafts; founder asked whether to keep or fill it.
+- Pit covered (founder: "다시 덮어"), life 21f at ~2,500: trench footprint x -11..-3, z -16..26 filled with stone from y -63 to 62 where air, lava or
+  water (Minecraft log: 13,615 + 1,600 + 234 blocks), floor restored (63 blocks of grass, place A glowstone). Next window: 9 deaths, all zombies,
+  lowest height 63 - no falls, no lava.
+- Found: MineLand's server picks a fresh random respawn spot at every death ("Set temporary respawn location to [...]" in its log), so the
+  spawnpoint / setworldspawn commands have no effect; the judge's put-back of far bodies (> 40 blocks from home) is what brings them home.
+- Founder's question "구덩이를 판다고 죽고 구덩이를 피하진 않네. 죽음을 두려워하지 않는건가?": by design nothing in the being feels death - its wants
+  come only from the bedrock (life, food, air), and a fall or lava kills within one step from full life, so no lack rises before the death for
+  anything to learn from; a rebirth then cuts the experience. The harm memory learns from hurt that comes before harm; a one-step death leaves it
+  nothing. Avoiding a deadly edge needs either a felt precursor (hurt from small falls, seeing depth), or learning from others' deaths (the
+  community stage), or an evolved fear of heights - a bedrock decision for the founder, not a rule to add.

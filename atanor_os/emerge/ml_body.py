@@ -28,7 +28,7 @@ def _recvall(s, n):
 
 
 class MineLandBody:
-    def __init__(self, seed=1, host="127.0.0.1", port=8792, device="cuda"):
+    def __init__(self, seed=1, host="127.0.0.1", port=8792, device="cuda", path=False):
         self.dev = device
         self.s = socket.create_connection((host, port), timeout=600); self.s.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         hello, pics = self._recv(); self.n, self.H, self.W = hello["n"], hello["h"], hello["w"]; self.valley, self.names = hello["valley"], hello["names"]
@@ -49,6 +49,8 @@ class MineLandBody:
         for o in self.opt:
             rng.shuffle(o)
         sensors = [Channel(self.phys[i][1], (self.phys[i][2],) if self.phys[i][1] == "vector" else self.phys[i][2], self.phys[i][3]) for i in order]
+        if path:                                                        # MC_GOING_PROTOCOL.md: the body declares where forward, sideways and turn sit in its motion signal
+            k = order.index(2); pm = self.perm.get(k, list(range(5))); sensors[k] = Channel("vector", (5,), False, motion=(pm.index(0), pm.index(1), pm.index(3)))
         self.c = Contract(sensors=sensors, motors=[self.levers[j][1] for j in lo])
         self.combos, _ = self.c.codes()
         self.dead = torch.zeros(self.n, dtype=torch.bool, device=device)
@@ -146,7 +148,7 @@ class MineLandBody:
         for i in torch.nonzero(which)[:, 0].tolist():
             nm = self.names[i]
             cmds += [f"effect give {nm} minecraft:instant_health 1 10", f"effect give {nm} minecraft:saturation 1 10",
-                     f"tp {nm} {v['x'] + 0.5} {v['y']} {v['z'] + 0.5} 0 0"]
+                     f"tp {nm} {v['x'] + 0.5} {v['y']} {v.get('home', v['z']) + 0.5} 0 0"]          # rebirth place (founder 2026-11-25 '리스폰 포인트 바꿔': place A, off the pit)
             self.dead[i] = False
         if cmds:
             self.judge_cmd(cmds, settle=3)

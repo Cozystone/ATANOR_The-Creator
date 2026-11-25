@@ -1,0 +1,75 @@
+{
+ "protocol": "atanor_os/S3_S4_PROTOCOL.md (S4)",
+ "rows": [
+  {
+   "arm": "b",
+   "carry": 3000,
+   "parent": 5,
+   "nurse": 0.01,
+   "exit_store": 0.92,
+   "set_exit": 0.0,
+   "nursed": 9175,
+   "waited": 146133,
+   "near_child": 0.246,
+   "rep": 0,
+   "layout": "9101_0",
+   "elder": "s3_a",
+   "early_deaths": 0.0,
+   "last_deaths": 0.0,
+   "child_need": 1.13,
+   "near_h1": 0.189,
+   "near_h2": 0.304,
+   "early_need": 5.9,
+   "last_need": 6.61,
+   "near_share": 0.055,
+   "seen_share": 0.016,
+   "resonance_events": 123.0,
+   "forks": {
+    "far": [
+     1.0,
+     1.0
+    ],
+    "stem": [
+     1.0,
+     1.0
+    ]
+   },
+   "seconds": 1001
+  },
+  {
+   "arm": "b",
+   "carry": 3000,
+   "parent": 5,
+   "nurse": 0.01,
+   "exit_store": 0.85,
+   "set_exit": 0.0,
+   "nursed": 10279,
+   "waited": 152655,
+   "near_child": 0.204,
+   "rep": 0,
+   "layout": "9104_0",
+   "elder": "s3_b",
+   "early_deaths": 0.08,
+   "last_deaths": 0.01,
+   "child_need": 1.34,
+   "near_h1": 0.199,
+   "near_h2": 0.208,
+   "early_need": 3.6,
+   "last_need": 5.73,
+   "near_share": 0.045,
+   "seen_share": 0.028,
+   "resonance_events": 233.0,
+   "forks": {
+    "far": [
+     1.0,
+     0.6875
+    ],
+    "stem": [
+     1.0,
+     0.9375
+    ]
+   },
+   "seconds": 999
+  }
+ ]
+}

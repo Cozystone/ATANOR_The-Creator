@@ -21,7 +21,9 @@ class Channel:
     kind: str                     # "image" | "vector" | "audio"
     shape: tuple
     bedrock: bool = False
-    motion: bool = False          # P1 (atanor_os/P1_PATH_PROTOCOL.md): this signal is the body's own felt motion (forward, sideways, turn) - read by the innate path organ
+    motion: object = False        # P1 (atanor_os/P1_PATH_PROTOCOL.md): this signal is the body's own felt motion - read by the innate path organ.
+                                  # True = its first three numbers are (forward, sideways, turn); a tuple of three = where those three sit in the signal
+                                  # (anatomy declared by the body, as a nerve is wired to the vestibular organ; MC_GOING_PROTOCOL.md)
 
 
 @dataclass
@@ -90,7 +92,8 @@ class Organs:
         self.inside = slice(0, sum(int(np.prod(contract.sensors[i].shape)) for i in self.bed))
         self.z = None
         mo = [i for i, ch in enumerate(contract.sensors) if getattr(ch, "motion", False)]
-        self.path = PathOrgan(n, dev) if mo else None; self.mo = mo[0] if mo else None      # P1: present only when the body declares its own motion
+        self.path = PathOrgan(n, dev) if mo else None; self.mo = mo[0] if mo else None
+        mi = getattr(contract.sensors[mo[0]], "motion", False) if mo else False; self.mo_idx = list(mi) if isinstance(mi, (tuple, list)) else [0, 1, 2]      # P1: present only when the body declares its own motion
         if self.path is not None:
             self.dx += PathOrgan.N
 
@@ -132,7 +135,7 @@ class Organs:
                 small = F.interpolate(fr.permute(0, 3, 1, 2) / 255.0, size=(48, 80), mode="bilinear", align_corners=False)
                 parts.append(self.DE(small))
         if self.path is not None:
-            parts.append(self.path(raw[self.mo].reshape(self.n, -1).float()))
+            parts.append(self.path(raw[self.mo].reshape(self.n, -1).float()[:, self.mo_idx]))
         return torch.cat(parts, 1)
 
     def state(self):

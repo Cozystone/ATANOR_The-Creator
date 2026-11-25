@@ -1171,3 +1171,62 @@
 - 2026-11-25 `e32d7b97` L1d controls: new rooms pass all bars; W=0 control passes the life bars too - the lean adds recovery from put places (forks 5/6 vs 1/6), daily survival comes mostly from the corrected place sense; MineLand death record (judge side)
 - 2026-11-25 `e955c9fd` MineLand death causes read: zombies 13, creeper 2, starved 3 of 18 (no falls/suffocation); judge-side death-message record; P1b-fixed registered
 - 2026-11-25 `a4e67a46` P1b-fixed: place sense alone carries much of daily life but not steadily; ladder alone/childhood/lean = 168,2,48 / 4,1,97 / 0,0,0
+- 2026-11-25 `97f60c15` export: going organ, L1/D34 tools and results; trailer Opus 5.5
+- 2026-11-25 `f8eaa1ec` MineLand going: theory + D35 registered (where life is given back); judge-side place record; re-read drift fix in ml_live; body declares motion wiring for the path organ
+- 2026-11-25 `838e88b2` MineLand: founder-asked shaft to the bottom under a digging body (body 1 fell to y -51.5 and died)
+- 2026-11-25 `17ca232a` MineLand: founder-asked whole pit opened to the bottom; falls became the main killer
+- 2026-11-25 `da64edc0` MineLand: D35 not met (life not given back by place; no cake eaten); respawn moved to A; judge puts far bodies back; pit now kills every ~11 steps
+- 2026-11-25 `b0f9c1c6` MineLand: pit covered (falls gone, 9 zombie deaths next window); MineLand randomizes respawn; why the being does not avoid deadly falls
+- 2026-11-25 `69317524` S3 registered (one being through rooms A,B,C and back) and running; S4 theory note (S4a without new bedrock, S4b needs founder's empathy-bedrock decision)
+- 2026-11-25 `6020e933` Founder: empathy bedrock (resonance, weight .3, felt where the observer stands); S4 registered (alone / elder seen / elder seen + resonance)
+- 2026-11-25 `85d76781` Empathy bedrock: other-in-view sense (room) + resonance in the going organ (seen rise felt as .3 relief where the observer stands); S4 runner
+- 2026-11-25 `d9a2b9e4` S3: return and forks met; new rooms 3 of 4 - failure explained: birth-relative relief memory transfers by side, misleads when sides swap; context is the next step
+- 2026-11-25 `2244a1e5` S4 not met: newborns see the elder 7-10% of beats, ~10 resonance events per body; S4c registered (nurture carries newborns close, carry felt as motion)
+- 2026-11-25 `43e6645a` S4p registered (founder: raise like parent and child): elder fetches its newborn with its own going skill and calls; call heard by two ears in the room
+- 2026-11-25 `3fd585c6` Fear theory note (founder: why fear death, how a will to live can emerge): research, measured reasons it is missing (death restores 59% of bodies, value decides 0.4%), F1-F4 plan, D37 next; nursing option in S4 runner
+- 2026-11-25 `42271a92` S4n registered: nursing near the parent (founder: give a pull toward the parent)
+- 2026-11-25 `8140defc` S4g registered (founder: hand-written parent that keeps and leads the child): guardian fetches, calls, nurses; queued after S4n
+- 2026-11-25 `bcb46475` S3b registered (context separation from its own failed expectations, latent-cause inference): going organ holds relief memory per context, switches by foretelling score; queued right after S4c
+- 2026-11-25 `79858b4f` Developmental map: newborn scaffolds (answer vs bias, evidence and contested marks) against what the being has; agent detection gap and its cheap diagnostic
+- 2026-11-25 `91791a5b` Map: the furthest step - a model of itself (founder: Vision, not Jarvis)
+- 2026-11-25 `b14f38cd` D38 registered (agent detection: responsive vs yoked vs still other, error of its own forecaster); queued right after S4c
+- 2026-11-25 `4c3fd0f3` Map: self-propulsion row - the eye's innate bug signal is a crude form
+- 2026-11-25 `1cc65dd5` S4c stopped after 4 runs: carrying the young back to its elder harms (deaths 1.3 vs alone 1.19/.57, no own fills)
+- 2026-11-25 `f80d86bc` D38 not met as registered (responsive < yoked in both rooms, ratio .71 / .85); S3 reading corrected (room shape, not only sides); S3b contexts scored by the map per context (remapping)
+- 2026-11-25 `01a855e2` S3b mechanism fixed by dev diagnostics (map per context, remapping): A->B switches at 143, back to A's own context at 63; registered runs start
+- 2026-11-25 `61524460` D37 registered: deadly drops beside the stem, value vote and choice at drop vs wall edges; PIT cell kind in the room world
+- 2026-11-25 `b5423e2e` D37: foresight of the drop met in both rooms; choice at the edge not (9101 steps forward more at drops than walls); deaths fell by staying away; holding 78% of beats
+- 2026-11-25 `639ffdf5` S3b not met: 9102 now learned fully (last deaths 1.34 -> 0) but contexts churn inside a world (springs deplete) and slots are reused, so the return does not find its old context; next: worlds by layout only
+- 2026-11-25 `a30269dc` S3c registered: worlds told by layout only (map evidence), relief expectations within the world
+- 2026-11-25 `66d111e4` D37b registered: conflict monitoring (value against the held gesture calls a new choice), holding untouched
+- 2026-11-25 `3879930c` D37b not met: conflict monitor fired on .2-.3% of beats, no change beyond noise; edge forward rate is confounded; fatal-step diagnostic next
+- 2026-11-25 `1373df12` Fatal-step diagnostic: falls are 2/3 holds, fresh strong-pull choices 2x over-represented, tries at base rate
+- 2026-11-25 `792aa1c7` S3c not met (map frequencies follow behaviour, churn); S3c2 registered: worlds by which crossings are possible
+- 2026-11-25 `2178b4a2` D37c: at fatal steps the going organ's lean (+2.5..+6) and the value (+1.5..+2.3) both favour the fatal gesture; my 'knows but does not act' reading was wrong - the strongest pull is blind to death
+- 2026-11-25 `206cd9b1` D37d registered: place memory of deaths in the going organ (dread 1)
+- 2026-11-25 `7d9f9b58` D37: live view on 8768 (body 0's eye, map with drops, run numbers)
+- 2026-11-25 `d3373986` S3c2 not met: never switches - the context in use absorbs new crossings at once; single-run S3 comparisons are within chance (9102 last 0 vs 1.34 with the same path)
+- 2026-11-25 `e3b3ad25` D37d not met (place dread breaks the road in 9104); D37e registered: the going lean earns its weight by its own record
+- 2026-11-25 `5af14c26` S3d registered: suspend before learning (held crossings -> new world or merge as own error); S3 baseline and S3d with two starts each
+- 2026-11-25 `6e6c0328` S3d amended: baseline = S3 + S3c2; four S3d runs at once; quick dev look first
+- 2026-11-25 `320ee320` D37e not met; found the cause of all D37 failures: a drop at the side feels like a wall to touch and is out of view - the being could not perceive it at the fatal step (my world design error)
+- 2026-11-25 `ab04ab96` Ground touch in the room body (a drop is felt as missing ground, not touched); D37f registered: D37 again with the sense
+- 2026-11-25 `eca31f9c` D37: count beats with missing ground felt and forward chosen there
+- 2026-11-25 `6883376e` Going: online k-means in one vectorised step (same numbers as the per-unit loop, checked; 407 -> 5 ms per beat under load)
+- 2026-11-26 `83b5396b` D37f: met in 9104 (drop deaths 70 -> 24, fills up), not 9101; 39% of falls unfelt (diagonal gap); D37g registered: six ground rays
+- 2026-11-26 `4e79d264` S3d (first starts): no churn, returns find their own context, 'room like the last' reused; 9102 judged as own error (where-things-are worlds missed); not met
+- 2026-11-26 `5ddb81dd` D37g not met (falls are fine footing; D37 line paused); S3e registered: reliefs judge worlds over a long window beside the map
+- 2026-11-26 `ba608ff3` S3 runner: live view on 8768 (body 0, map, context in use, merges, switches)
+- 2026-11-26 `5a4d3393` S3e not met (reliefs as evidence bring churn back); S3 room line stops - kept: hold before learning; open: what lasts (world) vs what passes (state)
+- 2026-11-26 `32718b29` S4g amended: first starts first; back to the social line
+- 2026-11-26 `8158d839` S4g first starts met: guardian childhood cuts early deaths 83% / 54%; second starts and a no-nursing arm registered
+- 2026-11-26 `6eaefe65` S4g second starts: bar met, but no-nursing arm shows the gain is feeding, not teaching
+- 2026-11-26 `e125aff0` S4g correction (no-nursing arm also lost the childhood drain); S4g-d registered: head start vs lived childhood; nursed exit store .97-.98
+- 2026-11-26 `9c2ddf1f` S4g-d: head start does not give the gain; S4g-e registered: childhood drain without a guardian
+- 2026-11-26 `41957936` S4g-e: split by room (9104 lack alone teaches; 9101 needs the guardian); childhood fills diagnostic
+- 2026-11-26 `dc0ea540` S4g diagnostics: guardian nursed, did not lead; S4h leading guardian registered
+- 2026-11-26 `c6197fd0` S4h not met: the child does not follow a leading guardian (sees it 2-3% of beats); next = agent detection
+- 2026-11-26 `8ede04f2` D38b registered: own eye error on the seen other split by own motion
+- 2026-11-26 `e3ac99fa` D38b not met (sign differs by room); contingency bias left to the founder
+- 2026-11-26 `b6b6dd7a` D38c registered: act-sensitivity of own eye forecast when the other is seen
+- 2026-11-26 `b53884d2` D38c not met: no contingency seed in its own forecaster; social line waits on the founder's bedrock decision
