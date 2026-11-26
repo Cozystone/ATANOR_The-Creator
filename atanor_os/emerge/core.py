@@ -179,7 +179,7 @@ class Core(nn.Module):
 
     # ---- 헛됨 (창립자 2026-11-21 채택. 마음의 고르기에 든 고정된 성질 - 물고기와 선충에도 있는 바탕) ----
     @torch.no_grad()
-    def unmet(self, x, a, x2):
+    def unmet(self, x, a, x2, fo=None):
         """방금 한 행동이 가장 급한 모자람을 풀어 주리라 내다본 만큼에서, 실제로 풀린 만큼을 뺀 것 [B] (0 이상), 그리고 실제로 풀렸는가 [B].
         이것을 행동마다 쌓아 두고 (새어 나가게 하며) 쌓인 만큼 그 행동의 끌림을 던다: 헛되면 놓는다. 쌓는 것은 몸을 사는 쪽이 한다 (존재마다 따로)."""
         ins = self.inside
@@ -188,7 +188,8 @@ class Core(nn.Module):
             lack = dfc / dfc.sum(1, keepdim=True).clamp(min=1e-6)
         else:
             lack = F.one_hot((1 - x[:, ins]).argmax(1), ins.stop - ins.start).float()
-        fo = self.foresee(x).gather(1, a[:, None, None].expand(-1, 1, self.dx))[:, 0]
+        if fo is None:                                                 # T2 (LOKI_TRANSPLANT_PROTOCOL.md): a forecast of the done gesture may be given (LOKI's)
+            fo = self.foresee(x).gather(1, a[:, None, None].expand(-1, 1, self.dx))[:, 0]
         hoped = (((fo - x)[:, ins]) * lack).sum(1).clamp(min=0); came = (((x2 - x)[:, ins]) * lack).sum(1).clamp(min=0)
         more = (hoped - came).clamp(min=0)
         if self.far and self._last is not None and self._last[0].shape[0] == x.shape[0]:

@@ -198,9 +198,12 @@ class Mind:
         n, d = self.n, self.dev
         if self.prev is not None:
             px, pa = self.prev
-            more, eased = self.net.unmet(px, pa, x)
-            self.fut = self.fut * LEAK; self.fut[torch.arange(n, device=d), pa] += more * (~self.cut); self.fut[eased] = 0
             fo = self.net.foresee(px).gather(1, pa[:, None, None].expand(-1, 1, x.shape[1]))[:, 0]
+            ext = getattr(self, "ext_fore", None)                              # T2 (LOKI_TRANSPLANT_PROTOCOL.md; default None): the body's own forecaster (LOKI) for its first columns
+            if ext is not None:
+                fo = fo.clone(); fo[:, :ext.shape[1]] = ext; self.ext_fore = None
+            more, eased = self.net.unmet(px, pa, x, fo=fo)
+            self.fut = self.fut * LEAK; self.fut[torch.arange(n, device=d), pa] += more * (~self.cut); self.fut[eased] = 0
             odd = ((fo - x) ** 2).mean(1); novel = (odd > self.s_m + 2 * self.s_v.sqrt()) & (self.steps > 20) & ~self.cut
             self.fut[novel] = 0; self.s_m = self.s_m + 0.02 * (odd - self.s_m); self.s_v = self.s_v + 0.02 * ((odd - self.s_m) ** 2 - self.s_v)
         else:
@@ -237,6 +240,17 @@ class Mind:
                 sc = sc + gl
                 if rec:
                     parts["going"] = gl
+            pg = getattr(self, "plan_goal", None)                              # B1 (WORLD_A_PROTOCOL.md; default None): a goal place from a memory organ (LOKI v12),
+            if pg is not None and self.wo is not None:                         # walked by the going organ's own map and skill, weighed by its own earned record
+                pl = go.lean_to(x, pg)
+                if pl is not None:
+                    if getattr(self, "plan_earned", None) is None:
+                        self.plan_earned = Earned()
+                    self.plan_earned.track(pl.max(1).values - pl.mean(1), self.wo.whole(x), ~self.cut)
+                    pl = pl * self.plan_earned.weight(); sc = sc + pl
+                    if rec:
+                        parts["plan"] = pl
+                self.plan_goal = None
         if rec:
             parts["total"] = sc.clone(); parts["strong"] = strong.clone(); self.parts = parts
         roam_on = getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256
@@ -256,8 +270,11 @@ class Mind:
             ev, ep = self.wo.earned(), self.pull_earned(); pv = ev / max(ev + ep, 1e-6) if (ev + ep) > 0 else 0.0
             take = strong & (torch.rand(n, device=d) < pv)           # on a strong beat the value decides with the share its record earns
             pick = torch.where(take, byv, pick); usedv = usedv | take; strong = strong & ~take
-        gap = sc.max(1).values - sc.gather(1, self.cur[:, None])[:, 0]
-        pre = strong & (gap > 2.0 * sc.std(1).clamp(min=1e-6))
+        gap = sc.max(1).values - sc.gather(1, self.cur[:, None])[:, 0]; sd = sc.std(1).clamp(min=1e-6)
+        if getattr(self, "gate_usual", False):                                # D40 (VALUE_CHOICE_PROTOCOL.md; default off): the bar is 2x the being's own usual score spread (slow mean over its lived beats), not this beat's
+            m = float(sd.mean()); self.sd_usual = m if getattr(self, "sd_usual", None) is None else 0.999 * self.sd_usual + 0.001 * m
+            sd = torch.full_like(sd, self.sd_usual)
+        pre = strong & (gap > 2.0 * sd); self.pre_last = pre                 # pre_last: judge-side record only
         again = novel | pre | self.cut
         if self.conflict and lw is not None:
             clash = (lw.mean(1) - lw.gather(1, self.cur[:, None])[:, 0]) > self.conflict
@@ -387,7 +404,7 @@ class Mind:
         돌려줌: 옮긴 것의 요약 (재는 쪽 기록)."""
         st = torch.load(path, map_location=self.dev, weights_only=False)
         osig, nsig = st["signature"], self.c.signature()
-        if osig == nsig:
+        if osig == nsig and st["core"]["f.4.weight"].shape[0] == self.o.dx:      # same body AND same sense width (G1: the path organ widens it; the signature does not say so)
             return dict(same_body=True, steps=self.load(path))
         def eye_map(sig, depth):
             off = sum(int(np.prod(s)) for k, s, b in sig[0] if b) + sum(int(np.prod(s)) for k, s, b in sig[0] if not b and k in ("vector", "audio"))
@@ -395,7 +412,11 @@ class Mind:
             return [off + j * per + q for j in range(sum(1 for k, s, b in sig[0] if k == "image")) for q in range(per)], off + per * sum(1 for k, s, b in sig[0] if k == "image")
         ndx = self.o.dx; depth = self.o.DE is not None
         oe, odx = eye_map(osig, depth); ne, ndx2 = eye_map(nsig, depth)
-        assert ndx2 == ndx and odx == st["core"]["f.4.weight"].shape[0], "눈 칸 배치를 맞추지 못함"
+        from .body_contract import PathOrgan
+        pn = PathOrgan.N if getattr(self.o, "path", None) is not None else 0      # G1: the path code sits after the eye; new on this body, starts fresh
+        po = PathOrgan.N if st["core"]["f.4.weight"].shape[0] == odx + PathOrgan.N else 0
+        assert ndx2 + pn == ndx and odx + po == st["core"]["f.4.weight"].shape[0], "눈 칸 배치를 맞추지 못함"
+        odx = odx + po
         k = min(len(oe), len(ne)); oe, ne = torch.tensor(oe[:k]), torch.tensor(ne[:k])
         oc = st["core"]["f.0.weight"].shape[1] - odx; nc = self.net.f[0].weight.shape[1] - ndx
         skip = ("rel_", "fnd_", "harm_", "slow_", "trl_", "e2", "t2", "ascale", "oc")

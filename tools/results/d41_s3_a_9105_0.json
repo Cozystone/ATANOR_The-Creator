@@ -1,0 +1,405 @@
+{
+ "protocol": "atanor_os/VALUE_CHOICE_PROTOCOL.md (D39)",
+ "rows": [
+  {
+   "d41": {
+    "picks": 37969.0,
+    "disagree": 37181.0,
+    "agree": 788.0,
+    "k": 20,
+    "by_third": [
+     {
+      "value_best": {
+       "n": 4747,
+       "died": 0.0,
+       "dwhole": -0.00151
+      },
+      "going_best": {
+       "n": 9128,
+       "died": 0.0,
+       "dwhole": -0.00202
+      },
+      "other": {
+       "n": 9097,
+       "died": 0.0,
+       "dwhole": -0.00145
+      },
+      "agree": {
+       "n": 564,
+       "died": 0.0,
+       "dwhole": -0.00166
+      }
+     },
+     {
+      "value_best": {
+       "n": 763,
+       "died": 0.0,
+       "dwhole": 0.00973
+      },
+      "going_best": {
+       "n": 6397,
+       "died": 0.0,
+       "dwhole": 0.00023
+      },
+      "other": {
+       "n": 3713,
+       "died": 0.0,
+       "dwhole": 0.00509
+      },
+      "agree": {
+       "n": 176,
+       "died": 0.0,
+       "dwhole": 0.00841
+      }
+     },
+     {
+      "value_best": {
+       "n": 148,
+       "died": 0.0338,
+       "dwhole": 0.02347
+      },
+      "going_best": {
+       "n": 1891,
+       "died": 0.0143,
+       "dwhole": 0.02031
+      },
+      "other": {
+       "n": 1162,
+       "died": 0.0155,
+       "dwhole": 0.01569
+      },
+      "agree": {
+       "n": 43,
+       "died": 0.0,
+       "dwhole": 0.01458
+      }
+     }
+    ]
+   },
+   "layout": "9105_0",
+   "being": "s3_a",
+   "gate_usual": 0,
+   "sd_usual": null,
+   "beats": 5000,
+   "bodies": 64,
+   "temperature": 0.05,
+   "deaths": 15,
+   "all": {
+    "deaths_per_1000": 0.047,
+    "need_fills_per_1000": 5.22,
+    "gestures": 90,
+    "chance": 0.0111,
+    "value_ready": 0.987,
+    "value_flat": 0.0556,
+    "value_has_a_best": 0.9316,
+    "M1_done_is_value_best": 0.0873,
+    "M1_pick_is_value_best": 0.0961,
+    "done_in_value_top3": 0.1799,
+    "decided_by": {
+     "strong": 0.1161,
+     "value": 0.0,
+     "random": 0.0,
+     "hold": 0.7835,
+     "tried": 0.1004
+    },
+    "value_best_done_when_decided_by": {
+     "strong": 0.1708,
+     "value": null,
+     "random": null,
+     "hold": 0.0851,
+     "tried": 0.0101
+    },
+    "by_lack": [
+     {
+      "share": 0.6218,
+      "done_best": 0.1094,
+      "pick_best": 0.1205,
+      "gate_open": 0.119,
+      "value_spread": 0.7562
+     },
+     {
+      "share": 0.2489,
+      "done_best": 0.045,
+      "pick_best": 0.049,
+      "gate_open": 0.1387,
+      "value_spread": 0.9176
+     },
+     {
+      "share": 0.0609,
+      "done_best": 0.0358,
+      "pick_best": 0.0391,
+      "gate_open": 0.1665,
+      "value_spread": 1.4967
+     }
+    ],
+    "gate": {
+     "open": 0.1289,
+     "by_pre": 0.0865,
+     "by_cut": 0.0002,
+     "by_novel": 0.0421,
+     "mean_hold_beats": 7.8,
+     "strong_share_all_beats": 1.0,
+     "held_is_value_best": 0.0852,
+     "held_mean_rank_in_value": 24.188
+    },
+    "strong_open": {
+     "share": 0.1187,
+     "pick_is_value_best": 0.1706,
+     "softmax_mass_on_value_best": 0.1707,
+     "score_best_is_value_best": 0.1712,
+     "value_decisive": 0.4741,
+     "top_margin_in_temperatures": 17.0831,
+     "margin_over_3": 0.8246,
+     "spread": {
+      "total": 1.9494,
+      "pull": 0.343,
+      "harm": 0.0108,
+      "futile": 0.047,
+      "value": 0.8502,
+      "going": 1.5716
+     }
+    },
+    "weak_open": {
+     "share": 0.0,
+     "pick_is_value_best": null,
+     "value_drawn": null
+    },
+    "value_itself": {
+     "own_softmax_mass_on_best": 0.8298,
+     "spread": 0.84771,
+     "earned_trust": 0.588,
+     "spread_all_beats": {
+      "pull": 0.271,
+      "harm": 0.0137,
+      "futile": 0.0537,
+      "value": 0.7897,
+      "going": 1.37
+     }
+    },
+    "arithmetic": {
+     "P_hold": 0.8726,
+     "best_given_hold": 0.0852,
+     "P_strong": 0.1274,
+     "best_given_strong": 0.1706,
+     "P_weak": 0.0,
+     "best_given_weak": 0,
+     "pick_total": 0.0961,
+     "if_hold_perfect": 0.8944,
+     "if_strong_perfect": 0.2017,
+     "if_weak_perfect": 0.0961
+    }
+   },
+   "first_half": {
+    "deaths_per_1000": 0.094,
+    "need_fills_per_1000": 3.67,
+    "gestures": 90,
+    "chance": 0.0111,
+    "value_ready": 0.974,
+    "value_flat": 0.1112,
+    "value_has_a_best": 0.8632,
+    "M1_done_is_value_best": 0.0426,
+    "M1_pick_is_value_best": 0.0465,
+    "done_in_value_top3": 0.1002,
+    "decided_by": {
+     "strong": 0.127,
+     "value": 0.0,
+     "random": 0.0,
+     "hold": 0.7723,
+     "tried": 0.1007
+    },
+    "value_best_done_when_decided_by": {
+     "strong": 0.078,
+     "value": null,
+     "random": null,
+     "hold": 0.041,
+     "tried": 0.0102
+    },
+    "by_lack": [
+     {
+      "share": 0.3618,
+      "done_best": 0.0559,
+      "pick_best": 0.0612,
+      "gate_open": 0.1248,
+      "value_spread": 0.4676
+     },
+     {
+      "share": 0.3797,
+      "done_best": 0.032,
+      "pick_best": 0.0348,
+      "gate_open": 0.1449,
+      "value_spread": 0.7872
+     },
+     {
+      "share": 0.1217,
+      "done_best": 0.0358,
+      "pick_best": 0.0391,
+      "gate_open": 0.1665,
+      "value_spread": 1.4967
+     }
+    ],
+    "gate": {
+     "open": 0.1409,
+     "by_pre": 0.1005,
+     "by_cut": 0.0005,
+     "by_novel": 0.0399,
+     "mean_hold_beats": 7.1,
+     "strong_share_all_beats": 1.0,
+     "held_is_value_best": 0.0413,
+     "held_mean_rank_in_value": 31.8795
+    },
+    "strong_open": {
+     "share": 0.1204,
+     "pick_is_value_best": 0.0785,
+     "softmax_mass_on_value_best": 0.0785,
+     "score_best_is_value_best": 0.0786,
+     "value_decisive": 0.312,
+     "top_margin_in_temperatures": 21.799,
+     "margin_over_3": 0.8525,
+     "spread": {
+      "total": 2.4909,
+      "pull": 0.5393,
+      "harm": 0.013,
+      "futile": 0.075,
+      "value": 0.7779,
+      "going": 2.183
+     }
+    },
+    "weak_open": {
+     "share": 0.0,
+     "pick_is_value_best": null,
+     "value_drawn": null
+    },
+    "value_itself": {
+     "own_softmax_mass_on_best": 0.7629,
+     "spread": 0.75335,
+     "earned_trust": 0.412,
+     "spread_all_beats": {
+      "pull": 0.4193,
+      "harm": 0.0161,
+      "futile": 0.0812,
+      "value": 0.6503,
+      "going": 1.8917
+     }
+    },
+    "arithmetic": {
+     "P_hold": 0.8605,
+     "best_given_hold": 0.0413,
+     "P_strong": 0.1395,
+     "best_given_strong": 0.0785,
+     "P_weak": 0.0,
+     "best_given_weak": 0,
+     "pick_total": 0.0465,
+     "if_hold_perfect": 0.8714,
+     "if_strong_perfect": 0.1751,
+     "if_weak_perfect": 0.0465
+    }
+   },
+   "last_half": {
+    "deaths_per_1000": 0.0,
+    "need_fills_per_1000": 6.76,
+    "gestures": 90,
+    "chance": 0.0111,
+    "value_ready": 1.0,
+    "value_flat": 0.0,
+    "value_has_a_best": 1.0,
+    "M1_done_is_value_best": 0.126,
+    "M1_pick_is_value_best": 0.1389,
+    "done_in_value_top3": 0.2487,
+    "decided_by": {
+     "strong": 0.1053,
+     "value": 0.0,
+     "random": 0.0,
+     "hold": 0.7946,
+     "tried": 0.1002
+    },
+    "value_best_done_when_decided_by": {
+     "strong": 0.2663,
+     "value": null,
+     "random": null,
+     "hold": 0.122,
+     "tried": 0.01
+    },
+    "by_lack": [
+     {
+      "share": 0.8819,
+      "done_best": 0.1313,
+      "pick_best": 0.1448,
+      "gate_open": 0.1166,
+      "value_spread": 0.8746
+     },
+     {
+      "share": 0.1181,
+      "done_best": 0.0866,
+      "pick_best": 0.0949,
+      "gate_open": 0.1188,
+      "value_spread": 1.3365
+     },
+     {
+      "share": 0.0,
+      "done_best": null,
+      "pick_best": null,
+      "gate_open": null,
+      "value_spread": null
+     }
+    ],
+    "gate": {
+     "open": 0.1169,
+     "by_pre": 0.0726,
+     "by_cut": 0.0,
+     "by_novel": 0.0443,
+     "mean_hold_beats": 8.6,
+     "strong_share_all_beats": 1.0,
+     "held_is_value_best": 0.1221,
+     "held_mean_rank_in_value": 17.719
+    },
+    "strong_open": {
+     "share": 0.1169,
+     "pick_is_value_best": 0.2655,
+     "softmax_mass_on_value_best": 0.2657,
+     "score_best_is_value_best": 0.2668,
+     "value_decisive": 0.6412,
+     "top_margin_in_temperatures": 12.2226,
+     "margin_over_3": 0.796,
+     "spread": {
+      "total": 1.3913,
+      "pull": 0.1406,
+      "harm": 0.0086,
+      "futile": 0.0181,
+      "value": 0.9246,
+      "going": 0.9414
+     }
+    },
+    "weak_open": {
+     "share": 0.0,
+     "pick_is_value_best": null,
+     "value_drawn": null
+    },
+    "value_itself": {
+     "own_softmax_mass_on_best": 0.8875,
+     "spread": 0.92917,
+     "earned_trust": 0.74,
+     "spread_all_beats": {
+      "pull": 0.1227,
+      "harm": 0.0113,
+      "futile": 0.0262,
+      "value": 0.9292,
+      "going": 0.8482
+     }
+    },
+    "arithmetic": {
+     "P_hold": 0.8831,
+     "best_given_hold": 0.1221,
+     "P_strong": 0.1169,
+     "best_given_strong": 0.2655,
+     "P_weak": 0.0,
+     "best_given_weak": 0,
+     "pick_total": 0.1389,
+     "if_hold_perfect": 0.9142,
+     "if_strong_perfect": 0.2247,
+     "if_weak_perfect": 0.1389
+    }
+   },
+   "seconds": 514
+  }
+ ]
+}

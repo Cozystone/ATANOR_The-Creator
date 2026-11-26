@@ -1,0 +1,46 @@
+{
+ "seen": 1,
+ "staged": 0,
+ "stage2_fills": {
+  "water": 0,
+  "food": 0
+ },
+ "world": "a3",
+ "mirror": 1,
+ "seed": 9301,
+ "being": "s3_b",
+ "beats": 6000,
+ "deaths_by_quarter": [
+  128,
+  123,
+  110,
+  87
+ ],
+ "need_fills_by_quarter": [
+  0,
+  6,
+  45,
+  101
+ ],
+ "deaths_per_1000_first_quarter": 1.333,
+ "hunger_to_fill": {
+  "water": {
+   "n": 223,
+   "median": 168.0,
+   "first_half_median": 185.0,
+   "last_half_median": 157.0
+  },
+  "food": {
+   "n": 422,
+   "median": 331.0,
+   "first_half_median": 414.0,
+   "last_half_median": 218.0
+  }
+ },
+ "died_lacking": [
+  411,
+  245
+ ],
+ "share_of_lacking_beats_in_spurs": 0.1624,
+ "seconds": 521
+}

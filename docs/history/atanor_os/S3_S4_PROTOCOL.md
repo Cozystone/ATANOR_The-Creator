@@ -387,3 +387,104 @@ Reading as registered: relief beside a moving other does not make the young foll
 of its beats - it cannot follow what it does not perceive as one thing that goes on being there; nursing relief is credited to the place
 where it came, and the guardian is never at one place. Value has no "the other" to attach to. Next is the agent-detection line (D38): before a
 young can follow, something in it must stand for the other as a lasting thing that can be found again.
+
+# S4i (registered before running; the founder's contingency-bedrock decision is pending, so a world-side step that adds nothing to the mind)
+Found reading the code: the being's value (ReliefWorth) is learned over its whole sense, ears and eye included, so "the guardian is near"
+could gain value - but the world hid it at the moment of relief: nursing comes within 1.5 cells, the guardian called only beyond 3 cells, and
+was seen 2-3% of beats. When relief came the child neither heard nor saw where it came from. Mammal mothers and young keep contact calls
+going while together (not only when apart). Change (one thing, the world's guardian): S4h's leading guardian sounds all through childhood
+(same call, heard by two ears, louder when near and on the facing side). Nothing in the child changes; nothing tells it to follow.
+Runs: 9101, 9104, rep 0, as S4h. Bars as S4h: (a) near share in the second half of childhood >= .5 and above the first half, both layouts;
+(b) childhood fills >= drain-alone (3.49) and early deaths <= drain-alone mean (9101 .84, 9104 .1).
+Readings: (a) met -> following emerged from relief alone once the other could be sensed when relief came (social line reopens without a new
+bedrock); not met -> sound at relief is not enough; the contingency bedrock stays the founder's decision.
+
+## S4i result: not met - a contact call changes nothing
+| room | near 1st / 2nd half | seen | childhood fills | early deaths |
+|---|---|---|---|---|
+| 9101 | .17 / .31 (S4h .19 / .30) | .018 | .91 | .01 |
+| 9104 | .22 / .26 (S4h .20 / .21) | .026 | .90 | .04 |
+(a) not met (< .5), the same as without the call; (b) childhood fills below drain-alone. Reading as registered: a sound at relief is not
+enough; the child's value does not come to favour "the guardian heard near" within a 2,000-beat childhood, or favouring it does not turn into
+steps toward it. The social line now rests on the founder's decision on a contingency bedrock. I stop adding world variants here: two
+guardian worlds in a row (S4h, S4i) moved nothing, and more variants would be chasing room numbers (the two-track warning).
+
+# S4j (registered before running; a diagnostic, no new part, to tell where the following fails)
+S4i again (9101, 9104, rep 0) with a readout over the last 1,000 beats of childhood: the child's own value (ReliefWorth score, best act) on
+beats within 1.5 cells of the guardian vs beyond 3 cells, in thirds of lack; and how often its chosen step closes the gap when apart,
+against its random babbling steps (last 500 babbling beats).
+Readings: value near > far in the upper lack thirds, but steps close the gap no more than random -> value has learned the other, the turn
+from value into steps toward a moving thing is what fails (the going leans to places, not to things); value near ~ far -> value never
+learned it (the other must first be held as one lasting thing: the contingency / object question for the founder).
+
+## S4j result: value has learned the other; steps do not go to it
+Last 1,000 beats of childhood, its own value (best act) near (<= 1.5 cells) vs far (> 3), by thirds of lack:
+| room | low lack | mid | high lack | steps closing the gap when apart | random babbling steps |
+|---|---|---|---|---|---|
+| 9101 | -.0005 vs -.0018 | .014 vs -.0006 | .255 vs .052 | .31 | .38 |
+| 9104 | -.0011 vs -.0030 | .007 vs -.0021 | .108 vs .050 | .30 | .39 |
+Reading as registered: value near > far, most in high lack (2-5x) - the child's own bedrock value has come to hold "beside the guardian is
+where my lack is relieved"; its chosen steps close the gap less often than random ones. What fails is the turn from value into steps toward
+a moving thing: value is high when it is already near, flat across acts when far (far beats all look alike to it), and the going leans to
+places, where the guardian never stays. (Caveat: near beats are partly beats of nursing itself; the babble baseline counts all gaps, the
+childhood one only gaps > 1.5.)
+This sharpens the founder's question: the young does not lack a pull to the other - value has it. It lacks an approach to a valued moving
+thing. In animals that is innate (chicks and ducklings approach the maternal call and a moving shape from birth - phonotaxis, filial
+approach; Bolhuis 1991; Gottlieb on duck calls). Giving an approach to what its value rates high is a bedrock and the founder's decision.
+
+# S4k (registered before running; diagnostic, no new part): is the value's own best act an approach, drowned in choice?
+S4j readout plus: when apart, gap-closing rate on beats its chosen act was its value's best act vs not; how often choice follows value;
+spread of value over acts (best minus mean) far vs near. 9101 only, rep 0 (decisive one first).
+Readings: value-best steps close the gap clearly above random (>= .45 vs .38) -> value has the approach, choice drowns it (a weighting of
+parts already in the mind - mine to test, not a bedrock); about random or below -> value has no direction when far; approach to a moving
+valued thing is missing and the founder's decision stands.
+
+## S4k result: value has no direction when far
+9101, last 1,000 beats of childhood, apart: steps that were the value's best act closed the gap .34 (high lack .31), other steps .30, random
+babbling .38; choice followed value on 11% of beats; value spread over acts .014 far vs .016 near. Reading as registered: about random or
+below -> the value knows "near is good" but not which act brings it nearer; reweighting parts already in the mind would not give an approach.
+The approach to a moving valued thing is missing; it is the founder's decision whether to give it as bedrock (filial approach / phonotaxis).
+The social line (S4g-S4k, D38-D38c) is stopped here until then.
+
+# S4l (registered before running): choosing by imagination - the founder's own next line ("from here only pure learning: imagination")
+S4k: value knows near is good but has no direction when far. Not a bedrock: the mind already holds an imagination (Mind.imagined, off in
+S4): each act is rolled 6 beats ahead with its own forecaster (then random acts, best of 2 rolls) and scored by its own value at the end
+(wholeness change + best value there); its share of choice = imagine x the value's earned trust. If the forecaster foresees "turning to the
+louder call, the guardian grows near", imagination lends value the direction it lacks. One change: the child imagines (imagine 1.0) in S4i.
+Run: 9101, rep 0, childhood only (3,001 beats) with the S4k readout; then both layouts in full if (a) moves.
+Readings: steps when apart close the gap above random (>= .45 vs .38) and near in the second half rises above S4i's .31 by >= .1 -> imagination
+gives the approach (a learned one, no bedrock); no change -> its forecaster does not foresee the other's nearing; the approach bedrock stays
+the founder's decision.
+
+## S4l result (9101 childhood): not met, a small move
+With imagination: near 1st / 2nd half of childhood .22 / .38 (S4i .17 / .31: +.07, bar +.1); steps closing the gap when apart .37 (bar .45,
+random .38); value-best steps .43 (S4k .34). Reading as registered: not met - imagination nudges the value's best act toward the guardian
+(.34 -> .43) but not choice as a whole; the second layout is not run. Not tuned further (raising the imagination share would be chasing
+the number). The approach to a moving valued thing stays open; the founder's decision on an approach bedrock stands.
+
+# S4m (registered before running): is the approach learnable with a longer childhood
+S4l (imagination) moved the value-best step .34 -> .43 within a 2,000-beat childhood. If approach to the guardian is learnable by the
+being's own forecaster and value, it should grow with more lived childhood; if it stays, it is not. One change: childhood 6,000 beats
+(carry 6,000) instead of 3,000, as S4l otherwise (imagine 1.0, contact call, leading guardian), 9101 rep 0, childhood only; readout over the
+last 1,000 beats of childhood. Bars as S4l: steps closing the gap when apart >= .45 and near (second half) >= S4i + .1 (>= .41).
+Readings: met -> the approach is learned, given time (a long childhood is what the young needed, no bedrock); value-best rises further but
+choice does not -> learnable but slow, report; flat -> not learnable here; the approach bedrock stays the founder's decision.
+
+## S4m result: not met - a longer childhood does not grow the approach
+9101, childhood 6,000 beats, last 1,000: near 1st / 2nd half .31 / .41 (bar .41, met by a hair); steps closing the gap when apart .36 (bar .45,
+random .38); value-best steps .35 (S4l .43 - fell back); value spread over acts .002 far / .002 near (S4l .009 / .006). Lack in the last
+1,000 beats was low (top third .19 vs .83 in S4j): a well-fed child's value barely tells acts apart. Reading as registered: the approach is
+flat - not learnable here with more time; the higher near share comes without steps that close the gap (the child stays where the guardian
+returns to, its springs). The approach bedrock stays the founder's decision. This closes the bedrock-free routes I can see.
+
+## Founder reading (2026-11-26) and where the S4 line stands under it
+Founder: S4g turned from a social experiment into a developmental one. The lines now read: S3 - how a world is told apart; D37 - how danger
+is felt and used; S4 - how experience is passed on; D38 - whether another is seen as a separate being. Do not call it social learning until
+"the child follows the guardian by itself -> finds the spring -> it holds after childhood".
+Under that reading, the evidence so far:
+- Proven: growing up with a guardian -> better survival after (S4g); not a head start (S4g-d).
+- Experience, not the other: controlled lack and relief in childhood teaches by itself in 2 of 3 starts (S4g-e); the guardian fed, did not
+  lead (child's own fills 0 in 9101), and acted as a safety net (4 of 4 starts good).
+- First social meaning, inside value only: the child's value rates beside-the-guardian 2-5x above far at high lack (S4j) - relief attached to
+  another, not to a place. Not yet behaviour: it does not follow (S4h, S4i, S4l, S4m); value has no direction toward a moving other (S4k).
+- D38-D38c: no contingency seed. Open, founder's decision: an innate approach toward a valued moving other (filial approach).

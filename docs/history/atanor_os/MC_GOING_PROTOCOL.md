@@ -32,3 +32,27 @@ Also in the same restart (judge loop, not the being): the senses re-read after a
 - Reading as registered: not met -> life is not given back by place; the going cannot shelter a hurt body by place memory here. And food, the one
   place-bound relief, was not eaten at all in this stretch, so its relief memory would stay empty: the going has nothing to lean toward yet.
   Before any build: why cakes went uneaten (the bodies starve 16 times in 10,000 steps with three cakes in the valley).
+
+## D35b (judge side, 2026-11-26, no being): can a body eat a valley cake at all
+tools/mineland/cake_check.py: body 0 put 1.3 blocks before a cake, facing it, made hungry (food <= 14), 20 steps of each hand option.
+- 'use' eats: head tilted down 15 deg food 8 -> 16, 30 deg 13 -> 20, 45 deg 12 -> 20; level (0) and 60 deg: no eating. A full body cannot eat
+  (Minecraft's rule: pitch 30 at food 20 gave nothing in the first check). 'attack' and 'dig' never eat.
+Reading: no world fault. Eating asks for four things at once: hungry, within reach, head nodded down one to three units (the neck's resting
+tone pulls the head back to level every 4 still steps), and 'use'. D35's bodies were rarely hungry (food > 6 before 103 of 121 deaths) and
+the cakes sit on the dark side where zombies come - so "no cake eaten" is the being's life, not the valley's rules. Next on this line
+(roadmap stage 4, one being many bodies): how often bodies are within reach of a cake while hungry, in a life.
+
+# D35c (registered before running; judge-side record only, roadmap stage 4)
+Life 25: the being continues from mineland18b/s1000 (with its LOKI memory), as life 24b (home -10, window 500), 5,000 steps. Every window,
+body-steps within 2 blocks of a cake, of those how many hungry (food < 19.5), and food rises there (eating).
+Readings: hungry body-steps in reach >= 50 in the life and eating 0 -> the being comes hungry to food and does not eat (the hand + head
+combination is the gap, a learning question); hungry in reach < 50 -> it seldom comes hungry to food at all (where it lives is the gap:
+zombies on the cake side, food mostly full); eating > 0 -> first eating in the valley, measure whether it rises over windows.
+
+## D35c result (life 25, 5,000 steps, 10 healthy windows, no faults)
+Cake reach [body-steps within 2 blocks, of those hungry, eats]: window 1 [51, 51, 3], window 4 [1, 0, 0], all others 0. Deaths per window
+0, 2, 9, 25, 37, 10, 2, 2, 0, 2. Value decided 0-3 of 500 steps per window (strong pull and hold decide the rest).
+Reading as registered: eating > 0 (first cakes eaten in the valley, 3 in the first window), but it does not rise - after window 1 the
+bodies never come back to the cakes. Hungry in reach summed 51 (bar 50, met only by window 1). The relief there did not bring them back:
+the being's value, which would carry "food is there", chooses almost nothing (0-0.6% of steps) - the same wall as in the room (S4k: choice
+follows value 11%). Line rests here; next is the core: why value does not move choice.

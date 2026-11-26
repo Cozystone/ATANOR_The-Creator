@@ -74,6 +74,9 @@ def main():
     ap.add_argument("--elder", required=True); ap.add_argument("--beats", type=int, default=10000); ap.add_argument("--babble", type=int, default=1000)
     ap.add_argument("--carry", type=int, default=0); ap.add_argument("--rep", type=int, default=0)
     ap.add_argument("--nurse", type=float, default=0.0)   # S4n: after babbling, childhood drains (floor .1) and a newborn within 1.5 cells of its parent is filled this much a beat (nursing)
+    ap.add_argument("--imagine", type=float, default=0.0)
+    ap.add_argument("--vdiag", type=int, default=0)   # S4j diagnostic (see protocol)
+    ap.add_argument("--contact", type=int, default=0)   # S4i: the leading guardian sounds all through childhood (a contact call, louder when near), not only when the child is far
     ap.add_argument("--exit-store", type=float, default=0.0)   # S4g diagnostic: stores set to this when childhood ends (0 = as they are); tells a head start from what childhood taught
     ap.add_argument("--parent", type=int, default=0)   # 5: S4h leading guardian; 4: S4g fetching guardian; 1: through childhood the elder waits (stands) and calls while its newborn is more than 3 cells away; 2: waits, no call
     a = ap.parse_args(); V2["on"] = True; RoomBody.default_cues = True; t0 = time.time(); n = 64
@@ -81,6 +84,7 @@ def main():
     torch.manual_seed(sd)
     Be = make(rows, n, sd + 1, V2["drain"]); Oe, Me = being(Be, n, a.elder)
     Bn = make(rows, n, sd, V2["drain"]); On, Mn = being(Bn, n)
+    Mn.imagine = a.imagine                                             # S4l: choosing by its own imagination (rolled forecaster, scored by its own value); 0 = off
     every = torch.ones(n, dtype=torch.bool, device=DEV)
     for B, O, Mi in ((Be, Oe, Me), (Bn, On, Mn)):
         B.w.store[:] = 0.75; place(B, info); O.reset(every); Mi.begin(every); Mi.prev = None
@@ -89,12 +93,12 @@ def main():
     lg, nk, hd = Be.legs, Be.neck, Be.hand; STILL = int(torch.nonzero((lg == 0) & (nk == 0) & (hd == 0))[0, 0]); waited = 0; nursed = 0
     xe, xn = Oe(Be.raw()), On(Bn.raw())
     deaths = np.zeros(a.beats, int); need = np.zeros(a.beats, int); near = np.zeros(a.beats); seen = np.zeros(a.beats); felt = 0.0
-    exit_store = None; C = Guardian(rows, info, n, sd) if a.parent in (4, 5) else None; fetching = torch.zeros(n, dtype=torch.bool, device=DEV)
+    VD, VG, VB = [], [], []; exit_store = None; C = Guardian(rows, info, n, sd) if a.parent in (4, 5) else None; fetching = torch.zeros(n, dtype=torch.bool, device=DEV)
     for t in range(a.beats):
         if C is not None:                                              # S4g: the hand-written guardian through childhood, then it is gone
             if t < a.carry and a.parent == 5:                          # S4h: the leading guardian - never fetches nor waits; goes its own way between springs and calls while the child is more than 3 cells away
                 gap = (Bn.w.pos - C.B.w.pos).norm(dim=1); calling = gap > 3.0; waited += int(calling.sum())
-                fe = C.step(np.zeros(n, bool)); ppos = C.B.w.pos.clone(); Bn.call_pos = ppos; Bn.call_on = calling
+                fe = C.step(np.zeros(n, bool)); ppos = C.B.w.pos.clone(); Bn.call_pos = ppos; Bn.call_on = torch.ones_like(calling) if a.contact else calling
             elif t < a.carry:
                 gap = (Bn.w.pos - C.B.w.pos).norm(dim=1); fetching = (gap > 3.0) | (fetching & (gap > 1.2)); wait = fetch = fetching.cpu().numpy(); waited += int(wait.sum())
                 fe = C.step(wait, fetch, Bn.w.pos.cpu().numpy()); ppos = C.B.w.pos.clone()
@@ -116,9 +120,19 @@ def main():
             s0e = Be.w.store.clone(); al_e = ~Be.dead.clone(); fe = Be.step(ae); de = al_e & Be.dead; xe2 = Oe(Be.raw())
             Me.after(xe, ae, xe2, de, Be.dead & ~de); xe = xe2; ppos = Be.w.pos
         an = torch.randint(0, Mn.M, (n,), device=DEV) if t < a.babble else Mn.choose(xn)
+        if a.vdiag and C is not None:
+            gb = (Bn.w.pos - C.B.w.pos).norm(dim=1)
+        if a.vdiag and prot - 1000 <= t < prot and C is not None:   # S4j: does its own value rate the guardian near above far (same lack), and do its steps close the gap
+            with torch.no_grad():
+                sc = Mn.wo.score(xn); g0 = (Bn.w.pos - C.B.w.pos).norm(dim=1)
+            VD.append(torch.stack([sc.max(1).values, g0, 1.0 - Bn.w.store.min(1).values, sc.gather(1, an[:, None])[:, 0], (an == sc.argmax(1)).float(), sc.max(1).values - sc.mean(1)], 1).cpu().numpy())
         s0 = Bn.w.store.clone(); al = ~Bn.dead.clone(); f = Bn.step(an)
         if a.arm != "alone":
             Bn.kin = ppos.clone()
+        if a.vdiag and a.babble - 500 <= t < a.babble and C is not None:   # random-step baseline for closing the gap
+            VB.append(((Bn.w.pos - C.B.w.pos).norm(dim=1) < gb - 0.02).cpu().numpy())
+        if a.vdiag and prot - 1000 <= t < prot and C is not None:
+            VG.append(((Bn.w.pos - C.B.w.pos).norm(dim=1) < g0 - 0.02).cpu().numpy())
         dn = al & Bn.dead; xn2 = On(Bn.raw()); Mn.after(xn, an, xn2, dn, Bn.dead & ~dn)
         ks = getattr(Bn, "kin_seen", None) if a.arm != "alone" else None
         if a.arm == "b" and ks is not None:                            # the resonance bedrock: a seen rise of the elder's inside, felt where the newborn stands
@@ -157,9 +171,15 @@ def main():
             Be.felt[:] = 0; Bn.felt[:] = 0; xe = Oe(Be.raw()); xn = On(Bn.raw())
     per = lambda arr, lo, hi: round(1000 * float(arr[lo:hi].sum()) / (n * (hi - lo)), 2)
     fk = forks(Mn, On, rows, info, sd, paths_of(rows, info))
-    r = dict(arm=a.arm, carry=a.carry, parent=a.parent, nurse=a.nurse, exit_store=exit_store, set_exit=a.exit_store, nursed=nursed, waited=waited, near_child=round(float(near[a.babble:max(a.carry, a.babble + 1)].mean()), 3), rep=a.rep, layout=a.lay, elder=a.elder, early_deaths=per(deaths, prot, prot + 3000), last_deaths=per(deaths, a.beats - 2000, a.beats),
+    r = dict(arm=a.arm, carry=a.carry, parent=a.parent, contact=a.contact, imagine=a.imagine, nurse=a.nurse, exit_store=exit_store, set_exit=a.exit_store, nursed=nursed, waited=waited, near_child=round(float(near[a.babble:max(a.carry, a.babble + 1)].mean()), 3), rep=a.rep, layout=a.lay, elder=a.elder, early_deaths=per(deaths, prot, prot + 3000), last_deaths=per(deaths, a.beats - 2000, a.beats),
              child_need=per(need, a.babble, prot), near_h1=round(float(near[a.babble:(a.babble + prot) // 2].mean()), 3), near_h2=round(float(near[(a.babble + prot) // 2:prot].mean()), 3), early_need=per(need, prot, prot + 3000), last_need=per(need, a.beats - 2000, a.beats), near_share=round(float(near[a.babble:].mean()), 3),
              seen_share=round(float(seen[a.babble:].mean()), 3), resonance_events=felt, forks={s: fk[s] for s in ("far", "stem")}, seconds=round(time.time() - t0))
+    if VD:
+        D = np.concatenate(VD); Gs = np.concatenate(VG); v, g, lk = D[:, 0], D[:, 1], D[:, 2]; q = np.quantile(lk, [1 / 3, 2 / 3]); rows_ = []
+        for lo, hi in ((-1, q[0]), (q[0], q[1]), (q[1], 2)):
+            m = (lk > lo) & (lk <= hi); nr = m & (g <= 1.5); fr = m & (g > 3.0)
+            rows_.append(dict(lack=round(float(lk[m].mean()), 3), v_near=round(float(v[nr].mean()), 5) if nr.any() else None, v_far=round(float(v[fr].mean()), 5) if fr.any() else None, n_near=int(nr.sum()), n_far=int(fr.sum())))
+        far_ = g > 1.5; ag = D[:, 4] > 0.5; hi_ = lk > q[1]; r["vdiag"] = dict(by_lack=rows_, closer_when_apart=round(float(Gs[far_].mean()), 3), closer_value_best=round(float(Gs[far_ & ag].mean()), 3), closer_not_best=round(float(Gs[far_ & ~ag].mean()), 3), share_value_best=round(float(ag[far_].mean()), 3), closer_value_best_hilack=round(float(Gs[far_ & ag & hi_].mean()), 3), spread_far=round(float(D[far_, 5].mean()), 5), spread_near=round(float(D[g <= 1.5, 5].mean()), 5), closer_random_babble=round(float(np.concatenate(VB).mean()), 3) if VB else None)
     print(json.dumps(r), flush=True)
     try:
         old = json.load(open(a.out))["rows"]

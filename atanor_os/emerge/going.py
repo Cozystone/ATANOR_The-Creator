@@ -23,7 +23,7 @@ class Skill(nn.Module):
 
 class Going:
     def __init__(self, dx, M, n, inside, dev, KU=64, ring=1024, far=32, gamma=0.99, W=1.0, decay=0.9995, mended=True, piece=64, born=True, hops=4,
-                 ctx=0, margin=20.0, lam=0.99, fresh=0.998, ctx_by="both", dread=0.0, hold=0):
+                 ctx=0, margin=20.0, lam=0.99, fresh=0.998, ctx_by="both", dread=0.0, hold=0, chan="room"):
         self.dx, self.M, self.n, self.dev, self.KU, self.far, self.gamma, self.W, self.decay = dx, M, n, dev, KU, far, gamma, W, decay
         # L1b (D34b): mended = units settle (running mean), relief per fading visits, the skill's memory a reservoir of pieces over the whole life.
         # mended=False is L1 as it ran (units drift with a +.01 floor; visits never fade; ring of the latest beats).
@@ -34,8 +34,12 @@ class Going:
         self.rad = float((c0[0] - c0[1]).norm()); self.used = 0
         self.mended, self.piece = mended, piece; self.Vn = torch.zeros(KU, device=dev); self.slots = ring // piece - 1; self.pieces = 0
         self.ins = list(range(dx))[inside] if isinstance(inside, slice) else list(inside)     # (constant, food, water) in the room's order
+        # G1 (K1_KNOWING_PROTOCOL.md): chan="contract" reads every bedrock channel the body contract declares, unnamed and in any order - one
+        # relief memory per channel, the lowest channel is the lack. chan="room" (default) is the organ as it was: food = ins[1], water = ins[2].
+        self.chan = chan; assert chan in ("room", "contract") and not (chan == "contract" and ctx), "contract channels: ctx not carried over yet"
+        self.k = len(self.ins) if chan == "contract" else 2
         self.skill = Skill(dx, M).to(dev); self.opt = torch.optim.Adam(self.skill.f.parameters(), 3e-4); self.fitted = False
-        self.C = None; self.Cn = torch.zeros(KU, device=dev); self.T = torch.zeros(KU, KU, device=dev); self.R = torch.zeros(KU, 2, device=dev)
+        self.C = None; self.Cn = torch.zeros(KU, device=dev); self.T = torch.zeros(KU, KU, device=dev); self.R = torch.zeros(KU, self.k, device=dev)
         self.rX = torch.zeros(ring, n, dx, device=dev); self.rA = torch.zeros(ring, n, dtype=torch.long, device=dev); self.rL = torch.zeros(ring, n, dtype=torch.long, device=dev)
         self.ri, self.rn, self.life = 0, 0, torch.zeros(n, dtype=torch.long, device=dev); self.nxt = None; self.since = 0
         # S3b (atanor_os/S3_S4_PROTOCOL.md): contexts of the relief memory - latent-cause inference after Gershman & Niv. The place units and their
@@ -85,7 +89,9 @@ class Going:
             self.C[self.used] = p[i]; self.used += 1
 
     def needs(self, x):
-        """lack per body (1 - lowest inside) and which store is lowest (0 water, 1 food: the world's store order)."""
+        """lack per body (1 - lowest inside) and which store is lowest (0 water, 1 food: the world's store order; contract: the channel's own place)."""
+        if self.chan == "contract":
+            b = x[:, self.ins]; m = b.min(1); return 1.0 - m.values, m.indices
         food, water = x[:, self.ins[1]], x[:, self.ins[2]]
         return 1.0 - torch.minimum(food, water), (food < water).long()
 
@@ -125,13 +131,13 @@ class Going:
                     self.T += self.Th; self.Th.zero_(); self.h_since = -1; self.merges += 1
         else:
             self.T.index_put_((u[live], u2[live]), torch.ones(int(live.sum()), device=self.dev), accumulate=True)
-        rose = torch.stack([x2[:, self.ins[2]] - x[:, self.ins[2]] > 0.01, x2[:, self.ins[1]] - x[:, self.ins[1]] > 0.01], 1) & live[:, None]
+        rose = ((x2[:, self.ins] - x[:, self.ins] > 0.01) if self.chan == "contract" else torch.stack([x2[:, self.ins[2]] - x[:, self.ins[2]] > 0.01, x2[:, self.ins[1]] - x[:, self.ins[1]] > 0.01], 1)) & live[:, None]
         self.beats += 1
         if self.ctx and bool(live.any()):
             sel = live if self.do_mask is None else live & self.do_mask[a]
             if bool(sel.any()):
                 self._evidence(u2[sel], rose[sel])
-        self.R.index_put_((u2[:, None].expand(-1, 2).reshape(-1), torch.arange(2, device=self.dev).repeat(len(u2))), rose.reshape(-1).float(), accumulate=True)
+        self.R.index_put_((u2[:, None].expand(-1, self.k).reshape(-1), torch.arange(self.k, device=self.dev).repeat(len(u2))), rose.reshape(-1).float(), accumulate=True)
         if self.mended:                                                  # the piece being lived sits in the last 64 rows; a full piece may be kept in a slot
             j = self.slots * self.piece + self.ri; self.rX[j] = x; self.rA[j] = a; self.rL[j] = self.life; self.ri += 1
             if self.ri == self.piece:
@@ -215,9 +221,9 @@ class Going:
         r = self.R / (self.Vn.clamp(min=1)[:, None] if self.mended else vis[:, None])
         if self.dread:
             r = r - self.dread * (self.Dd / self.Vn.clamp(min=1))[:, None]
-        V = torch.linalg.solve(torch.eye(self.KU, device=self.dev) - self.gamma * Tm, r)          # [KU, 2]
+        V = torch.linalg.solve(torch.eye(self.KU, device=self.dev) - self.gamma * Tm, r)          # [KU, k]
         nb = (S > 0.5) | torch.eye(self.KU, dtype=torch.bool, device=self.dev)
-        self.nxt = torch.stack([torch.where(nb, V[None, :, c].expand(self.KU, -1), torch.full_like(S, -1e9)).argmax(1) for c in (0, 1)])   # [2, KU]
+        self.nxt = torch.stack([torch.where(nb, V[None, :, c].expand(self.KU, -1), torch.full_like(S, -1e9)).argmax(1) for c in range(self.R.shape[1])])   # [k, KU]
         self.V = V
 
     def learn(self, updates=1500, batch=1024):
@@ -270,6 +276,37 @@ class Going:
             v = self.nxt[c, v]
         g = self.C[v]
         lp = self.toward(x, g); return self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
+
+    @torch.no_grad()
+    def lean_to(self, x, goal):
+        """B1 (WORLD_A_PROTOCOL.md): the same lean, but toward a goal unit given from outside (goal [n] long, -1 = none) - e.g. where a memory
+        organ (LOKI v12) believes the lacking channel will be relieved now. The way there follows this organ's own map: a shortest chain over
+        crossings it has lived (T), `hops` units ahead; the walking is its own skill. Bodies without a goal or a lived way get 0."""
+        if not self.fitted or self.nxt is None:
+            return None
+        lack, _ = self.needs(x); v = self.unit(self.place(x)); n = len(v)
+        S = (self.T + self.T.t()) > 0.5; KU = self.KU
+        nb = [torch.nonzero(S[i])[:, 0].tolist() for i in range(KU)]
+        tgt = v.clone(); ok = torch.zeros(n, dtype=torch.bool, device=self.dev); gl = goal.tolist(); vl = v.tolist()
+        for i in range(n):
+            gi = gl[i]
+            if gi < 0:
+                continue
+            if gi == vl[i]:
+                tgt[i] = gi; ok[i] = True; continue
+            prev = {vl[i]: None}; q = [vl[i]]
+            while q and gi not in prev:                                    # breadth-first over its own lived crossings
+                u = q.pop(0)
+                for w_ in nb[u]:
+                    if w_ not in prev:
+                        prev[w_] = u; q.append(w_)
+            if gi in prev:
+                path = [gi]
+                while prev[path[-1]] is not None:
+                    path.append(prev[path[-1]])
+                path = path[::-1]; tgt[i] = path[min(self.hops, len(path) - 1)]; ok[i] = True
+        lp = self.toward(x, self.C[tgt]); out = self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
+        return torch.where(ok[:, None], out, torch.zeros_like(out))
 
     def state(self):
         d = dict(skill=self.skill.state_dict(), C=self.C, Cn=self.Cn, T=self.T, R=self.R, Vn=self.Vn, fitted=self.fitted, mended=self.mended, born=self.born, used=self.used)

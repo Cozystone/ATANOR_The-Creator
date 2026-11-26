@@ -1230,3 +1230,63 @@
 - 2026-11-26 `e3ac99fa` D38b not met (sign differs by room); contingency bias left to the founder
 - 2026-11-26 `b6b6dd7a` D38c registered: act-sensitivity of own eye forecast when the other is seen
 - 2026-11-26 `b53884d2` D38c not met: no contingency seed in its own forecaster; social line waits on the founder's bedrock decision
+- 2026-11-26 `2c4a98c5` export: S4 and D37/D38 tools and results go to the public repo
+- 2026-11-26 `30eebc3e` S4i registered: leading guardian with a contact call (world-side, mind unchanged)
+- 2026-11-26 `e0e0596b` S4i not met: contact call changes nothing; social line waits on the founder's bedrock decision
+- 2026-11-26 `6e9ef63f` S4j registered: where following fails (value vs steps)
+- 2026-11-26 `bc371719` S4j: the child's value holds the guardian (near 2-5x far at high lack) but its steps do not close the gap; the open part is approach to a moving valued thing
+- 2026-11-26 `f66f233e` S4k registered: is value's best act an approach drowned in choice
+- 2026-11-26 `e94c2334` S4k: value has no direction when far (value-best steps .34 vs random .38); social line stopped pending the founder's approach-bedrock decision
+- 2026-11-26 `7ca1ef67` S4l registered: the child chooses by imagination
+- 2026-11-26 `3940461d` S4l not met: imagination nudges value's best act toward the guardian (.34 -> .43), not choice; approach still open
+- 2026-11-26 `e4ee0690` S4m registered: longer childhood for a learned approach
+- 2026-11-26 `fd608e13` S4m not met: longer childhood does not grow the approach (closing .36, value-best .35)
+- 2026-11-26 `51ef1692` D35b: valley cakes are eatable (use, head down 15-45 deg, hungry); no world fault - D35's uneaten cakes are the being's life
+- 2026-11-26 `38787249` D35c registered: judge-side cake reach while hungry in MineLand life 25
+- 2026-11-26 `dc0b35bb` S4: founder's reading recorded (S4 = how experience is passed on) with where the evidence stands
+- 2026-11-26 `beecc2ce` D35c: first valley cakes eaten (3, window 1) but bodies never return; value decides 0-0.6% of steps - same wall as the room
+- 2026-11-26 `f7cdef90` D39 registered: value -> choice decomposition (readout only, nothing in choice touched)
+- 2026-11-26 `9c37f22e` D39: value's best is done on 13% of beats; the loss is the gate (88% holds, blind to urgency), not size, temperature or a flat value; correction on the decided-by label
+- 2026-11-26 `e34632d6` D40 registered: gate bar on the being's usual score spread (probe, default off)
+- 2026-11-26 `be8cc503` D40 probe option (Mind.gate_usual, default off) and life counts in the readout
+- 2026-11-26 `98266261` D40 not met: gate hears urgency (opens 2-3x at high lack), value's best not done more; new-room deaths fall (-73% in 9105); home fills 86% in 9101; probe stays off
+- 2026-11-26 `8f52df38` D41 registered: who was right when value and going disagree (readout only)
+- 2026-11-26 `83fb4c5e` D41 mixed: value's picks fare better at middle lack (4/4), going's at high lack at home; not causal - D42 registered: randomised value vs going at disagreeing picks
+- 2026-11-26 `e077f26d` D42: randomised, value's best and going's best fare the same at middle lack (1 of 4 better); D41 was selection; value->choice wiring closed for now, the knowing is the wall
+- 2026-11-26 `4215831a` D43 registered: does each part know when it knows (margins vs randomised outcomes)
+- 2026-11-26 `7fc30f99` D43 flat: neither value nor going knows when it is right; the choice line D39-D43 closes - the knowing is the wall
+- 2026-11-26 `3cba90a1` Roadmap rewritten after D39-D43: one line, the knowing (out-of-view objects and places) first
+- 2026-11-26 `589f53c2` Stage 1 starts: MineLand being has no going organ (found); K1 registered: believed spring place vs true
+- 2026-11-26 `e90b778f` K1: room being knows its springs (error <= 1 cell; new room in 100-700 beats); going organ is room-bound (ins order) - G1 registered: channel-agnostic going, then MineLand
+- 2026-11-26 `8fb1fc16` G1: going organ option chan=contract (one relief memory per declared bedrock channel, unnamed); room default unchanged; K1 contract arm
+- 2026-11-26 `39a1c2b3` G1: MineLand being can take the going organ (--going, path organ on); MineLand step amended: wear life 25 + control without going
+- 2026-11-26 `0e14446b` LOKI transplant plan; LK1 registered: does LOKI know what gestures bring (randomised, judge side)
+- 2026-11-26 `6f004c03` LK1 not met: LOKI's foresight is nearly blind to the gesture (corr .01/-.03); G1 room equivalence met on totals (water fills -8/-10%)
+- 2026-11-26 `bf1c720a` LK1b: LOKI's next beat follows the gesture in own motion (40% of real spread), not in the insides over many beats; transplant = LOKI as the body forecaster (T2)
+- 2026-11-26 `36d5d054` ml_live: --path (G1 control arm)
+- 2026-11-26 `a6d2b7f8` Mind.wear: a wider sense (path organ) is a different body - graft, do not load whole; path code starts fresh
+- 2026-11-26 `a35629fc` T2 registered and built: LOKI as the body's one-beat forecaster for futility and novelty (Mind.ext_fore, default off)
+- 2026-11-26 `88580772` T2 room not met: the room core forecasts insides 1.6x better than a fresh LOKI; T2 moves to MineLand
+- 2026-11-26 `a4aa61fd` G1 MineLand not met: no body reached a cake in 10,000 body-steps; deaths 66 vs 85 with the going organ (one start)
+- 2026-11-26 `d43301e8` Ideal LOKI spec, gap to latest LOKI main (v4 front end, v11 back end), LOKI v12 two-level design, world A stages; LOKI docs kept out of export
+- 2026-11-26 `e39b10c7` World A2 registered and built: food moves between three corners in a fixed cycle; baseline of the current being with a still control
+- 2026-11-26 `11a3f479` LOKI v12 prompt for Astra: requirements R1-R8 with gates, evidence, principles, interface, verification (kept out of the public export)
+- 2026-11-26 `dfed80d0` A2-0: moving food costs the current being (deaths 91 vs 1 in 9104, food -19/-32%); belief at chance; latency measure dropped (population artefact)
+- 2026-11-26 `4a8c9765` A2-1 registered: per-body hunger-to-food wait
+- 2026-11-26 `b2d9267b` World A3 registered and built: two rooms, corridor with dead-end spurs; baseline registered
+- 2026-11-26 `253d0ff2` I0-v12 registered and built: LOKI v12 (55e85a4, hash checked) beside the real being in world A2, judge side only
+- 2026-11-26 `0efa435a` I0-v12 read-out: fold corner codes to v12's cue width (first try crashed)
+- 2026-11-26 `b174cab9` A2-1: moving food costs the being 2.0x / 3.6x the hunger-to-food wait (91 vs 46, 251 vs 70); no learning of the cycle
+- 2026-11-26 `3b58866f` I0-v12 not met on a real body: food place now .60/.47 (being .35), next .45/.36, one beat worse than last value; feedback for Astra
+- 2026-11-26 `ab3b95e8` A3-0: two-room world beyond the being (deaths 128 per quarter, water almost never found in either mirror) - too big a step, my design error
+- 2026-11-26 `86a67040` A3-0 follow-up: each being goes to its home's water side whatever is there (s3_a right, s3_b left) - the old world carried as a direction habit; first reading corrected
+- 2026-11-26 `aeb279a6` A3-1 registered and built: both kinds in both rooms first, then the A3 layout
+- 2026-11-26 `8cbdd5cf` A3-1 not met: side habit outlasts both-sides teaching; A3 lethal even with springs in both rooms - journeys too long for this being
+- 2026-11-26 `4714ba1b` A3-2 registered and built: springs in sight from the corridor
+- 2026-11-26 `846c8991` Re-plan: from analysis to building (B1 = LOKI v12 into choice in A2); A3 splitting stops at A3-2
+- 2026-11-26 `cb83f57c` A3-2 not met but improving (deaths 128 -> 87-118, neglected side now reached); A3 splitting stops. B1 parts: Going.lean_to, Mind.plan_goal (default off), i0_v12 --plan
+- 2026-11-26 `2e577daa` B1 registered: v12's believed relief place into choice through the going organ, in A2
+- 2026-11-26 `62b302cb` B1 not met: v12's belief into choice changes deaths not at all (7 vs 6, 90 vs 91), food wait worse in 9101 (129 vs 91); its belief is right about half the time
+- 2026-11-26 `a0c7e3bd` Astra feedback: B1 result added (v12 belief in choice: no gain; belief must be right >= .8 on a real body)
+- 2026-11-26 `2841eeb0` V1 registered: faster going memory (.99) in A2 moving and still
+- 2026-11-26 `0d1a5be2` Roadmap as three gates in order (changing world, out of view, other beings), budgets and a stop signal
