@@ -1183,3 +1183,7 @@ with a level head.
 # Growth G (replaces F100's growth, stopped 14 minutes in, unread): s3_worlds 9104_0 9105_1 9106_0, tag _g, ATANOR_EYE=1.1 ATANOR_FOV=100
 # ATANOR_TOUCH_FEEL=1; then the seen eyes (with bearing) grown on it. Two body changes at once (field of view, touch feel) - said plainly;
 # the check against s3_e is of the pair. Separate later only if the pair is worse.
+## Seen eyes with bearing, grown again (A2 9104, 64 bodies, 6,000 beats, s3_e): error .58 cells over 2,740 stops; springs 91% right over
+12,870 pictures; 59,028 writes into the place memory (was 28,876 without bearing). Carried to the viewer with G1 (gut). Dashboard (8777)
+now shows general inner-state indices (wholeness, lack, habit, unfamiliarity, gut's share, eye's certainty, expects relief in view, journey
+progress, memory change) - the being's own, not room measures.

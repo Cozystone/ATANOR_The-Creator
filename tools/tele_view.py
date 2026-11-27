@@ -8,13 +8,14 @@ from collections import deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 STATE, LOCK = {"rows": deque(maxlen=600), "map": None, "label": ""}, threading.Lock()
-AXES = [("trust", "귀가 믿음", "#e0b040"), ("lack", "모자람", "#e05050"), ("stuck", "고착 (맴돎)", "#b070e0"), ("again", "다시 생각", "#50b0e0"),
-        ("explore", "탐색 (최근 칸 수 / 30)", "#50d080"), ("mismatch", "어긋남 (최근 300박자, /10)", "#ff8040"), ("attend", "시선이 배운 중요도로 끌린 몫", "#e0e0e0")]
+AXES = [("whole", "온전함 (바탕)", "#f0f0f0"), ("lack", "가장 큰 모자람", "#e05050"), ("habit", "습관 유지 (하던 것을 이어 감)", "#50b0e0"),
+        ("unfamiliar", "낯섦 (지금 자리의 기억이 얇음)", "#50d080"), ("gut", "감이 아는 몫 (목표 물음 중)", "#e0b040"), ("eye", "눈의 확신 (제 눈이 맞은 정도)", "#b070e0"),
+        ("sees", "채워질 것이 보인다고 여김", "#40c0c0"), ("journey", "여정 진행 (포기까지의 몫)", "#ff8040"), ("memory", "기억이 바뀌는 빠르기", "#909090")]
 PAGE = """<!doctype html><meta charset=utf-8><title>ATANOR inner state</title><style>body{background:#111;color:#ddd;font:13px sans-serif;margin:16px}
 canvas{background:#181818;border:1px solid #333;margin:4px;max-width:100%}.k{display:inline-block;margin-right:14px}</style>
 <div id=lab style="font-size:16px;margin-bottom:6px"></div><div id=keys></div>
 <div><canvas id=ts width=760 height=360></canvas><canvas id=mp width=420 height=420></canvas></div>
-<div id=note style="color:#999;max-width:1200px">왼쪽: 속 상태 축 (최근 600박자, 0~1). 오른쪽: 존재 자신의 지도 - 제 걸음 셈으로 기억하는 장소들 (태어난 자리 기준).
+<div id=note style="color:#999;max-width:1200px">왼쪽: 속 상태 지수 (최근 600박자, 0~1; 어느 몸·어느 세계에서도 같은 뜻, 모두 존재 자신의 속에서 읽음; 지수마다 단위가 달라 크기를 서로 견주지 말 것). 오른쪽: 존재 자신의 지도 - 제 걸음 셈으로 기억하는 장소들 (태어난 자리 기준).
 점 크기 = 들른 횟수, 파랑 = 물을 기억하는 정도, 주황 = 먹이를 기억하는 정도, 선 = 실제로 건너 본 길, 흰 점 = 제가 믿는 지금 자리, 빨간 고리 = 지금 목표.
 갈색 칸 = 제 벽 지도 (가려다 막힌 곳). 판정 쪽 정보는 하나도 없음 - 존재 머릿속에 있는 것만.</div>
 <script>

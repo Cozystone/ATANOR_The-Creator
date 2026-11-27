@@ -1403,3 +1403,5 @@
 - 2026-11-28 `04d3c160` TF1 touch feel per side; G1 gut over journeys (Astra somatic readout) wired; SM2 learns bearing; growth G registered
 - 2026-11-28 `40ec301e` Roadmap check: five stages, each with what to build, the wall, the world and the yardstick
 - 2026-11-28 `30406b58` Public README and roadmap for the 2026-11-28 turn; export list extended (spatial tests, dashboard, ladder results); ASTRA request docs kept out
+- 2026-11-28 `f7604821` Seen eyes with bearing grown (.58 cells, 91%); dashboard shows general inner-state indices; viewer with gut
+- 2026-11-28 `8c900cc6` Roadmap: second axis (intellectual development I-V), efficiency as a pass condition, grown-and-moved vs learned-in-one-life kept apart
