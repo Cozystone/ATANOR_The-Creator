@@ -1,4 +1,48 @@
-# ATANOR 현재 상태 (2026-10-26)
+# ATANOR 현재 상태 (2026-11-27) - 주선 지도
+
+이 절이 지금의 주선이다. 아래의 "이전 상태 (2026-10-26)"는 글 세계 시절 기록으로 그대로 남긴다 (지우지 않음).
+
+## 틀 하나
+새 능력 = 정보를 내는 기관 하나 + 그 정보를 얼마나 믿을지 존재가 제 약속 기록으로 배움 (LW3). 보상은 제 온전함의 변화뿐.
+훈련은 64몸 (한 마음), 삶은 한 몸. 손으로 짠 행동 규칙 없음. 구축 로드맵 M1-M5: atanor_os/EMERGE_PLAN.md 끝.
+
+## 존재 (마음과 기관) - atanor_os/emerge/
+| 파일 | 무엇 |
+|---|---|
+| mind.py | Mind: 점수 합산으로 몸짓을 고름 (끌림, 다침, 헛수고, 값, 길찾기, 귀가 정보), 놀랄 때만 다시 고름. LearnedWeight (LW3 믿음, state/carry). unfamiliar (낯섦, E1) |
+| going.py | Going: 자리 기억 (장소 단위, 건넌 길 T, 채워진 곳 R, 값 V), 가는 솜씨, 귀가 벡터 (_home, D46), 제 목표 (own_goal, D48), hops=4 |
+| body_contract.py | PathOrgan: 타고난 걸음 셈 (태어난 자리 기준, 세계 좌표 안 읽음) |
+| room_body.py | RoomBody: 방 몸 (눈 1.6칸, 90 몸짓 = 다리 6 x 목 5 x 손 3), 세계 수리 (갇힘) |
+| room3d_gpu.py | 방 세계 (GPU, 여러 몸), WORLD_FIX 기본 1 |
+| ml_body.py, mc_*.py | MineLand / Minecraft 몸 |
+| laptop_*.py | 노트북 몸 (atanor-body) |
+
+## 주선 켜짐 (환경 변수로 옛 판 재현)
+- ATANOR_INNATE_HOMING=1 (관문 1: 귀가 벡터 + 제 목표), ATANOR_LEARNED_TRUST=1 (LW3 믿음), ATANOR_WORLD_FIX=1, 눈 높이 1.6.
+- 꺼진 채 대기: ATANOR_GOAL_FIX, ATANOR_HOME_HOLD (D49, 채택 안 됨), ATANOR_TRUST_FROM (M1a, 확인 중), Mind.roam / learned_roam (낯섦, 관문 2).
+
+## 도구 - tools/
+| 파일 | 무엇 |
+|---|---|
+| s4_kin.py | being(): 존재 불러오기 (주선 켜짐을 여기서 정함) |
+| a2_moving_food.py | 세계 A2 (움직이는 먹이): --bodies, --circ (tools/walk_diag.py), --hops, --save-trust |
+| a3_rooms.py | 세계 A3 (두 방, 먼 샘): --roam, --roam-trust |
+| walk_diag.py | 판정 쪽 걷기 진단 C1-C7 (맴돎, 결정 출처, 벽 막힘, 구간 진전) |
+| a2_view.py, room_live_view.py | 뷰어 (8768), 존재 자신의 그림 + 중심와/주변 상자 |
+| ml_live.py | MineLand 삶 (주선과 같은 귀가 + 믿음) |
+| smoke_main.py | 주선 바꾼 뒤 6 PASS 확인 |
+| creator/export.py | 공개 저장소 내보내기 (개인정보 지움) |
+
+## 기록 (등록 -> 결과)
+WORLD_A_PROTOCOL.md (관문 1·2, C1-C7, D46-D50), LEARNED_WEIGHT_PROTOCOL.md (LW1-LW3g, B1, M1a), E1_ROAM_PROTOCOL.md (낯섦),
+EMERGE_PLAN.md (로드맵, 창립자 결정). 결과 json: tools/results/. 판정은 시작 3개 이상 합산. 봉인 시드 7701-7712 사용 금지.
+
+## 관문 현황
+관문 1 사실상 통과 (9104 시작 5개: 죽음 404 -> 104). 관문 2 예산 2/5 사용, 미통과 (먼 샘 0 -> 765). 관문 3 미개시.
+
+---
+
+# 이전 상태 (2026-10-26)
 
 ## 1. 코어
 

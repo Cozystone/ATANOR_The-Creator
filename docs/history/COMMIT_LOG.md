@@ -1290,3 +1290,57 @@
 - 2026-11-26 `a0c7e3bd` Astra feedback: B1 result added (v12 belief in choice: no gain; belief must be right >= .8 on a real body)
 - 2026-11-26 `2841eeb0` V1 registered: faster going memory (.99) in A2 moving and still
 - 2026-11-26 `0d1a5be2` Roadmap as three gates in order (changing world, out of view, other beings), budgets and a stop signal
+- 2026-11-26 `604701ab` Public repo: README points to the three-gate roadmap; ROADMAP rewritten; new tools/results exported. Stray result files committed
+- 2026-11-26 `120213e0` V1: faster going memory lifts the being's belief of the food corner .35 -> .74 but finding gets worse (map forgotten too); V1b registered: fast relief memory, slow map
+- 2026-11-26 `94e4a5cf` I0 pair registered: v12 vs v12.1 on one real life in A2
+- 2026-11-26 `c45ae40c` Plan B designed and kept ready: one latent world model per body, two time scales set by its own surprise, choice by imagination; used only at the stop signal
+- 2026-11-26 `8efd05c1` V1b moving: belief .73 but deaths 131 and wait 302 - a fast relief memory is empty when hunger comes far away
+- 2026-11-26 `72d2b0d6` I0 pair: both classes from one LOKI package (two copies broke Numba); A2 oracle walkers (judge-side world check); V1b still result
+- 2026-11-26 `0022b6d1` World check: A2 solvable even by last-place + search (walkers: deaths 0); D44 registered: give the being the true goal
+- 2026-11-26 `2f2bd775` D44 full arm: the true goal does not help (deaths 126 vs 91) - walking to a goal is the wall; approach read-out added
+- 2026-11-26 `d7d3bc55` I0 pair: v12.1 drops the old corner 2-3x faster and wins steady-beat one-beat, but is not more accurate; feedback for Astra extended
+- 2026-11-26 `17b16770` D44 rerun: map right (0.4 cells), steering weak (60/40); D45 registered: skill learns 4x as often
+- 2026-11-26 `93b3c5d9` D45 not met: skill learning 4x as often does not sharpen steering (closer .575), deaths 174; homing vector is the founder's decision
+- 2026-11-26 `bdf6b4ea` Draft (not registered): innate homing vector from path integration, awaiting the founder's decision
+- 2026-11-26 `502b925d` D46 registered and built: innate homing vector from path integration (Going.homing, default off)
+- 2026-11-26 `ebb50499` D46: homing vector with the right goal at full weight - deaths 91 -> 5, wait 251 -> 132; earned arm floored. D47 registered: gate 1 with the being's own memory + homing
+- 2026-11-26 `854ecb42` D47 not met (chain-wired homing kills; switched off). D48 registered: the last gate-1 run - own belief as goal, D46's path
+- 2026-11-26 `0ba70427` D48: gate 1 met in 9104 (deaths 91 -> 12, wait 251 -> 154), missed narrowly in 9101 (wait -24% vs bar -25%, deaths 9 vs 6); still worlds improve
+- 2026-11-26 `95d610e2` D48 second start registered (11th run, as its partial reading calls for), with same-seed controls
+- 2026-11-26 `a2843519` Gate 1 over two starts: met in 9104 (deaths -73%, wait .68x), not in 9101 (wait .78x, deaths 16 vs 15 near floor); still worlds better in both
+- 2026-11-26 `c22d3af6` Gate 1 adopted into the main line (homing + own goal; reproduces D48 exactly). Gate 2 run 1 (A3 corners): not met, flat - its own goal holds firmly to spurs; goals change .1-.2% of held beats
+- 2026-11-26 `6bd0a8b2` View check (eye not the problem), gate 2 run 1 explained (own goal at never-visited units = birth point; fixed), D46b registered; viewer drawn smoothly
+- 2026-11-26 `281542ed` Faster path search (identical results), fix 2 check (not met), D48 birth-point check registered, LW1 learned weight registered; plan B dropped by the founder
+- 2026-11-27 `8f15c246` Correction: the being's own eye (eye 1.6) loses food within reach - founder right, my view check read the wrong renderer; viewer shows its own picture with fovea/rings; W1 registered; LW1 code
+- 2026-11-27 `d579aa06` E-height 1.1 registered (founder: go), main line back to D48 goal, viewer at eye 1.1
+- 2026-11-27 `a1a4f231` LW1: weight on homing content learned from the bedrock alone (0 -> ~.2): deaths 131 -> 34 (full weight 19), wait 302 -> 199; bar 2 met, bar 1 not; LW1b registered
+- 2026-11-27 `f9084e74` Fix --eye flag edit (n was set only inside the if)
+- 2026-11-27 `4f55d0aa` E-height 1.1: not met by the docking bar (-17%), deaths 12->7; anticipation check registered; LW1b 9104 rep1 partial
+- 2026-11-27 `952c4e12` World bug: food moved onto a body traps it in the block (founder found it); trapped count added, fix rule registered
+- 2026-11-27 `13146c27` LWD registered: weight step split by event + goal-to-food lag (smoke: lag 177 vs trace 50; ordinary beats drive the step); LW2 candidate (credit per goal episode)
+- 2026-11-27 `5c706f98` LW1b: learned weight not reliable (1 of 3 starts); full weight good in all
+- 2026-11-27 `cdede3b3` LW2 registered from a literature search: event-triggered retrospective credit (ANCCR-style), trace scaled by the being's own event interval
+- 2026-11-27 `3360cf9c` Anticipation: not met (lingers at the old place); trapped 1.9% -> world fix (step out of a block), gate 1 rerun in the fixed world registered
+- 2026-11-27 `df3f0d25` LWD: ordinary beats (drain noise) decide the weight's sign; fills weak - supports LW2
+- 2026-11-27 `0913d636` LW2: not met (events now decide, but sign still set early; one start negative). LW3 registered (trust = how often the organ's promise was kept on arrival), smoke-calibrated
+- 2026-11-27 `4eaff2f7` Gate 1 in the fixed world: effect about half as large (9104 deaths -46%, wait .70x; 9101 wait .88x); bug inflated it
+- 2026-11-27 `3063f1f3` LW3: trust learned from the organ's kept promises - right way in all starts (A2 ~.5, A3 old map -> .02-.15); bar 2 met 2 of 3 (one wait +6 beats). LW3b registered in the fixed world
+- 2026-11-27 `8be583c2` LW3b (true world): trust learned ~.5 in every start; outcome mixed (bar 2 met 1 of 3) - not adopted; LW3c (fixed .5) registered
+- 2026-11-27 `1f8e77b5` LW3c: fixed .5 far from learned ~.5 (9104: 61/32 vs 18/8 deaths) - the moving trust matters; LW3d (trust by phase of the food period) registered
+- 2026-11-27 `ae604755` LW3d: trust flat within a food period; LW3e noise check registered (5 paired starts)
+- 2026-11-27 `d57e75b3` LW3e: within noise (3 of 5); A2 bars move to >= 3 starts; LW3f pooled adoption check registered
+- 2026-11-27 `0e03b984` LW3f met on five pooled starts: learned trust adopted into the main line (replaces fixed full weight); world fix default; gate 1 pooled in 9104 met
+- 2026-11-27 `4e5ed446` LW3g: 9101 not met (room barely separates arms; learned trust deaths trend worse, 1.6 se); adoption stays, flagged; gate 2 run 2 next
+- 2026-11-27 `f94f646e` G2a: unfamiliarity reaches the far side (79 vs 29 far fills) but at weight 1 drowns the near kind; gate 2 run 2 registered (its trust learned in the LW3 frame)
+- 2026-11-27 `a81e679f` Gate 2 run 2: not met; unfamiliarity trust sinks to ~.06 in all starts (absolute-rate promise rule unfair to exploration); main line alone reaches the far kind (765 pooled); budget 2 of 5
+- 2026-11-27 `339fa1a9` B1 (one-body learned trust) and C1 (circling diagnostic) registered; --bodies, --circ in a2_moving_food
+- 2026-11-27 `01d7dc22` C1: circles with a goal held, on the way, by re-chosen strafe+turn gestures; C2 registered (score mix vs heading drift)
+- 2026-11-27 `59d9fc09` C2/C3: no heading drift, forecaster exact; circling = one-beat homing score + held gesture (self-sustaining orbit); D49 registered (score held gestures over 4 beats)
+- 2026-11-27 `4ccd286b` B1: one body poor with either trust (waits ~410 both); learned trust deaths 26 vs 18 on small numbers; main cost is the circling walk (D49)
+- 2026-11-27 `d66f097b` D49 not met (circling not down); C3 mechanism was a code reading contradicted by C1; C4 (which score part chooses circling) registered
+- 2026-11-27 `9b69680b` C4-C6: going lean decides ~80% of choices; circling = constant re-choosing; target steady; homing line blocked by walls ~2/3 of beats everywhere; D50 (hops 1/2/4) registered with C7 bout progress
+- 2026-11-27 `2140c7f9` Build roadmap to the vision (M1-M5) in one frame: organ gives content, being learns trust; train many, live as one
+- 2026-11-27 `4a7e3865` M1a built and registered: trust record kept with the being (state/carry, --save-trust, ATANOR_TRUST_FROM; default off)
+- 2026-11-27 `f7d08fb4` Tidy: walk diagnostics C1-C7 moved to tools/walk_diag.py (outputs identical); C4 correction - choices list order misread, circling is mostly held
+- 2026-11-27 `ad622fc4` CURRENT_STATE: main-line map (one frame, files, flags, tools, protocols, gates); old text-world state kept below
+- 2026-11-27 `1efc3879` Export: public roadmap M1-M5, new tools (a2_view, walk_diag) and results of the learned-trust, gate 2 and walk lines

@@ -9,6 +9,8 @@ import torch
 import torch.nn.functional as F
 
 FLOOR, WALL, WATER, FOOD = 0, 1, 2, 3
+import os as _os
+WORLD_FIX = _os.environ.get("ATANOR_WORLD_FIX", "1") == "1"   # used by room_body.RoomBody.step (the room's movement); set default 1 once gate 1's pair is rerun
 COLOR = torch.tensor([[0.0, 0.0, 0.0], [0.62, 0.60, 0.56], [0.20, 0.45, 0.95], [0.90, 0.35, 0.25], [0.25, 0.75, 0.30], [0.07, 0.05, 0.05]])      # 4: 다른 몸 (같은 종), 5: 구덩이
 MATE = 4
 PIT = 5                                                                # D37 (atanor_os/FEAR_PROTOCOL.md): a drop - seen as a dark low rim, walked into, it kills
@@ -85,6 +87,9 @@ class World:
             for ax in (0, 1):
                 trial = self.pos.clone(); trial[:, ax] = nx[:, ax]
                 ok = self.cell(trial) == FLOOR
+                if WORLD_FIX:                                           # world fix (WORLD_A_PROTOCOL.md, 2026-11-27): a body standing in a cell that became a
+                    here = self.pos.long(); there = trial.long()         # block (food moved onto it) may move within it and step out to floor
+                    ok = ok | ((here == there).all(1) & (self.cell(self.pos) != FLOOR))
                 self.pos = torch.where(ok[:, None], trial, self.pos)
                 bumped |= (~ok) & (stp.abs() > 0)
         self.store = self.store - self.drain * TICK * alive[:, None]

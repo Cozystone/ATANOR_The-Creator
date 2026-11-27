@@ -6,6 +6,8 @@ Reads the innate path organ's code (the last PathOrgan.N numbers of the sense). 
   never by reward (D33: Ghosh et al. 2019 GCSL; goal babbling, Rolf et al. 2010);
 - the lean of the lack: for the lowest inside, the next unit on its own map toward where that inside was relieved (V = (I - g T)^-1 r, best
   neighbour); the skill's preference for going there, scaled by how low that inside is, is offered to the mind's choice score."""
+import os
+import numpy as np
 import torch, torch.nn as nn, torch.nn.functional as F
 from .body_contract import PathOrgan
 
@@ -105,13 +107,16 @@ class Going:
         if self.born:
             self._recruit(p2)
         u, u2 = self.unit(p), self.unit(p2); live = ~died
+        if getattr(self, "homing", False) and getattr(self, "organs", None) is not None and getattr(self.organs, "path", None) is not None:
+            self.keep_where(u2, live)
         cnt = torch.bincount(u2, minlength=self.KU).float()            # online k-means, each unit moves toward the places it wins (one step for all units;
         sm = torch.zeros(self.KU, PC, device=self.dev).index_add_(0, u2, p2)   # same numbers as the old per-unit loop, checked 2026-11-25)
         self.Cn += cnt; hit = cnt > 0; rate = (cnt / self.Cn.clamp(min=1) + (0.0 if self.mended else 0.01)).clamp(max=1.0)
         self.C = torch.where(hit[:, None], self.C + (sm / cnt.clamp(min=1)[:, None] - self.C) * rate[:, None], self.C)
         if self.ctx and bool(live.any()):                               # S3b: the map's expectation is scored before this beat is learned
             self._moves(u[live], u2[live])
-        self.T.mul_(self.decay); self.R.mul_(self.decay); self.Vn.mul_(self.decay)
+        rd = getattr(self, "rdecay", None) or self.decay                 # V1b (WORLD_A_PROTOCOL.md; default = decay): where relief came (R, with its visits Vn) may fade faster than the map (T)
+        self.T.mul_(self.decay); self.R.mul_(rd); self.Vn.mul_(rd)
         if self.dread:
             self.Dd.mul_(self.decay)
             if bool(died.any()):
@@ -274,6 +279,8 @@ class Going:
         lack, c = self.needs(x); v = self.unit(self.place(x))
         for _ in range(self.hops):
             v = self.nxt[c, v]
+        if getattr(self, "homing_lean", False) and getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
+            return self._home(x, v, torch.ones_like(lack, dtype=torch.bool), lack)     # D47 (not met; off): its own lean walks by the homing vector to the unit its chain aims at
         g = self.C[v]
         lp = self.toward(x, g); return self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
 
@@ -285,28 +292,96 @@ class Going:
         if not self.fitted or self.nxt is None:
             return None
         lack, _ = self.needs(x); v = self.unit(self.place(x)); n = len(v)
-        S = (self.T + self.T.t()) > 0.5; KU = self.KU
-        nb = [torch.nonzero(S[i])[:, 0].tolist() for i in range(KU)]
-        tgt = v.clone(); ok = torch.zeros(n, dtype=torch.bool, device=self.dev); gl = goal.tolist(); vl = v.tolist()
+        S = ((self.T + self.T.t()) > 0.5).cpu().numpy(); KU = self.KU          # one copy to the host (speed, 2026-11-26; same answers as the per-body loop)
+        nb = [np.nonzero(S[i])[0].tolist() for i in range(KU)]
+        gl = goal.tolist(); vl = v.tolist(); tl = list(vl); okl = [False] * n; trees = {}
         for i in range(n):
             gi = gl[i]
             if gi < 0:
                 continue
             if gi == vl[i]:
-                tgt[i] = gi; ok[i] = True; continue
-            prev = {vl[i]: None}; q = [vl[i]]
-            while q and gi not in prev:                                    # breadth-first over its own lived crossings
-                u = q.pop(0)
-                for w_ in nb[u]:
-                    if w_ not in prev:
-                        prev[w_] = u; q.append(w_)
+                tl[i] = gi; okl[i] = True; continue
+            prev = trees.get(vl[i])
+            if prev is None:                                               # breadth-first over its own lived crossings, once per starting unit
+                prev = {vl[i]: None}; q = [vl[i]]; qi = 0
+                while qi < len(q):
+                    u = q[qi]; qi += 1
+                    for w_ in nb[u]:
+                        if w_ not in prev:
+                            prev[w_] = u; q.append(w_)
+                trees[vl[i]] = prev
             if gi in prev:
                 path = [gi]
                 while prev[path[-1]] is not None:
                     path.append(prev[path[-1]])
-                path = path[::-1]; tgt[i] = path[min(self.hops, len(path) - 1)]; ok[i] = True
+                path = path[::-1]; tl[i] = path[min(self.hops, len(path) - 1)]; okl[i] = True
+        tgt = torch.tensor(tl, device=self.dev, dtype=torch.long); ok = torch.tensor(okl, device=self.dev, dtype=torch.bool)
+        if getattr(self, "homing", False) and getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
+            return self._home(x, tgt, ok, lack)
         lp = self.toward(x, self.C[tgt]); out = self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
         return torch.where(ok[:, None], out, torch.zeros_like(out))
+
+    @torch.no_grad()
+    def keep_where(self, u2, live):
+        """D46 (innate homing vector, founder 2026-11-26): each place unit keeps the mean position the path organ held there (the body's own
+        integrated position in its birth frame, not the judge's)."""
+        P = self.organs.path.p
+        if getattr(self, "Pu", None) is None:
+            self.Pu = torch.zeros(self.KU, 2, device=self.dev); self.Pn = torch.zeros(self.KU, device=self.dev)
+        if bool(live.any()):
+            cnt = torch.bincount(u2[live], minlength=self.KU).float(); sm = torch.zeros(self.KU, 2, device=self.dev).index_add_(0, u2[live], P[live]); hit = cnt > 0
+            self.Pn += cnt; r = (cnt / self.Pn.clamp(min=1)).clamp(min=0.01)
+            self.Pu = torch.where(hit[:, None], self.Pu + (sm / cnt.clamp(min=1)[:, None] - self.Pu) * r[:, None], self.Pu)
+
+    @torch.no_grad()
+    def _home(self, x, tgt, ok, lack):
+        """The homing vector to the next unit on its own chain, in the body's frame; each gesture scored by how its own forecaster says the
+        body would then move: progress along the vector + alignment of the heading after the turn (equal weight, each standardised)."""
+        O = self.organs; p, h = O.path.p, O.path.h
+        v = self.Pu[tgt] - p; c, s = torch.cos(h), torch.sin(h)
+        bx, by = v[:, 0] * c + v[:, 1] * s, -v[:, 0] * s + v[:, 1] * c; d = (bx * bx + by * by).sqrt().clamp(min=1e-3); th = torch.atan2(by, bx)
+        nb = sum(int(np.prod(O.c.sensors[i].shape)) for i in O.bed); off = nb
+        for i in O.vec:
+            if i == O.mo:
+                break
+            off += int(np.prod(O.c.sensors[i].shape))
+        st = O.stats[O.mo]; idx = torch.tensor(O.mo_idx, device=self.dev)
+        fo = self.net.foresee(x)[:, :, off + idx]                          # [n, M, 3] its own foreseen felt motion per gesture (feeling scale)
+        ph = fo * 4 * st.s[idx] + st.m[idx]                                # back to the body's own units
+        f, sd, tn = ph[..., 0], ph[..., 1], ph[..., 2]
+        prog = (bx[:, None] * f + by[:, None] * sd) / d[:, None]; algn = torch.cos(th[:, None] - tn)
+        H_ = int(os.environ.get("ATANOR_HOME_HOLD", "1"))
+        if H_ > 1:                                                         # D49: what each gesture does if held H beats, as gestures are held (its own one-beat foresight, integrated)
+            X_ = torch.zeros_like(f); Y_ = torch.zeros_like(f); A_ = torch.zeros_like(f)
+            for _ in range(H_):
+                ca_, sa_ = torch.cos(A_), torch.sin(A_); X_ = X_ + f * ca_ - sd * sa_; Y_ = Y_ + f * sa_ + sd * ca_; A_ = A_ + tn
+            prog = (bx[:, None] * X_ + by[:, None] * Y_) / d[:, None]; algn = torch.cos(th[:, None] - A_)
+        self.last_th, self.last_d, self.last_ok, self.last_ph, self.last_tgt = th, d, ok, ph, tgt                   # judge-side read only (C2); changes nothing
+        if getattr(self, "home_rem", False):                              # D46b: what is left of the way after the gesture (overshoot counts), not how far along it
+            prog = -((bx[:, None] - f) ** 2 + (by[:, None] - sd) ** 2).sqrt()
+        z = lambda a: (a - a.mean(1, keepdim=True)) / (a.std(1, keepdim=True) + 1e-6)
+        out = self.W * lack[:, None] * (z(prog) + z(algn))
+        return torch.where(ok[:, None], out, torch.zeros_like(out))
+
+    def innate(self, organs, net, rdecay=0.99):
+        """Gate 1 adopted (founder 2026-11-26, WORLD_A_PROTOCOL.md): the innate homing vector (D46) and seeking its own believed relief (D48)
+        become the main line. rdecay: where relief came fades faster than the map (V1b)."""
+        self.homing, self.organs, self.net, self.seek, self.rdecay = True, organs, net, True, rdecay; return self
+
+    @torch.no_grad()
+    def own_goal(self, x, at=0.3):
+        """D48: for a body whose lack is over `at`, the place unit its own relief memory values most for the lacking channel; -1 otherwise.
+        No judge: the goal is its own belief, walked by lean_to (its lived crossings + the homing vector)."""
+        if getattr(self, "V", None) is None:
+            return None
+        lack, c = self.needs(x); Vc = self.V.clone()
+        ok = torch.ones_like(Vc, dtype=torch.bool)                             # gate 2 run 1 fix 2: only at a place it has been in this life (its homing
+        if getattr(self, "Pn", None) is not None and os.environ.get("ATANOR_GOAL_FIX", "0") == "1":   # position set); faint relief memories still count
+            ok &= (self.Pn > 0)[:, None]                                       # ATANOR_GOAL_FIX=0: D48 as it ran (goals may be units with no homing position)
+        if self.used < self.KU:
+            ok[self.used:] = False
+        Vc[~ok] = -1e9; best = Vc.argmax(0); has = ok.any(0)
+        g = best[c]; return torch.where((lack > at) & has[c], g, torch.full((len(lack),), -1, device=self.dev, dtype=torch.long))
 
     def state(self):
         d = dict(skill=self.skill.state_dict(), C=self.C, Cn=self.Cn, T=self.T, R=self.R, Vn=self.Vn, fitted=self.fitted, mended=self.mended, born=self.born, used=self.used)

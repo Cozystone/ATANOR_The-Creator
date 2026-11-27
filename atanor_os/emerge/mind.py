@@ -14,6 +14,106 @@ from .common_senses import Z, ZF
 LEAK, TIRE, LOOSE = 0.95, 4.0, 0.05
 
 
+class LearnedWeight:
+    """LW1 (LEARNED_WEIGHT_PROTOCOL.md): how much one organ's content counts in choice, learned from the bedrock only. The content f [n, M]
+    (per gesture, e.g. what the homing organ says each gesture does to the way left) enters the score as w * f. w is learned by a linear
+    policy gradient on the being's own wholeness change per beat (a death = losing the wholeness it had), with an eligibility trace (credit
+    to the choices of the last ~1/(1-lam) beats) and a running baseline; both signals standardised by their running spread, so lr is
+    scale-free. No other reward; w starts where it is told (0 = the content is not trusted at birth)."""
+
+    def __init__(self, w0=0.0, lr=1e-3, lam=0.98, mode="beat", reach=2.0):
+        self.w, self.lr, self.lam = float(w0), lr, lam; self.e = None; self.base = 0.0; self.rv = 1e-6; self.gv = 1e-6; self.hist = []
+        # LW2 (mode="retro"; LEARNED_WEIGHT_PROTOCOL.md): learning is triggered by a meaningful event and looks back (Jeong et al. 2022,
+        # ANCCR). An event = a beat whose wholeness change is far outside its own usual (a fill, a death) - nothing is named. At an event
+        # the body's trace of how much its choices followed the content, minus what that trace usually is, moves the weight by the
+        # event's size and sign. The trace reaches back `reach` x its own mean interval between events (a long wait = a long memory).
+        self.mode, self.reach = mode, reach; self.T = 100.0; self.since = None; self.M = 0.0; self.Ev = 1e-6; self.am = 0.0; self.av = 1e-6; self.rs = 1e-6; self.n_ev = 0
+
+    @torch.no_grad()
+    def arrive(self, at_goal, goal, wrise, alive):
+        """LW3: at_goal [n] the body is at its goal unit now; goal [n] its goal (-1 none); wrise [n] wholeness change this beat."""
+        n = len(at_goal)
+        if getattr(self, "win", None) is None or self.win.shape[0] != n:
+            self.win = torch.full((n,), -1, dtype=torch.long, device=at_goal.device); self.got = torch.zeros(n, dtype=torch.bool, device=at_goal.device)
+            if not getattr(self, "carried", False):                              # M1a: a trust carried from the being file keeps its record (else the prior 1 kept, 1 broken)
+                self.kept, self.broken = 1.0, 1.0
+            self.w = self.kept / (self.kept + self.broken); self.n_arr = 0
+        start = at_goal & (self.win < 0) & alive
+        self.win = torch.where(start, torch.zeros_like(self.win), self.win); self.got = torch.where(start, torch.zeros_like(self.got), self.got)
+        on = (self.win >= 0) & alive
+        a_ = wrise.abs(); self.am = 0.999 * self.am + 0.001 * float(a_[alive].mean()) if bool(alive.any()) else self.am
+        self.av = 0.999 * self.av + 0.001 * float(((a_[alive] - self.am) ** 2).mean()) if bool(alive.any()) else self.av
+        relief = wrise > self.am + 3.0 * self.av ** 0.5                         # a rise far outside its own usual (LW2's event, rises only) - no fixed size
+        self.got = self.got | (on & relief); self.win = torch.where(on, self.win + 1, self.win)
+        done = (self.win > 30) | (self.win >= 0) & (self.got | ~alive)
+        if bool(done.any()):
+            k = int((done & self.got).sum()); b = int((done & ~self.got).sum())
+            for _ in range(k + b):
+                self.kept *= 0.995; self.broken *= 0.995
+            self.kept += k; self.broken += b; self.n_arr += k + b; self.w = self.kept / (self.kept + self.broken)
+            self.win = torch.where(done, torch.full_like(self.win, -1), self.win)
+        if len(self.hist) < 10000:
+            self.hist.append(self.w)
+
+    def state(self):
+        """M1a: the trust's own record, kept with the being (what it has learned of this organ's promises)."""
+        return dict(kept=float(getattr(self, "kept", 1.0)), broken=float(getattr(self, "broken", 1.0)), am=float(self.am), av=float(self.av))
+
+    def carry(self, st):
+        self.kept, self.broken, self.am, self.av = st["kept"], st["broken"], st["am"], st["av"]; self.w = self.kept / (self.kept + self.broken); self.carried = True
+
+    @torch.no_grad()
+    def credit(self, f, pi, act, made):
+        """f [n, M] content, pi [n, M] the choice's own probabilities, act [n] what the body did, made [n] whether a choice was made this beat."""
+        g = f.gather(1, act[:, None])[:, 0] - (pi * f).sum(1); g = torch.where(made, g, torch.zeros_like(g))
+        self.gv = 0.999 * self.gv + 0.001 * float((g * g).mean())
+        if self.mode == "retro":
+            dec = float(torch.exp(torch.tensor(-1.0 / max(self.reach * self.T, 1.0)))); gz = g / (self.gv ** 0.5 + 1e-8)
+            self.e = gz if self.e is None or self.e.shape != g.shape else dec * self.e + gz
+            return
+        self.e = g / (self.gv ** 0.5 + 1e-8) if self.e is None or self.e.shape != g.shape else self.lam * self.e + g / (self.gv ** 0.5 + 1e-8)
+
+    @torch.no_grad()
+    def learn(self, r, alive):
+        if self.e is None:
+            return
+        if self.mode == "reli":                                                    # LW3: the weight = how often this organ's promise was kept on arrival
+            return
+        if self.mode == "retro":
+            n = len(r); a = r.abs()
+            if self.since is None or self.since.shape != r.shape:
+                self.since = torch.zeros_like(r)
+            self.since += 1
+            ev = alive & (a > self.am + 3.0 * self.av ** 0.5) & (self.n_ev > 200 or True)
+            self.am = 0.999 * self.am + 0.001 * float(a[alive].mean()) if bool(alive.any()) else self.am
+            self.av = 0.999 * self.av + 0.001 * float(((a[alive] - self.am) ** 2).mean()) if bool(alive.any()) else self.av
+            self.M = 0.999 * self.M + 0.001 * float(self.e.mean()); self.Ev = 0.999 * self.Ev + 0.001 * float(((self.e - self.M) ** 2).mean())
+            if bool(ev.any()):
+                k = int(ev.sum()); self.rs = 0.99 * self.rs + 0.01 * float((r[ev] ** 2).mean())
+                zr = r[ev] / (self.rs ** 0.5 + 1e-8); ze = (self.e[ev] - self.M) / (self.Ev ** 0.5 + 1e-8)
+                per = self.lr * zr * ze / n; self.w += float(per.sum()); self.n_ev += k
+                self.T = 0.98 * self.T + 0.02 * float(self.since[ev].mean()); self.since[ev] = 0
+                if getattr(self, "kinds", None) is not None:
+                    k_ = self.kinds[ev]; self.split = getattr(self, "split", {"death": 0.0, "fill": 0.0, "other": 0.0})
+                    for nm, m_ in (("death", k_ == 2), ("fill", k_ == 1), ("other", k_ == 0)):
+                        self.split[nm] += float(per[m_].sum())
+            self.kinds = None
+            if len(self.hist) < 10000:
+                self.hist.append(self.w)
+            return
+        m = float(r[alive].mean()) if bool(alive.any()) else 0.0; self.base = 0.999 * self.base + 0.001 * m
+        d = r - self.base; self.rv = 0.999 * self.rv + 0.001 * float((d * d).mean())
+        per = self.lr * (d / (self.rv ** 0.5 + 1e-8) * self.e) / len(d)               # each body's share of this beat's step
+        self.w += float(per.sum())
+        if getattr(self, "kinds", None) is not None:                             # LW diagnostic (judge side): the step split by what happened this beat
+            k_ = self.kinds; self.split = getattr(self, "split", {"death": 0.0, "fill": 0.0, "other": 0.0})
+            for nm, m_ in (("death", k_ == 2), ("fill", k_ == 1), ("other", k_ == 0)):
+                self.split[nm] += float(per[m_].sum())
+            self.kinds = None
+        if len(self.hist) == 0 or len(self.hist) < 10000:
+            self.hist.append(self.w)
+
+
 class Earned:
     """D37e: a controller's earned trust - correlation between how hard it pushed (e [n]) and the wholeness change over the next K beats (a death
     = losing all wholeness), discounted, kept as running moments (same form as Mind._track_pull)."""
@@ -240,6 +340,19 @@ class Mind:
                 sc = sc + gl
                 if rec:
                     parts["going"] = gl
+            if getattr(go, "seek", False) and getattr(self, "plan_goal", None) is None and getattr(self, "beat_n", 0) >= 50:   # gate 1 adopted: its own goal at full weight
+                self.plan_goal = go.own_goal(x); self.plan_full = True
+                if self.plan_goal is not None:                                 # judge-side count only (Copilot's question): how often its own goal changes while held
+                    gp = getattr(self, "goal_prev", None)
+                    if gp is not None:
+                        both = (self.plan_goal >= 0) & (gp >= 0); self.goal_held = getattr(self, "goal_held", 0) + int(both.sum())
+                        self.goal_switch = getattr(self, "goal_switch", 0) + int((both & (self.plan_goal != gp)).sum())
+                    self.goal_prev = self.plan_goal.clone()
+                    Pn = getattr(go, "Pn", None)                                # judge-side: goals at a unit with no homing position (walked toward the birth point)
+                    if Pn is not None:
+                        hd_ = self.plan_goal >= 0; self.goal_set_n = getattr(self, "goal_set_n", 0) + int(hd_.sum())
+                        self.goal_unset = getattr(self, "goal_unset", 0) + int((hd_ & (Pn[self.plan_goal.clamp(min=0)] == 0)).sum())
+            self.beat_n = getattr(self, "beat_n", 0) + 1
             pg = getattr(self, "plan_goal", None)                              # B1 (WORLD_A_PROTOCOL.md; default None): a goal place from a memory organ (LOKI v12),
             if pg is not None and self.wo is not None:                         # walked by the going organ's own map and skill, weighed by its own earned record
                 pl = go.lean_to(x, pg)
@@ -247,15 +360,24 @@ class Mind:
                     if getattr(self, "plan_earned", None) is None:
                         self.plan_earned = Earned()
                     self.plan_earned.track(pl.max(1).values - pl.mean(1), self.wo.whole(x), ~self.cut)
-                    pl = pl * self.plan_earned.weight(); sc = sc + pl
+                    lwh = getattr(self, "learned_home", None)                   # LW1: the weight on the homing content learned from the bedrock (default None = as before)
+                    if lwh is not None and getattr(self, "plan_full", False):
+                        self._lw_f = pl.clone(); pl = pl * lwh.w
+                    else:
+                        pl = pl * (1.0 if getattr(self, "plan_full", False) else self.plan_earned.weight())
+                    sc = sc + pl
                     if rec:
                         parts["plan"] = pl
-                self.plan_goal = None
+                self.plan_goal = None; self.plan_full = False
         if rec:
             parts["total"] = sc.clone(); parts["strong"] = strong.clone(); self.parts = parts
         roam_on = getattr(self, "roam", 0) and getattr(self, "pm_n", 0) >= 256
+        self._roam_swing = None
         if roam_on and getattr(self, "roam_mode", "slot") == "score":            # E1b: the unfamiliarity competes in the score, as the value and harm do
-            sc = sc + self.roam * self.unfamiliar(x)
+            u_ = self.unfamiliar(x); lwr = getattr(self, "learned_roam", None)   # G2 run 2: its weight = its own kept promises (LW3 frame), else the fixed roam
+            wr_ = lwr.w if lwr is not None else self.roam
+            self._roam_swing = (u_.argmax(1), sc.argmax(1) != u_.argmax(1))      # judge-free: which way the unfamiliarity points, and whether it differs from the rest of the score
+            sc = sc + wr_ * u_
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
         rnd = torch.randint(0, self.M, (n,), device=d); usedv = torch.zeros(n, dtype=torch.bool, device=d)
         if roam_on and getattr(self, "roam_mode", "slot") == "slot":             # E1: with no strong pull, drawn to the gesture whose foreseen state its place memory knows least
@@ -284,6 +406,12 @@ class Mind:
             again = again | force; self.force = None
         self.again, self.lw_last = again, lw                                # 재는 쪽 기록만
         self.cur = torch.where(again, pick, self.cur)
+        lwh = getattr(self, "learned_home", None)
+        if lwh is not None:                                                    # LW1: credit for the homing content in the choices made this beat
+            f_ = getattr(self, "_lw_f", None)
+            if f_ is None:
+                f_ = torch.zeros(n, self.M, device=d)
+            lwh.credit(f_, torch.softmax(sc / LOOSE, 1), self.cur, again); self._lw_f = None
         tried = torch.rand(n, device=d) < self.try_p
         act = torch.where(tried, torch.randint(0, self.M, (n,), device=d), self.cur)
         # 재는 쪽 기록 (고름을 바꾸지 않음): 이 박자의 몸짓을 누가 정했나 - 0 강한 끌림 (기억·다침·헛됨·값을 더한 점수), 1 값 (끌림이 약할 때 믿음만큼),
@@ -308,6 +436,18 @@ class Mind:
                 self.net.keep(rise[ok], x[ok], act[ok])
                 if getattr(self.net, "trail", False):
                     self.keep_trail(ok, rise)
+            lwh = getattr(self, "learned_home", None)
+            if lwh is not None and self.wo is not None:                          # LW1: the bedrock's own change this beat (a death = all its wholeness lost)
+                w0_, w1_ = self.wo.whole(x), self.wo.whole(x2)
+                lwh.learn(torch.where(died, -w0_, w1_ - w0_), ~cut | died)
+                if lwh.mode == "reli" and getattr(self, "going", None) is not None and getattr(self, "goal_prev", None) is not None:
+                    go_ = self.going; u2_ = go_.unit(go_.place(x2)); gp_ = self.goal_prev
+                    lwh.arrive((gp_ >= 0) & (u2_ == gp_), gp_, torch.where(died, -w0_, w1_ - w0_), ~died & ~cut)
+            lwr = getattr(self, "learned_roam", None)
+            if lwr is not None and self.wo is not None:                          # G2 run 2: a promise = a choice the unfamiliarity swung; kept = a relief event within 30 beats
+                sw_ = getattr(self, "_roam_swing", None); r0_, r1_ = self.wo.whole(x), self.wo.whole(x2)
+                fol_ = (sw_[1] & (act == sw_[0])) if sw_ is not None else torch.zeros_like(died)
+                lwr.arrive(fol_, None, torch.where(died, -r0_, r1_ - r0_), ~died & ~cut)
             if self.wo is not None:
                 wdrop = (self.wo.whole(x) - self.wo.whole(x2))
                 drop = torch.where(died, torch.ones_like(wdrop), wdrop.clamp(min=0))

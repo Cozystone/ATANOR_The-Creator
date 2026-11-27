@@ -141,6 +141,8 @@ class RoomBody:
             for ax in (0, 1):
                 trial = w.pos.clone(); trial[:, ax] = nx[:, ax]
                 ok = (w.cell(trial) == G.FLOOR) | (w.cell(trial) == G.PIT)
+                if G.WORLD_FIX:                                         # world fix (WORLD_A_PROTOCOL.md, 2026-11-27): a body in a cell that became a block
+                    ok = ok | ((w.pos.long() == trial.long()).all(1) & (w.cell(w.pos) != G.FLOOR) & (w.cell(w.pos) != G.PIT))   # may move within it and step out
                 w.pos = torch.where(ok[:, None], trial, w.pos)
         w.store = w.store - w.drain * TICK * alive[:, None]
         filled = torch.zeros(self.n, 2, dtype=torch.bool, device=self.dev)

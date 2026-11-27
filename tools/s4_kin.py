@@ -2,7 +2,7 @@
 Elder = the S3 being as it ended (its own twin room, same layout). Newborns = a fresh being, 1,000 protected babbling beats, then the wild.
 Arms: alone (no elder drawn) | a (elder drawn in the newborn's eye) | b (elder drawn + resonance bedrock .3).
   PYTHONPATH=. python -m tools.s4_kin OUT.json --arm b --lay 9101_0 --elder s3_a"""
-import argparse, json, math, time
+import argparse, os, json, math, time
 import numpy as np, torch
 from tools.need_fork import t_room, place, DEV, DEPTH, BEING
 from tools.a1_channel import V2
@@ -62,7 +62,17 @@ def being(B, n, path=None):
         Mi.load(f"{path}/mind.pt"); st = torch.load(f"{path}/going.pt", map_location=DEV, weights_only=False)
         G.skill.load_state_dict(st["skill"]); G.C, G.Cn, G.T, G.R, G.fitted = st["C"], st["Cn"], st["T"], st["R"], st["fitted"]
         G.mended = st.get("mended", True); G.Vn = st.get("Vn", G.Vn); G.born = st.get("born", True); G.used = st.get("used", G.KU); G.refresh()
-    Mi.wo.on = True; Mi.going = G; return O, Mi
+    Mi.wo.on = True; Mi.going = G
+    if os.environ.get("ATANOR_INNATE_HOMING", "1") == "1":            # gate 1 adopted (WORLD_A_PROTOCOL.md): homing vector + own goal; =0 reproduces runs before 2026-11-26
+        G.innate(O, Mi.net)
+        if os.environ.get("ATANOR_LEARNED_TRUST", "1") == "1":       # LW3f adopted (LEARNED_WEIGHT_PROTOCOL.md): trust in the homing content = its kept promises; =0 = full weight (gate 1)
+            from atanor_os.emerge.mind import LearnedWeight
+            Mi.learned_home = LearnedWeight(w0=0.0, mode="reli")
+            tf = os.environ.get("ATANOR_TRUST_FROM", "")                  # M1a (registered): the trust learned in training carried into this life (default: none)
+            if tf:
+                import json as _j
+                Mi.learned_home.carry(_j.load(open(tf))["home"])
+    return O, Mi
 
 
 def rebirth(B, O, Mi, info):

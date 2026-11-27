@@ -1,0 +1,1192 @@
+{
+ "lw_phase": [
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+ ],
+ "lw_diag": {
+  "mode": "beat",
+  "arrivals": null,
+  "events": 0,
+  "trace_T": 100.0,
+  "split": {
+   "death": 0.0,
+   "fill": 0.0,
+   "other": 0.0
+  },
+  "goal_to_food": {
+   "n": 618,
+   "median": 97.0,
+   "p90": 320.9000000000002
+  }
+ },
+ "trapped": {
+  "body_beats": 375,
+  "died_inside": 0
+ },
+ "anticipation": {
+  "0": {
+   "when_next": 117.83333333333333,
+   "when_other": 384.7142857142857,
+   "n": [
+    6,
+    7
+   ]
+  },
+  "1": {
+   "when_next": 496.14285714285717,
+   "when_other": 93.5,
+   "n": [
+    7,
+    6
+   ]
+  },
+  "2": {
+   "when_next": 647.5714285714286,
+   "when_other": 1061.7142857142858,
+   "n": [
+    7,
+    7
+   ]
+  }
+ },
+ "eye": 1.6,
+ "lw": {
+  "start": 0.0,
+  "lr": 0.0,
+  "end": 0.0,
+  "path": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "goal_set_n": 118204,
+ "goal_unset": 13361,
+ "goal_switch": 676,
+ "view": null,
+ "rep": 4,
+ "homing": 0,
+ "skill_every": 1000,
+ "approach": null,
+ "goal_unit_cells_from_corner": null,
+ "oracle_goal": 0,
+ "plan_weight": 0.49138573509851946,
+ "decay": 0.9995,
+ "rdecay": 0.99,
+ "layout": "9101_0",
+ "being": "s3_a",
+ "beats": 6000,
+ "period": 300,
+ "still": 0,
+ "corners": [
+  [
+   1,
+   6
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   10,
+   1
+  ]
+ ],
+ "deaths": 11,
+ "fills": [
+  3001,
+  2036
+ ],
+ "need_fills": 2498,
+ "hunger_to_food": {
+  "n": 531,
+  "median": 115.0,
+  "mean": 148.7024482109228,
+  "first_half_median": 178.0,
+  "last_half_median": 78.5,
+  "died_hungry": 10
+ },
+ "deaths_per_1000": 0.029,
+ "food_fills_per_1000": 5.3,
+ "latency_first_third": 18.166666666666668,
+ "latency_last_third": 26.166666666666668,
+ "belief_on_food_corner": 0.75,
+ "cycles": [
+  {
+   "t": 0,
+   "corner": 0,
+   "first_fill": 68,
+   "fills": 62,
+   "deaths": 0,
+   "next_visits": 761,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    1358,
+    507,
+    91
+   ]
+  },
+  {
+   "t": 300,
+   "corner": 1,
+   "first_fill": 11,
+   "fills": 38,
+   "deaths": 0,
+   "next_visits": 768,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    1390,
+    741,
+    381
+   ]
+  },
+  {
+   "t": 600,
+   "corner": 2,
+   "first_fill": 1,
+   "fills": 76,
+   "deaths": 6,
+   "next_visits": 2128,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    481,
+    68,
+    1120
+   ]
+  },
+  {
+   "t": 900,
+   "corner": 0,
+   "first_fill": 7,
+   "fills": 77,
+   "deaths": 2,
+   "next_visits": 750,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    1227,
+    230,
+    448
+   ]
+  },
+  {
+   "t": 1200,
+   "corner": 1,
+   "first_fill": 10,
+   "fills": 63,
+   "deaths": 1,
+   "next_visits": 1208,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    450,
+    951,
+    670
+   ]
+  },
+  {
+   "t": 1500,
+   "corner": 2,
+   "first_fill": 12,
+   "fills": 126,
+   "deaths": 0,
+   "next_visits": 696,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    90,
+    61,
+    1917
+   ]
+  },
+  {
+   "t": 1800,
+   "corner": 0,
+   "first_fill": 71,
+   "fills": 32,
+   "deaths": 1,
+   "next_visits": 1093,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    750,
+    435,
+    1025
+   ]
+  },
+  {
+   "t": 2100,
+   "corner": 1,
+   "first_fill": 0,
+   "fills": 85,
+   "deaths": 1,
+   "next_visits": 1460,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    172,
+    964,
+    604
+   ]
+  },
+  {
+   "t": 2400,
+   "corner": 2,
+   "first_fill": 0,
+   "fills": 186,
+   "deaths": 0,
+   "next_visits": 174,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    66,
+    118,
+    1685
+   ]
+  },
+  {
+   "t": 2700,
+   "corner": 0,
+   "first_fill": 17,
+   "fills": 25,
+   "deaths": 0,
+   "next_visits": 858,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    421,
+    497,
+    2243
+   ]
+  },
+  {
+   "t": 3000,
+   "corner": 1,
+   "first_fill": 0,
+   "fills": 119,
+   "deaths": 0,
+   "next_visits": 2283,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    420,
+    591,
+    821
+   ]
+  },
+  {
+   "t": 3300,
+   "corner": 2,
+   "first_fill": 0,
+   "fills": 170,
+   "deaths": 0,
+   "next_visits": 615,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    63,
+    154,
+    1309
+   ]
+  },
+  {
+   "t": 3600,
+   "corner": 0,
+   "first_fill": 9,
+   "fills": 43,
+   "deaths": 0,
+   "next_visits": 1296,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    461,
+    799,
+    1212
+   ]
+  },
+  {
+   "t": 3900,
+   "corner": 1,
+   "first_fill": 0,
+   "fills": 120,
+   "deaths": 0,
+   "next_visits": 1922,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    122,
+    806,
+    563
+   ]
+  },
+  {
+   "t": 4200,
+   "corner": 2,
+   "first_fill": 0,
+   "fills": 234,
+   "deaths": 0,
+   "next_visits": 269,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    1,
+    0,
+    2268
+   ]
+  },
+  {
+   "t": 4500,
+   "corner": 0,
+   "first_fill": 108,
+   "fills": 33,
+   "deaths": 0,
+   "next_visits": 887,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    700,
+    482,
+    1407
+   ]
+  },
+  {
+   "t": 4800,
+   "corner": 1,
+   "first_fill": 1,
+   "fills": 123,
+   "deaths": 0,
+   "next_visits": 2287,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    139,
+    926,
+    893
+   ]
+  },
+  {
+   "t": 5100,
+   "corner": 2,
+   "first_fill": 2,
+   "fills": 223,
+   "deaths": 0,
+   "next_visits": 419,
+   "at_next": [
+    1,
+    6
+   ],
+   "late": [
+    6,
+    160,
+    1736
+   ]
+  },
+  {
+   "t": 5400,
+   "corner": 0,
+   "first_fill": 46,
+   "fills": 88,
+   "deaths": 0,
+   "next_visits": 1103,
+   "at_next": [
+    1,
+    1
+   ],
+   "late": [
+    1710,
+    523,
+    1006
+   ]
+  },
+  {
+   "t": 5700,
+   "corner": 1,
+   "first_fill": 0,
+   "fills": 113,
+   "deaths": 0,
+   "next_visits": 2549,
+   "at_next": [
+    10,
+    1
+   ],
+   "late": [
+    0,
+    1065,
+    601
+   ]
+  }
+ ],
+ "trace": [
+  {
+   "t": 50,
+   "food_corner": 0,
+   "believed_corner": 1,
+   "believed_err": 4.83
+  },
+  {
+   "t": 100,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.0
+  },
+  {
+   "t": 150,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.89
+  },
+  {
+   "t": 200,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.8
+  },
+  {
+   "t": 250,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.76
+  },
+  {
+   "t": 300,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.28
+  },
+  {
+   "t": 350,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.34
+  },
+  {
+   "t": 400,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 4.75
+  },
+  {
+   "t": 450,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 4.86
+  },
+  {
+   "t": 500,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.41
+  },
+  {
+   "t": 550,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.51
+  },
+  {
+   "t": 600,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.57
+  },
+  {
+   "t": 650,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 9.39
+  },
+  {
+   "t": 700,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.4
+  },
+  {
+   "t": 750,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.37
+  },
+  {
+   "t": 800,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.38
+  },
+  {
+   "t": 850,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.46
+  },
+  {
+   "t": 900,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.68
+  },
+  {
+   "t": 950,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.08
+  },
+  {
+   "t": 1000,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.38
+  },
+  {
+   "t": 1050,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.38
+  },
+  {
+   "t": 1100,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.35
+  },
+  {
+   "t": 1150,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.3
+  },
+  {
+   "t": 1200,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.26
+  },
+  {
+   "t": 1250,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.4
+  },
+  {
+   "t": 1300,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 1.05
+  },
+  {
+   "t": 1350,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.97
+  },
+  {
+   "t": 1400,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.53
+  },
+  {
+   "t": 1450,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.6
+  },
+  {
+   "t": 1500,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.62
+  },
+  {
+   "t": 1550,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 9.37
+  },
+  {
+   "t": 1600,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.31
+  },
+  {
+   "t": 1650,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.28
+  },
+  {
+   "t": 1700,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.36
+  },
+  {
+   "t": 1750,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.41
+  },
+  {
+   "t": 1800,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.72
+  },
+  {
+   "t": 1850,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.07
+  },
+  {
+   "t": 1900,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.07
+  },
+  {
+   "t": 1950,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.05
+  },
+  {
+   "t": 2000,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.52
+  },
+  {
+   "t": 2050,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.59
+  },
+  {
+   "t": 2100,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.32
+  },
+  {
+   "t": 2150,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.37
+  },
+  {
+   "t": 2200,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.42
+  },
+  {
+   "t": 2250,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.48
+  },
+  {
+   "t": 2300,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.56
+  },
+  {
+   "t": 2350,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.59
+  },
+  {
+   "t": 2400,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.63
+  },
+  {
+   "t": 2450,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 9.38
+  },
+  {
+   "t": 2500,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.36
+  },
+  {
+   "t": 2550,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.32
+  },
+  {
+   "t": 2600,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.39
+  },
+  {
+   "t": 2650,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.46
+  },
+  {
+   "t": 2700,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.51
+  },
+  {
+   "t": 2750,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.38
+  },
+  {
+   "t": 2800,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.24
+  },
+  {
+   "t": 2850,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.33
+  },
+  {
+   "t": 2900,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.36
+  },
+  {
+   "t": 2950,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.36
+  },
+  {
+   "t": 3000,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.3
+  },
+  {
+   "t": 3050,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.38
+  },
+  {
+   "t": 3100,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.43
+  },
+  {
+   "t": 3150,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.42
+  },
+  {
+   "t": 3200,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.42
+  },
+  {
+   "t": 3250,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.42
+  },
+  {
+   "t": 3300,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.8
+  },
+  {
+   "t": 3350,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 8.16
+  },
+  {
+   "t": 3400,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.39
+  },
+  {
+   "t": 3450,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.47
+  },
+  {
+   "t": 3500,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.49
+  },
+  {
+   "t": 3550,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.5
+  },
+  {
+   "t": 3600,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.52
+  },
+  {
+   "t": 3650,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.38
+  },
+  {
+   "t": 3700,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 9.04
+  },
+  {
+   "t": 3750,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 9.06
+  },
+  {
+   "t": 3800,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.57
+  },
+  {
+   "t": 3850,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.6
+  },
+  {
+   "t": 3900,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.18
+  },
+  {
+   "t": 3950,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.33
+  },
+  {
+   "t": 4000,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 4.51
+  },
+  {
+   "t": 4050,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 4.5
+  },
+  {
+   "t": 4100,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.85
+  },
+  {
+   "t": 4150,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.84
+  },
+  {
+   "t": 4200,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.81
+  },
+  {
+   "t": 4250,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 8.16
+  },
+  {
+   "t": 4300,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.75
+  },
+  {
+   "t": 4350,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.71
+  },
+  {
+   "t": 4400,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.71
+  },
+  {
+   "t": 4450,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.73
+  },
+  {
+   "t": 4500,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.72
+  },
+  {
+   "t": 4550,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 9.96
+  },
+  {
+   "t": 4600,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.36
+  },
+  {
+   "t": 4650,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.41
+  },
+  {
+   "t": 4700,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.21
+  },
+  {
+   "t": 4750,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.17
+  },
+  {
+   "t": 4800,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.24
+  },
+  {
+   "t": 4850,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.33
+  },
+  {
+   "t": 4900,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.86
+  },
+  {
+   "t": 4950,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.81
+  },
+  {
+   "t": 5000,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.51
+  },
+  {
+   "t": 5050,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.51
+  },
+  {
+   "t": 5100,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.55
+  },
+  {
+   "t": 5150,
+   "food_corner": 2,
+   "believed_corner": 1,
+   "believed_err": 9.26
+  },
+  {
+   "t": 5200,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.76
+  },
+  {
+   "t": 5250,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.74
+  },
+  {
+   "t": 5300,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.48
+  },
+  {
+   "t": 5350,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.49
+  },
+  {
+   "t": 5400,
+   "food_corner": 2,
+   "believed_corner": 2,
+   "believed_err": 0.53
+  },
+  {
+   "t": 5450,
+   "food_corner": 0,
+   "believed_corner": 2,
+   "believed_err": 10.35
+  },
+  {
+   "t": 5500,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.86
+  },
+  {
+   "t": 5550,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.86
+  },
+  {
+   "t": 5600,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.45
+  },
+  {
+   "t": 5650,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 0.55
+  },
+  {
+   "t": 5700,
+   "food_corner": 0,
+   "believed_corner": 0,
+   "believed_err": 1.02
+  },
+  {
+   "t": 5750,
+   "food_corner": 1,
+   "believed_corner": 0,
+   "believed_err": 5.35
+  },
+  {
+   "t": 5800,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.37
+  },
+  {
+   "t": 5850,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.46
+  },
+  {
+   "t": 5900,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.48
+  },
+  {
+   "t": 5950,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.48
+  },
+  {
+   "t": 6000,
+   "food_corner": 1,
+   "believed_corner": 1,
+   "believed_err": 0.47
+  }
+ ],
+ "seconds": 396
+}

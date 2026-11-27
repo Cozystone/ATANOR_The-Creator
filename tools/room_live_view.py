@@ -11,7 +11,7 @@ PAGE = """<!doctype html><meta charset=utf-8><title>ATANOR room</title><style>bo
 img{image-rendering:pixelated;border:1px solid #333;margin:4px;max-width:100%}#l{font-size:16px;margin:8px 0}</style>
 <div id=l></div><div><img id=e width=512><img id=m width=360></div><pre id=t></pre>
 <script>async function f(){try{const r=await fetch('state');const d=await r.json();l.textContent=d.label||'';
-if(d.e)e.src='data:image/jpeg;base64,'+d.e;if(d.m)m.src='data:image/png;base64,'+d.m;t.textContent=d.text||''}catch(x){}setTimeout(f,500)}f()</script>"""
+if(d.e)e.src='data:image/jpeg;base64,'+d.e;if(d.m)m.src='data:image/png;base64,'+d.m;t.textContent=d.text||''}catch(x){}setTimeout(f,50)}f()</script>"""
 
 
 def start(port=8768):
