@@ -422,6 +422,7 @@ class Going:
                     path.append(prev[path[-1]])
                 path = path[::-1]; tl[i] = path[min(self.hops, len(path) - 1)]; okl[i] = True
         tgt = torch.tensor(tl, device=self.dev, dtype=torch.long); ok = torch.tensor(okl, device=self.dev, dtype=torch.bool)
+        self._last_goal = goal.clone()
         has_ = goal >= 0
         self.n_goal = getattr(self, "n_goal", 0) + int(has_.sum()); self.n_noway = getattr(self, "n_noway", 0) + int((has_ & ~ok).sum())   # judge-side count
         if os.environ.get("ATANOR_IMAGINE_GOAL", "0") == "1" and getattr(self, "wmap", None) is not None and getattr(self, "Pu", None) is not None:
@@ -559,6 +560,14 @@ class Going:
         than a wall it has touched; looking through a touched wall for a while clears it - an opened way). No geometry is given: a small
         net from a 12 x 20 picture to one number, grown from scratch. It writes only once its own error on new stops is under a cell."""
         n = p.shape[0]; dev = self.dev; L = 32
+        if os.environ.get("ATANOR_PARALLAX", "0") == "1":                     # P1 (registered 2026-11-28): depth from its own motion - how the picture
+            pv = getattr(self, "_par_v", None); pp = getattr(self, "_par_p", None); ph_ = getattr(self, "_par_h", None)   # changed with its own last step
+            if pv is None or pv.shape != view.shape:
+                pv, pp, ph_ = view.clone(), p.clone(), h.clone()
+            dv_ = p - pp; c_, s_ = torch.cos(h), torch.sin(h)
+            step_ = torch.stack([dv_[:, 0] * c_ + dv_[:, 1] * s_, -dv_[:, 0] * s_ + dv_[:, 1] * c_, torch.remainder(h - ph_ + math.pi, 2 * math.pi) - math.pi], 1)
+            self._par_v, self._par_p, self._par_h = view.clone(), p.clone(), h.clone()
+            view = torch.cat([view, view - pv, step_.clamp(-2, 2)], 1)
         if getattr(self, "sm_net", None) is None:
             self.sm_net = nn.Sequential(nn.Linear(view.shape[1], 128), nn.ReLU(), nn.Linear(128, 64), nn.ReLU(), nn.Linear(64, 1)).to(dev)
             self.sm_opt = torch.optim.Adam(self.sm_net.parameters(), 1e-3)
@@ -627,7 +636,11 @@ class Going:
             if c_ is not None:
                 self.sr_net.load_state_dict(c_["sr"]); self.sr_hit, self.sr_n = float(c_["sr_hit"]), int(c_["sr_n"])
         if rose is not None and bool(rose.any()):
+            lg = getattr(self, "_last_goal", None)
             for b, c in torch.nonzero(rose & live[:, None]).tolist():
+                if lg is not None and lg.shape[0] == n and int(lg[b]) >= 0 and getattr(self, "Pu", None) is not None and float(self.Pn[int(lg[b])]) > 0:
+                    e_ = float((self.Pu[int(lg[b])] - p[b]).norm())             # R5: how far its memory's place was from where relief came
+                    self.mem_err = 0.95 * float(getattr(self, "mem_err", 2.0)) + 0.05 * e_; self.mem_errn = getattr(self, "mem_errn", 0) + 1
                 v = p[b][None] - self.sm_p[:, b]; d = v.norm(dim=1); ang = torch.atan2(v[:, 1], v[:, 0])
                 bear = torch.remainder(ang - self.sm_h[:, b] + math.pi, 2 * math.pi) - math.pi       # where it was in the view, by its own path sense
                 face = bear.abs() < 0.65
@@ -635,7 +648,11 @@ class Going:
                 if bool(sel.any()):
                     X = self.sm_v[sel, b]; m = len(X)
                     with torch.no_grad():
-                        o = self.sr_net(X); self.sr_hit = 0.98 * self.sr_hit + 0.02 * float((torch.sigmoid(o[:, c]) > 0.5).float().mean()); self.sr_n += m
+                        o = self.sr_net(X)
+                        dq = F.softplus(o[:, k + c]).clamp(max=14.0); bq = o[:, 2 * k + c].clamp(-0.8, 0.8); hq = self.sm_h[sel, b] + bq
+                        q_ = self.sm_p[sel, b] + dq[:, None] * torch.stack([torch.cos(hq), torch.sin(hq)], 1)
+                        self.eye_err = 0.95 * float(getattr(self, "eye_err", 2.0)) + 0.05 * float((q_ - p[b][None]).norm(dim=1).mean())   # R5: the eye's own
+                        self.sr_hit = 0.98 * self.sr_hit + 0.02 * float((torch.sigmoid(o[:, c]) > 0.5).float().mean()); self.sr_n += m
                     idx = (torch.arange(m, device=dev) + self.sr_k) % 4096; self.sr_X[idx] = X; self.sr_C[idx] = c; self.sr_D[idx] = d[sel]; self.sr_B[idx] = bear[sel]; self.sr_k += m
         old = (self.sm_i + 1) % L; keep = self.sm_ok[old]                    # the oldest kept pictures: no relief followed within 32 beats
         if bool(keep.any()):
@@ -648,7 +665,7 @@ class Going:
             loss = F.binary_cross_entropy_with_logits(o[:, :k], tgt) + F.binary_cross_entropy_with_logits(on[:, :k], torch.zeros(128, k, device=dev))                 + F.smooth_l1_loss(F.softplus(o[:, k:2 * k]).gather(1, c[:, None])[:, 0], self.sr_D[j]) + F.smooth_l1_loss(o[:, 2 * k:].gather(1, c[:, None])[:, 0], self.sr_B[j])
             self.sr_opt.zero_grad(); loss.backward(); self.sr_opt.step()
         with torch.no_grad():
-            o = self.sr_net(view); pr = torch.sigmoid(o[:, :k]); dd = F.softplus(o[:, k:2 * k]).clamp(max=14.0); bb = o[:, 2 * k:].clamp(-0.8, 0.8); self.sr_last = pr
+            o = self.sr_net(view); pr = torch.sigmoid(o[:, :k]); dd = F.softplus(o[:, k:2 * k]).clamp(max=14.0); bb = o[:, 2 * k:].clamp(-0.8, 0.8); self.sr_last = pr; self.sr_dd = dd; self.sr_bb = bb
             if self.sr_n >= 200 and self.sr_hit > 0.7 and getattr(self, "Pu", None) is not None and self.C is not None:
                 if getattr(self, "_po", None) is None:
                     self._po = PathOrgan(1, dev)
@@ -727,6 +744,22 @@ class Going:
             dn = look(pk[:, None, :] + nbr[None]); best = dn.argmin(1)               # which way the imagined route goes from here
             way = torch.atan2(nbr[best, 1], nbr[best, 0]) - torch.atan2(torch.sin(hk), torch.cos(hk))
             algn = algn.clone(); algn[idx_ok] = torch.cos(way[:, None] - tn[idx_ok])
+        if vec is None and os.environ.get("ATANOR_SEEN", "0") == "1" and getattr(self, "sr_last", None) is not None and getattr(self, "sr_dd", None) is not None                 and self.sr_last.shape[0] == lack.shape[0] and self.sr_n >= 200 and self.sr_hit > 0.7:
+            # SM3 (registered 2026-11-28; founder on the viewer: "it sees the water and walks past"): what it sees now is fresher than what it
+            # remembers. While it lacks an inside and its eye says relief of that kind is in view (more likely than not), the homing content
+            # points where its eye says it is (its own learned bearing and distance) instead of where its memory places it.
+            _, c_ = self.needs(x); ar = torch.arange(len(c_), device=self.dev)
+            m = (self.sr_last[ar, c_] > 0.5) & (lack > 0.3)
+            if os.environ.get("ATANOR_RELY", "0") == "1":                      # R5 (registered 2026-11-28; Ernst & Banks 2002): each source counts by its own
+                we = self.sr_last[ar, c_] / (float(getattr(self, "eye_err", 2.0)) ** 2 + 0.05)      # record - how far off it has been about where relief came.
+                wm = ok.float() / (float(getattr(self, "mem_err", 2.0)) ** 2 + 0.05)                # No "the eye wins" rule: the surer one leads this beat.
+                m = (lack > 0.3) & (we > wm)
+                self.rely_eye = getattr(self, "rely_eye", 0) + int(m.sum()); self.rely_mem = getattr(self, "rely_mem", 0) + int(((lack > 0.3) & ok & ~m).sum())
+            if bool(m.any()):
+                d2 = self.sr_dd[ar, c_].clamp(min=0.3); b2 = self.sr_bb[ar, c_]; bx2, by2 = d2 * torch.cos(b2), d2 * torch.sin(b2)
+                pm = (bx2[:, None] * f + by2[:, None] * sd) / d2[:, None]; am = torch.cos(b2[:, None] - tn)
+                prog = torch.where(m[:, None], pm, prog); algn = torch.where(m[:, None], am, algn); ok = ok | m
+                self.sm3_n = getattr(self, "sm3_n", 0) + int(m.sum())
         z = lambda a: (a - a.mean(1, keepdim=True)) / (a.std(1, keepdim=True) + 1e-6)
         out = self.W * lack[:, None] * (z(prog) + z(algn))
         return torch.where(ok[:, None], out, torch.zeros_like(out))

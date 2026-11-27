@@ -1405,3 +1405,8 @@
 - 2026-11-28 `30406b58` Public README and roadmap for the 2026-11-28 turn; export list extended (spatial tests, dashboard, ladder results); ASTRA request docs kept out
 - 2026-11-28 `f7604821` Seen eyes with bearing grown (.58 cells, 91%); dashboard shows general inner-state indices; viewer with gut
 - 2026-11-28 `8c900cc6` Roadmap: second axis (intellectual development I-V), efficiency as a pass condition, grown-and-moved vs learned-in-one-life kept apart
+- 2026-11-28 `f78efe35` SM3: what it sees now steers (seen bearing and distance as homing content while relief is in view)
+- 2026-11-28 `71410996` Where a person would act differently: ten observed gaps, the human mechanism, and a no-hand-rule way for each
+- 2026-11-28 `c743c6a6` Links: motion-parallax eyes (P1), sources count by their own error about where relief came (R5), leaving by its own journey record (L7)
+- 2026-11-28 `28dfd2a9` Astra request: review of sources counting by their own error, and widening it to several sources
+- 2026-11-28 `56e81994` Astra sources request: candidates compete rather than average; ask for the common layer

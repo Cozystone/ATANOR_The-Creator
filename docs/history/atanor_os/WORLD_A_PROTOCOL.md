@@ -1187,3 +1187,27 @@ with a level head.
 12,870 pictures; 59,028 writes into the place memory (was 28,876 without bearing). Carried to the viewer with G1 (gut). Dashboard (8777)
 now shows general inner-state indices (wholeness, lack, habit, unfamiliarity, gut's share, eye's certainty, expects relief in view, journey
 progress, memory change) - the being's own, not room measures.
+
+# SM3 (registered; founder 2026-11-28 on the viewer: "it sees the water and still walks past - why?")
+Seen on the viewer (one body, strong detour room, beats 1,500-1,594): water in view (its eye .69-.70), its goal a water place - and it walks
+past to a corner. Two causes read off the dashboard: (1) its eye's own error rose from .6 to 3.7 cells in this room (the eye grown in A2 does
+not hold here; it rightly stopped writing its map), so the place its eye had written for the water is cells away from the water; (2) what
+it sees now does not steer - sight only writes a place memory, and it then walks to the remembered place. One change (with ATANOR_SEEN):
+while it lacks an inside and its eye says relief of that kind is in view, the homing content points where its eye says it is now (its own
+learned bearing and distance), not where memory places it. Viewer at once. To measure with the three pocket-room conditions.
+Finding to keep: transfer of the seen map to a room of another shape is weak (error .6 -> 3.7) - Astra's second condition is not met yet.
+
+# Links between organs (registered 2026-11-28; founder: "oil these connections"; atanor_os/HUMAN_DIFFERENCES.md #2, #5, #7) - three flags
+P1 ATANOR_PARALLAX=1: the two eye nets get this picture, how it changed since the last beat, and the own step that changed it (motion
+  parallax: depth from its own motion, the same geometry in any room). Eyes regrown in two rooms in turn (9104_0 then 9105_1, 4,000 beats
+  each) instead of one. Bar: its eye's error on new stops in a room it was not grown in < 1 cell (without P1: .6 -> 3.7 in the pocket room).
+R5 ATANOR_RELY=1: each source keeps how far off it has been about where relief came - the eye (its written place for the pictures that
+  faced the relief) and the memory (its goal place's own position) - a fading mean in cells, updated at each relief. While it lacks, the one
+  whose record is surer leads the homing content this beat (eye: its certainty now / its error squared; memory: 1 / its error squared).
+  Replaces SM3's "the eye leads when it sees". First reading (64 bodies, 700 beats, A2): eye 1.4 cells off, memory 4.0 - the place units are
+  coarse, as the unit-region check showed.
+L7 ATANOR_OWN_LEAVE=1: a journey past its own longest paying journey of late (fading) is booked at what it cost so far and the gut is asked
+  again (may choose the same place; its record now holds the failure). Replaces "three times the usual length". A first version (mean of
+  paying journeys) collapsed to 4.5 beats - sips at a spring are short paying journeys - and churned 2,639 journeys in 700 beats; changed
+  before any registered run.
+Measure together on the pocket room's three conditions after growth G.

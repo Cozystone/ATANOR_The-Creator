@@ -578,12 +578,13 @@ class Mind:
         cue = torch.cat([P_ / 8.0, df], 1)
         self.gt = torch.where(self.gj >= 0, self.gt + 1, self.gt)
         rose = (self.gbefore - df).max(1).values > 0.05                         # an inside rose since it set out: the journey paid
-        end = (self.gj >= 0) & (rose | (default < 0) | (self.gt > 3 * self.g_len) | self.cut)
+        late = self.gt > (self.g_len if os.environ.get("ATANOR_OWN_LEAVE", "0") == "1" else 3 * self.g_len)   # L7 (registered): past its own usual journey it
+        end = (self.gj >= 0) & (rose | (default < 0) | late | self.cut)                                          # books what the journey cost so far and asks again
         for i in torch.nonzero(end)[:, 0].tolist():
             after = torch.ones(k, device=d) if bool(self.cut[i]) and not bool(rose[i]) else df[i]
             self.gut.remember(self.gcue[i], int(self.gj[i]), self.gbefore[i], after); self.g_ends += 1
-            if bool(rose[i]):
-                self.g_len = 0.95 * self.g_len + 0.05 * float(self.gt[i])
+            if bool(rose[i]):                                                    # its usual: the mean of paying journeys; with L7 the longest paying journey
+                self.g_len = max(0.995 * self.g_len, float(self.gt[i])) if os.environ.get("ATANOR_OWN_LEAVE", "0") == "1" else 0.95 * self.g_len + 0.05 * float(self.gt[i])   # of late (fading), so sips at a spring do not shrink it
         self.gj = torch.where(end, torch.full_like(self.gj, -1), self.gj)
         out = default.clone(); start = (default >= 0) & (self.gj < 0)
         if bool(start.any()) and getattr(go, "V", None) is not None:
