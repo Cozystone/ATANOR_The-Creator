@@ -1,0 +1,56 @@
+{
+ "oracle": 0,
+ "eye": 1.1,
+ "mismatch_events": 194,
+ "roam_trust": null,
+ "roam": 0.0,
+ "trust_end": 0.445,
+ "lw": null,
+ "why": null,
+ "goal_held": 350114,
+ "goal_switch": 6263,
+ "seen": 0,
+ "staged": 0,
+ "stage2_fills": {
+  "water": 0,
+  "food": 0
+ },
+ "world": "a3",
+ "mirror": 0,
+ "seed": 9303,
+ "being": "s3_e",
+ "beats": 6000,
+ "deaths_by_quarter": [
+  127,
+  122,
+  115,
+  99
+ ],
+ "need_fills_by_quarter": [
+  1,
+  13,
+  53,
+  83
+ ],
+ "deaths_per_1000_first_quarter": 1.323,
+ "hunger_to_fill": {
+  "water": {
+   "n": 196,
+   "median": 236.0,
+   "first_half_median": 269.5,
+   "last_half_median": 206.5
+  },
+  "food": {
+   "n": 320,
+   "median": 143.5,
+   "first_half_median": 144.0,
+   "last_half_median": 141.5
+  }
+ },
+ "died_lacking": [
+  448,
+  411
+ ],
+ "share_of_lacking_beats_in_spurs": 0.2216,
+ "seconds": 627
+}

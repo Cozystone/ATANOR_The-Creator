@@ -6,7 +6,7 @@ Reads the innate path organ's code (the last PathOrgan.N numbers of the sense). 
   never by reward (D33: Ghosh et al. 2019 GCSL; goal babbling, Rolf et al. 2010);
 - the lean of the lack: for the lowest inside, the next unit on its own map toward where that inside was relieved (V = (I - g T)^-1 r, best
   neighbour); the skill's preference for going there, scaled by how low that inside is, is offered to the mind's choice score."""
-import os
+import os, math
 import numpy as np
 import torch, torch.nn as nn, torch.nn.functional as F
 from .body_contract import PathOrgan
@@ -21,6 +21,14 @@ class Skill(nn.Module):
 
     def forward(self, x, g):
         return self.f(torch.cat([((x - self.mu) / self.sd.clamp(min=0.05)).clamp(-5, 5), g], 1))
+
+
+def _blend(*wv, wall=98.0):
+    """B0: bilinear over a distance field, leaving out corners that are walls (no way) - a body against a wall is not 'far'."""
+    num = 0.0; den = 0.0
+    for w_, v_ in wv:
+        ok = (v_ < wall).float(); num = num + w_ * ok * v_; den = den + w_ * ok
+    return torch.where(den > 1e-6, num / den.clamp(min=1e-6), torch.full_like(num, 99.0))
 
 
 class Going:
@@ -90,6 +98,79 @@ class Going:
                 return
             self.C[self.used] = p[i]; self.used += 1
 
+    @torch.no_grad()
+    def _remap(self, p, live):
+        """R1 (EMERGE_PLAN 2026-11-27, registered in WORLD_A_PROTOCOL.md): place cells remap. The number of units stays fixed (KU). When a body
+        stands farther than one cell's worth of code (rad, the same rule units are born by) from every unit, the unit it has gone longest without
+        visiting - if that is longer than its own map's memory (1 / (1 - decay) beats) - is cleared and placed here: its code, its relief memory,
+        its crossings and its homing position start afresh. Nothing named: which units are used is its own walking. At the first beat of a life
+        in this world every unit counts as last visited one memory span ago (it comes from elsewhere)."""
+        span = 1.0 / (1.0 - self.decay)
+        if getattr(self, "lastv", None) is None:
+            self.lastv = torch.full((self.KU,), float(self.beats) - span, device=self.dev); self.remaps = 0
+        for _ in range(4):                                              # at most a few a beat, as births
+            d = torch.cdist(p, self.C[:self.used]).min(1).values; d = torch.where(live, d, torch.zeros_like(d)); i = int(d.argmax())
+            if float(d[i]) <= self.rad:
+                return
+            k = int(self.lastv.argmin())
+            if float(self.beats) - float(self.lastv[k]) <= span:
+                return
+            self.C[k] = p[i]; self.Cn[k] = 1.0; self.R[k] = 0; self.Vn[k] = 0; self.T[k, :] = 0; self.T[:, k] = 0; self.Dd[k] = 0; self.Th[k, :] = 0; self.Th[:, k] = 0
+            if getattr(self, "V", None) is not None:
+                self.V[k] = 0
+            if getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None:
+                self.Pu[k] = self.organs.path.p[i]; self.Pn[k] = 1.0
+            self.lastv[k] = float(self.beats); self.remaps += 1; self._fields = {}
+
+    @torch.no_grad()
+    def _r2_observe(self, x, a, x2, died):
+        """R2 (EMERGE_PLAN 2026-11-27; Astra's prototype, LOKI c7c304c loki_memory/place_bundles.py, fetched with the founder's approval):
+        64 place units shared by every world; what was relieved where, and which crossings were walked, kept per context (3 bundles, fixed
+        size). Which context is now: its own reliefs and its own blocked moves where it stands, against each bundle's record; none fits ->
+        read a blank one (no old world's relief pulls a goal). This organ then only reads the bundles' snapshot (C, R, Vn, T, Pu) - it no
+        longer learns places itself. Consolidation ("sleep") every 100 beats with the map's refresh - an interim stand-in for real sleep."""
+        if getattr(self, "r2", None) is None:
+            import sys as _s
+            _s.path.insert(0, "ext/LOKI-v13")
+            from loki_memory.place_bundles import PlaceBundles
+            self.r2 = PlaceBundles(channels=self.k, bodies=self.n, slots=self.KU, bundles=3).to(self.dev)
+            if getattr(self, "Pu", None) is None:
+                self.Pu = torch.zeros(self.KU, 2, device=self.dev); self.Pn = torch.zeros(self.KU, device=self.dev)
+            self.r2.import_going(self)                                     # the grown being's map as context 0 (its earlier world)
+            u_ = int(self.used); self.r2.Pu[:u_] = self.r2.odometry(self.r2.C[:u_])   # each unit's place, read from its own path code
+            self.r2_read = -1; self.r2_reads = []; self.r2_wp = self.organs.path.p.clone(); self.r2_n = 0
+        live = ~died; p2 = self.place(x2)
+        if self.chan == "contract":
+            rise = (x2[:, self.ins] - x[:, self.ins]).clamp(0, 1)
+        else:
+            rise = torch.stack([x2[:, self.ins[2]] - x[:, self.ins[2]], x2[:, self.ins[1]] - x[:, self.ins[1]]], 1).clamp(0, 1)
+        rose = (rise > 0.01).float()
+        fo = self._foreseen(x).gather(1, a[:, None, None].expand(-1, 1, 3))[:, 0]
+        moved = (self.organs.path.p - self.r2_wp).norm(dim=1); self.r2_wp = self.organs.path.p.clone()
+        err = ((fo[:, :2].norm(dim=1) > 0.15) & (moved < 0.03)).float()    # it pushed (its forecaster foresaw a step) and did not move
+        b, _sup = self.r2.observe(p2, rose, err, live)
+        self.r2_n += 1
+        if self.r2_n % 100 == 0:
+            self.r2.sleep(); b = int(self.r2.reading) if int(self.r2.reading) >= 0 else self.r2.identify()[0]
+        self.r2_read = b
+        if len(self.r2_reads) < 10000:
+            self.r2_reads.append(b)
+        sn = self.r2.going_snapshot(b)
+        self.C = sn["C"].clone(); self.Cn = sn["Cn"].clone(); self.T = sn["T"].clone(); self.R = sn["R"].clone(); self.Vn = sn["Vn"].clone()
+        self.Pu = sn["Pu"].clone(); self.Pn = sn["Pn"].clone(); self.used = max(1, int(sn["used"]))
+        self._fields = {}
+        if self.mended:                                                  # its going skill still learns from lived pieces, as before
+            j = self.slots * self.piece + self.ri; self.rX[j] = x; self.rA[j] = a; self.rL[j] = self.life; self.ri += 1
+            if self.ri == self.piece:
+                self.pieces += 1; s_ = self.pieces - 1 if self.pieces <= self.slots else int(torch.randint(0, self.pieces, (1,)))
+                if s_ < self.slots:
+                    sl, cur = slice(s_ * self.piece, (s_ + 1) * self.piece), slice(self.slots * self.piece, (self.slots + 1) * self.piece)
+                    self.rX[sl] = self.rX[cur]; self.rA[sl] = self.rA[cur]; self.rL[sl] = self.rL[cur]
+                self.ri = 0
+        self.life = self.life + died.long(); self.since += 1; self.beats += 1
+        if self.since >= 100 or self.nxt is None:
+            self.refresh(); self.since = 0
+
     def needs(self, x):
         """lack per body (1 - lowest inside) and which store is lowest (0 water, 1 food: the world's store order; contract: the channel's own place)."""
         if self.chan == "contract":
@@ -99,6 +180,24 @@ class Going:
 
     @torch.no_grad()
     def observe(self, x, a, x2, died):
+        if os.environ.get("ATANOR_SEEN", "0") == "1":                       # SM2: which inside rose this beat (channel order of needs)
+            self._sm_rose = ((x2[:, self.ins] - x[:, self.ins] > 0.01) if self.chan == "contract" else torch.stack([x2[:, self.ins[2]] - x[:, self.ins[2]] > 0.01, x2[:, self.ins[1]] - x[:, self.ins[1]] > 0.01], 1)) & ~died[:, None]
+        if (os.environ.get("ATANOR_IMAGINE_MAP", "0") == "1" or os.environ.get("ATANOR_B0", "0") == "own") and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
+            self.wall_map_observe(x, a, died)                                   # IM1: its own wall map grows from where it walked and where it was stopped
+        if os.environ.get("ATANOR_R2", "0") == "1" and self.C is not None and getattr(self, "organs", None) is not None:
+            return self._r2_observe(x, a, x2, died)                     # R2 (Astra, LOKI c7c304c): the place memory is the bundles organ's
+        if os.environ.get("ATANOR_B0", "0") != "0":                       # B0: its own felt drain a beat (insides falling when nothing rose)
+            st_ = torch.stack([x[:, self.ins[2]], x[:, self.ins[1]]], 1); st2_ = torch.stack([x2[:, self.ins[2]], x2[:, self.ins[1]]], 1)
+            fall = (st_ - st2_); quiet = (fall > -0.005).all(1) & ~died
+            if bool(quiet.any()):
+                self.b0_dr = 0.99 * float(getattr(self, "b0_dr", 0.001)) + 0.01 * float(fall[quiet].clamp(min=0).mean())
+            if getattr(self, "organs", None) is not None:                 # its own free pace: how far a beat moves it when it moves freely
+                pp_ = getattr(self, "_b0_pp", None); P_ = self.organs.path.p
+                if pp_ is not None and pp_.shape == P_.shape:
+                    mv = (P_ - pp_).norm(dim=1); fr = (mv > 0.1) & (mv < 2.0) & ~died
+                    if bool(fr.any()):
+                        self.b0_pace = 0.99 * float(getattr(self, "b0_pace", 0.3)) + 0.01 * float(mv[fr].quantile(0.9))
+                self._b0_pp = P_.clone()
         p, p2 = self.place(x), self.place(x2)
         if self.C is None:                                              # the first places it is in become its first units
             self.C = p[torch.randint(0, len(p), (self.KU,), device=self.dev)] + 0.01 * torch.randn(self.KU, PC, device=self.dev)
@@ -106,9 +205,13 @@ class Going:
                 self.C[0] = p[0]; self.used = 1
         if self.born:
             self._recruit(p2)
+        if os.environ.get("ATANOR_REMAP", "0") == "1" and self.used >= self.KU:
+            self._remap(p2, ~died)                                      # R1: a place no unit covers takes the unit it has gone longest without
         u, u2 = self.unit(p), self.unit(p2); live = ~died
         if getattr(self, "homing", False) and getattr(self, "organs", None) is not None and getattr(self.organs, "path", None) is not None:
             self.keep_where(u2, live)
+        if getattr(self, "lastv", None) is not None:                     # R1: when each unit was last stood in
+            self.lastv[torch.unique(u2[live])] = float(self.beats)
         cnt = torch.bincount(u2, minlength=self.KU).float()            # online k-means, each unit moves toward the places it wins (one step for all units;
         sm = torch.zeros(self.KU, PC, device=self.dev).index_add_(0, u2, p2)   # same numbers as the old per-unit loop, checked 2026-11-25)
         self.Cn += cnt; hit = cnt > 0; rate = (cnt / self.Cn.clamp(min=1) + (0.0 if self.mended else 0.01)).clamp(max=1.0)
@@ -291,6 +394,9 @@ class Going:
         crossings it has lived (T), `hops` units ahead; the walking is its own skill. Bodies without a goal or a lived way get 0."""
         if not self.fitted or self.nxt is None:
             return None
+        if getattr(self, "oracle", None) is not None:                          # G2L ladder (judge-side diagnostic, never a pass): the judge gives the vector in the body's frame
+            lack, c = self.needs(x); bx, by = self.oracle(c)
+            return self._home(x, None, lack > 0.3, lack, vec=(bx, by))
         lack, _ = self.needs(x); v = self.unit(self.place(x)); n = len(v)
         S = ((self.T + self.T.t()) > 0.5).cpu().numpy(); KU = self.KU          # one copy to the host (speed, 2026-11-26; same answers as the per-body loop)
         nb = [np.nonzero(S[i])[0].tolist() for i in range(KU)]
@@ -316,6 +422,12 @@ class Going:
                     path.append(prev[path[-1]])
                 path = path[::-1]; tl[i] = path[min(self.hops, len(path) - 1)]; okl[i] = True
         tgt = torch.tensor(tl, device=self.dev, dtype=torch.long); ok = torch.tensor(okl, device=self.dev, dtype=torch.bool)
+        has_ = goal >= 0
+        self.n_goal = getattr(self, "n_goal", 0) + int(has_.sum()); self.n_noway = getattr(self, "n_noway", 0) + int((has_ & ~ok).sum())   # judge-side count
+        if os.environ.get("ATANOR_IMAGINE_GOAL", "0") == "1" and getattr(self, "wmap", None) is not None and getattr(self, "Pu", None) is not None:
+            nw_ = has_ & ~ok                                                # IM2: no lived way to its goal - imagine one on its own wall map to the goal itself
+            if bool(nw_.any()):
+                tgt = torch.where(nw_, goal.clamp(min=0), tgt); ok = ok | nw_; self._im_only = nw_
         if getattr(self, "homing", False) and getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
             return self._home(x, tgt, ok, lack)
         lp = self.toward(x, self.C[tgt]); out = self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
@@ -334,12 +446,248 @@ class Going:
             self.Pu = torch.where(hit[:, None], self.Pu + (sm / cnt.clamp(min=1)[:, None] - self.Pu) * r[:, None], self.Pu)
 
     @torch.no_grad()
-    def _home(self, x, tgt, ok, lack):
+    def _foreseen(self, x):
+        """Its own forecaster's felt motion per gesture [n, M, 3] (forward, side, turn) in the body's own units."""
+        O = self.organs; nb = sum(int(np.prod(O.c.sensors[i].shape)) for i in O.bed); off = nb
+        for i in O.vec:
+            if i == O.mo:
+                break
+            off += int(np.prod(O.c.sensors[i].shape))
+        st = O.stats[O.mo]; idx = torch.tensor(O.mo_idx, device=self.dev)
+        fo = self.net.foresee(x)[:, :, off + idx]
+        return fo * 4 * st.s[idx] + st.m[idx]
+
+    @torch.no_grad()
+    def b0_foresight(self, x, goal, H=300, hold=3):
+        """B0 (Plan B, first step; EMERGE_PLAN 2026-11-27 "Yes, build B"): choice by imagination, scored by the bedrock only.
+        For each gesture: its own forecaster says where holding it `hold` beats takes the body (a turn is one act, then its walking twin);
+        from there the imagined way to the remembered relief place (its goal unit's own place) around the walls it knows (its own wall map;
+        unknown cells passable) gives the beats until relief at its own pace. Its stores drain at `drain` a beat; the lacking one refills at
+        arrival if that is within H. Score = imagined wholeness at H (1 - mean squared deficit). Returns (score [n, M], active [n]) - active
+        where a goal is held and the imagined ways differ. mode "oracle" (judge-side diagnostic, never a pass): the judge's true field in
+        the world frame (self.b0_true) instead of its own map."""
+        n = x.shape[0]; M = self.M; dev = self.dev
+        act_ = (goal >= 0)
+        if not bool(act_.any()):
+            return None, act_
+        lack, c = self.needs(x)
+        store = torch.stack([x[:, self.ins[2]], x[:, self.ins[1]]], 1) if self.chan == "room" else x[:, self.ins]   # its own insides (channel order of needs)
+        drain = float(getattr(self, "b0_dr", 0.001))                          # its own felt drain a beat (learned in observe)
+        fo = self._foreseen(x)                                              # [n, M, 3] forward, side, turn per beat (its own units)
+        f, sd, tn = fo[..., 0], fo[..., 1], fo[..., 2]
+        pace = torch.full((n,), float(getattr(self, "b0_pace", 0.3)), device=dev)   # its own free walking pace a beat (learned in observe)
+        mag = (f * f + sd * sd).sqrt()
+        moving = mag > 0.5 * mag.amax(1, keepdim=True).clamp(min=0.1)       # its forecaster foresees this gesture moving the body (vs turning in place)
+        uf = torch.where(moving, f / mag.clamp(min=1e-6), torch.zeros_like(f)); us = torch.where(moving, sd / mag.clamp(min=1e-6), torch.zeros_like(sd))
+        f, sd = uf * pace[:, None], us * pace[:, None]                      # imagined: the gesture's own direction at its free pace (walls come from the map)
+        oracle = getattr(self, "b0_true", None)
+        if oracle is not None:
+            p, h, look = oracle["pos"](), oracle["head"](), (lambda xy, near=False: oracle["field"](c, xy, near))
+        else:
+            O = self.organs; p, h = O.path.p, O.path.h; Gs = 64; c0 = Gs // 2; wver = int((self.wmap > 1.0).sum())
+            if getattr(self, "_fver", None) != wver:
+                self._fields = {}; self._fver = wver
+            gl = goal.clamp(min=0).tolist()
+            for g in set(gl):
+                if g not in self._fields:
+                    D = self.imagine_route(self.Pu[g].tolist()); D[~np.isfinite(D)] = 99.0
+                    self._fields[g] = torch.tensor(D, device=dev, dtype=torch.float32)
+            Fd = torch.stack([self._fields[g] for g in gl])
+            def look(xy, near=False):                                      # bilinear over its map's cells (cell centres at integers)
+                if near:
+                    i_ = (xy[..., 0] + c0).round().long().clamp(0, Gs - 1); j_ = (xy[..., 1] + c0).round().long().clamp(0, Gs - 1)
+                    return Fd[torch.arange(n, device=dev).view(-1, *([1] * (xy.dim() - 2))), i_, j_]
+                u_ = (xy[..., 0] + c0).clamp(0, Gs - 1.001); v_ = (xy[..., 1] + c0).clamp(0, Gs - 1.001)
+                i0, j0 = u_.floor().long(), v_.floor().long(); a_, b_ = u_ - i0, v_ - j0; bi = torch.arange(n, device=dev).view(-1, *([1] * (xy.dim() - 2)))
+                g_ = lambda i, j: Fd[bi, i.clamp(0, Gs - 1), j.clamp(0, Gs - 1)]
+                return _blend(((1 - a_) * (1 - b_), g_(i0, j0)), (a_ * (1 - b_), g_(i0 + 1, j0)), ((1 - a_) * b_, g_(i0, j0 + 1)), (a_ * b_, g_(i0 + 1, j0 + 1)))
+        h2 = h[:, None] + tn                                                # this gesture: its turn (one act) and one beat of its own motion
+        cs, sn = torch.cos(h2), torch.sin(h2)
+        p1 = torch.stack([p[:, 0:1] + f * cs - sd * sn, p[:, 1:2] + f * sn + sd * cs], -1)   # [n, M, 2]
+        p1 = torch.where((look(p1, near=True) >= 98.0)[..., None], p[:, None, :].expand_as(p1), p1)   # into a wall it knows: it stays
+        d_here = look(p[:, None, :])
+        # then, in its head: further one-act turns (30 degrees each) to any of 12 headings, and walking `hold` beats that way at its pace
+        th = torch.arange(12, device=dev, dtype=torch.float32) * (math.pi / 6)                         # [12]
+        dturn = torch.remainder(th[None, None, :] - h2[..., None] + math.pi, 2 * math.pi) - math.pi    # [n, M, 12]
+        acts = (dturn.abs() / (math.pi / 6)).round()
+        step = hold * pace[:, None, None]
+        p2 = torch.stack([p1[..., 0:1] + step * torch.cos(th), p1[..., 1:2] + step * torch.sin(th)], -1)  # [n, M, 12, 2]
+        pm = 0.5 * (p1[..., None, :] + p2)                                  # walking into a wall it knows stops it there (half-way checked too)
+        stop = (look(pm, near=True) >= 98.0) | (look(p2, near=True) >= 98.0)
+        p2 = torch.where(stop[..., None], p1[..., None, :].expand_as(p2), p2)
+        cost = 1 + acts + hold + look(p2) / pace[:, None, None]
+        beats = cost.amin(-1)                                               # its best imagined way after this gesture
+        s0 = store[:, None, :].expand(-1, M, -1).clone() - drain * H
+        reach = beats <= H
+        refill = torch.zeros_like(s0); refill.scatter_(2, c[:, None, None].expand(-1, M, 1), 1.0)
+        s_end = torch.where(reach[..., None] & (refill > 0), torch.ones_like(s0) - drain * (H - beats[..., None]).clamp(min=0), s0)
+        whole = 1.0 - ((1.0 - s_end.clamp(0, 1)) ** 2).mean(-1)
+        spread = whole.amax(1) - whole.amin(1)
+        return whole, act_ & (spread > 1e-4) & (d_here[:, 0] > 1.0)
+
+    def wall_map_observe(self, x, a, died):
+        with torch.no_grad():
+            return self._wall_map_observe(x, a, died)
+
+    def _wall_map_observe(self, x, a, died):
+        """IM1 (registered): the being's own wall map in its own path frame (fixed 64 x 64, one cell = one of its own steps' units).
+        Free where it has walked; a wall where it tried to move (its forecaster foresaw a step) and its own felt motion stayed ~0.
+        Its own senses only (path sense, forecaster, felt motion); nothing from the judge."""
+        O = self.organs; p = O.path.p; h = O.path.h; Gs = 64; c0 = Gs // 2
+        if getattr(self, "wmap", None) is None:
+            self.wmap = torch.zeros(Gs, Gs, device=self.dev); self.wp_prev = p.clone(); self.wfo = None
+        live = ~died
+        cell = (p + c0).round().long().clamp(0, Gs - 1)
+        self.wmap[cell[live, 0], cell[live, 1]] = (self.wmap[cell[live, 0], cell[live, 1]] - 1.0).clamp(min=-4.0)       # walked: free
+        if True:
+            fo = self._foreseen(x).gather(1, a[:, None, None].expand(-1, 1, 3))[:, 0]                                            # what this gesture was foreseen to do
+            moved = (p - self.wp_prev).norm(dim=1); tried = (fo[:, :2].norm(dim=1) > 0.15) & (moved < 0.03) & live
+            if bool(tried.any()):
+                ang = h[tried] + torch.atan2(fo[tried, 1], fo[tried, 0]); q = p[tried] + 0.7 * torch.stack([torch.cos(ang), torch.sin(ang)], 1)
+                wc = (q + c0).round().long().clamp(0, Gs - 1)
+                self.wmap[wc[:, 0], wc[:, 1]] = (self.wmap[wc[:, 0], wc[:, 1]] + 2.0).clamp(max=4.0)                     # pushed and did not move: wall
+        if os.environ.get("ATANOR_SEEN", "0") == "1" and getattr(O, "view", None) is not None:
+            with torch.enable_grad():
+                self._seen(O.view, p, h, fo, tried, moved, live)
+        self.wp_prev = p.clone()
+
+    def _seen(self, view, p, h, fo, tried, moved, live):
+        """SM1 (founder 2026-11-27: "does what it sees enter its map? a person takes in far structure by looking"): from its own walking it
+        learns how far the way ahead is free in the picture it sees - the teacher is its own feet: each picture of the last 32 beats, taken
+        facing the way it is now going, is paired with how far it then got (exactly, when it is stopped by a wall; at least that far, while
+        it still walks). Then looking alone writes its map: free as far as it expects, a faint wall where it expects to be stopped (weaker
+        than a wall it has touched; looking through a touched wall for a while clears it - an opened way). No geometry is given: a small
+        net from a 12 x 20 picture to one number, grown from scratch. It writes only once its own error on new stops is under a cell."""
+        n = p.shape[0]; dev = self.dev; L = 32
+        if getattr(self, "sm_net", None) is None:
+            self.sm_net = nn.Sequential(nn.Linear(view.shape[1], 128), nn.ReLU(), nn.Linear(128, 64), nn.ReLU(), nn.Linear(64, 1)).to(dev)
+            self.sm_opt = torch.optim.Adam(self.sm_net.parameters(), 1e-3)
+            self.sm_v = torch.zeros(L, n, view.shape[1], device=dev); self.sm_p = torch.zeros(L, n, 2, device=dev); self.sm_h = torch.zeros(L, n, device=dev)
+            self.sm_ok = torch.zeros(L, n, dtype=torch.bool, device=dev); self.sm_i = 0
+            self.sm_X = torch.zeros(4096, view.shape[1], device=dev); self.sm_Y = torch.zeros(4096, device=dev); self.sm_k = 0; self.sm_err = 9.0; self.sm_n = 0
+            sf = os.environ.get("ATANOR_SEEN_FROM", "")
+            if sf:
+                self._seen_carry = torch.load(sf, map_location=dev, weights_only=False); c_ = self._seen_carry
+                self.sm_net.load_state_dict(c_["sm"]); self.sm_err, self.sm_n = float(c_["sm_err"]), int(c_["sm_n"])
+        fwd = torch.atan2(fo[:, 1], fo[:, 0]).abs() < 0.35                    # this gesture was (foreseen) a walk ahead
+        u = torch.stack([torch.cos(self.sm_h), torch.sin(self.sm_h)], -1)     # [L, n, 2] where each kept picture was facing
+        v = p[None] - self.sm_p; d = (v * u).sum(-1); lat = (v[..., 0] * u[..., 1] - v[..., 1] * u[..., 0]).abs()
+        dh = (torch.remainder(self.sm_h - h[None] + math.pi, 2 * math.pi) - math.pi).abs()
+        same = self.sm_ok & (dh < 0.2) & (lat < 0.6) & (d >= 0)
+        stop = same & (tried & fwd & live)[None]; go_ = same & ((moved > 0.15) & fwd & live & ~tried)[None]
+        loss = 0.0; k = 0
+        if bool(stop.any()):                                                  # stopped: the pictures behind it on this line learn the exact way
+            X = self.sm_v[stop]; Y = d[stop] + 0.5
+            with torch.no_grad():
+                e = float((F.softplus(self.sm_net(X))[:, 0] - Y).abs().mean()); self.sm_err = 0.98 * self.sm_err + 0.02 * e; self.sm_n += len(Y)
+            idx = (torch.arange(len(Y), device=dev) + self.sm_k) % 4096; self.sm_X[idx] = X; self.sm_Y[idx] = Y; self.sm_k += len(Y)
+            self.sm_ok = self.sm_ok & ~stop                                   # used once
+        m = min(self.sm_k, 4096)
+        if m >= 64:
+            j = torch.randint(0, m, (256,), device=dev)
+            loss = loss + F.smooth_l1_loss(F.softplus(self.sm_net(self.sm_X[j]))[:, 0], self.sm_Y[j]); k += 1
+        if bool(go_.any()):                                                   # still walking: at least this far was free
+            sel = torch.nonzero(go_.reshape(-1))[:, 0]; sel = sel[torch.randint(0, len(sel), (min(256, len(sel)),), device=dev)]
+            loss = loss + F.relu(d.reshape(-1)[sel] + 0.3 - F.softplus(self.sm_net(self.sm_v.reshape(L * n, -1)[sel]))[:, 0]).mean(); k += 1
+        if k:
+            self.sm_opt.zero_grad(); loss.backward(); self.sm_opt.step()
+        self._seen_relief(view, p, h, live, L)
+        self.sm_v[self.sm_i] = view; self.sm_p[self.sm_i] = p; self.sm_h[self.sm_i] = h; self.sm_ok[self.sm_i] = live; self.sm_i = (self.sm_i + 1) % L
+        with torch.no_grad():
+            dhat = F.softplus(self.sm_net(view))[:, 0].clamp(max=20.0); self.sm_last = dhat
+            if self.sm_n >= 300 and self.sm_err < 1.0:                        # it trusts its eye only once its eye has been right about new stops
+                Gs = 64; c0 = Gs // 2; uh = torch.stack([torch.cos(h), torch.sin(h)], 1)
+                for s_ in range(1, 15):
+                    q = p + uh * float(s_); on = live & (dhat - 0.5 > s_)
+                    if bool(on.any()):
+                        c = (q[on] + c0).round().long().clamp(0, Gs - 1)
+                        self.wmap[c[:, 0], c[:, 1]] = (self.wmap[c[:, 0], c[:, 1]] - 0.3).clamp(min=-4.0)       # seen free
+                q = p + uh * (dhat[:, None] + 0.2); c = (q[live] + c0).round().long().clamp(0, Gs - 1)
+                cur = self.wmap[c[:, 0], c[:, 1]]
+                self.wmap[c[:, 0], c[:, 1]] = torch.where(cur < 2.0, (cur + 0.5).clamp(max=2.0), cur)                # seen wall (fainter than touched)
+                self.sm_writes = getattr(self, "sm_writes", 0) + int(live.sum())
+
+    def seen_state(self):
+        """SM1 / SM2 as part of the being: what its eye has learned from its feet and its insides (carried from a 64-body life to one body)."""
+        return dict(sm=self.sm_net.state_dict(), sm_err=self.sm_err, sm_n=self.sm_n, sr=self.sr_net.state_dict(), sr_hit=self.sr_hit, sr_n=self.sr_n)
+
+    def _seen_relief(self, view, p, h, live, L):
+        """SM2 (founder 2026-11-27 on the viewer: "the water is in view and it does not look at it"): what it sees enters its relief memory.
+        When one of its insides rises, the pictures of the last 32 beats that were facing the place where it rose learn "relief of this
+        kind lies ahead, this far" (teacher: its own insides and its own path sense); pictures kept long without relief learn "none". Then
+        looking alone puts an expectation of relief at that place in its own place memory (fainter than lived relief) - so a spring it sees
+        can become its goal before it has ever drunk there in this world. Nothing named: the kinds are its own inside channels."""
+        n = p.shape[0]; dev = self.dev; k = self.k; rose = getattr(self, "_sm_rose", None)
+        if getattr(self, "sr_net", None) is None:
+            self.sr_net = nn.Sequential(nn.Linear(view.shape[1], 128), nn.ReLU(), nn.Linear(128, 64), nn.ReLU(), nn.Linear(64, 3 * k)).to(dev)   # per channel: is it ahead, how far, and where in the view (bearing)
+            self.sr_opt = torch.optim.Adam(self.sr_net.parameters(), 1e-3)
+            self.sr_X = torch.zeros(4096, view.shape[1], device=dev); self.sr_C = torch.zeros(4096, dtype=torch.long, device=dev); self.sr_D = torch.zeros(4096, device=dev); self.sr_B = torch.zeros(4096, device=dev)
+            self.sr_k = 0; self.sr_hit = 0.0; self.sr_n = 0; self.sr_writes = 0; self.sr_NX = torch.zeros(4096, view.shape[1], device=dev); self.sr_nk = 0
+            c_ = getattr(self, "_seen_carry", None)
+            if c_ is not None:
+                self.sr_net.load_state_dict(c_["sr"]); self.sr_hit, self.sr_n = float(c_["sr_hit"]), int(c_["sr_n"])
+        if rose is not None and bool(rose.any()):
+            for b, c in torch.nonzero(rose & live[:, None]).tolist():
+                v = p[b][None] - self.sm_p[:, b]; d = v.norm(dim=1); ang = torch.atan2(v[:, 1], v[:, 0])
+                bear = torch.remainder(ang - self.sm_h[:, b] + math.pi, 2 * math.pi) - math.pi       # where it was in the view, by its own path sense
+                face = bear.abs() < 0.65
+                sel = self.sm_ok[:, b] & face & (d > 0.8) & (d < 14)
+                if bool(sel.any()):
+                    X = self.sm_v[sel, b]; m = len(X)
+                    with torch.no_grad():
+                        o = self.sr_net(X); self.sr_hit = 0.98 * self.sr_hit + 0.02 * float((torch.sigmoid(o[:, c]) > 0.5).float().mean()); self.sr_n += m
+                    idx = (torch.arange(m, device=dev) + self.sr_k) % 4096; self.sr_X[idx] = X; self.sr_C[idx] = c; self.sr_D[idx] = d[sel]; self.sr_B[idx] = bear[sel]; self.sr_k += m
+        old = (self.sm_i + 1) % L; keep = self.sm_ok[old]                    # the oldest kept pictures: no relief followed within 32 beats
+        if bool(keep.any()):
+            X = self.sm_v[old][keep][:8]; idx = (torch.arange(len(X), device=dev) + self.sr_nk) % 4096; self.sr_NX[idx] = X; self.sr_nk += len(X)
+        mp, mn = min(self.sr_k, 4096), min(self.sr_nk, 4096)
+        if mp >= 32 and mn >= 32:
+            j = torch.randint(0, mp, (128,), device=dev); jn = torch.randint(0, mn, (128,), device=dev)
+            o = self.sr_net(self.sr_X[j]); on = self.sr_net(self.sr_NX[jn]); c = self.sr_C[j]
+            tgt = torch.zeros(128, k, device=dev); tgt[torch.arange(128, device=dev), c] = 1.0
+            loss = F.binary_cross_entropy_with_logits(o[:, :k], tgt) + F.binary_cross_entropy_with_logits(on[:, :k], torch.zeros(128, k, device=dev))                 + F.smooth_l1_loss(F.softplus(o[:, k:2 * k]).gather(1, c[:, None])[:, 0], self.sr_D[j]) + F.smooth_l1_loss(o[:, 2 * k:].gather(1, c[:, None])[:, 0], self.sr_B[j])
+            self.sr_opt.zero_grad(); loss.backward(); self.sr_opt.step()
+        with torch.no_grad():
+            o = self.sr_net(view); pr = torch.sigmoid(o[:, :k]); dd = F.softplus(o[:, k:2 * k]).clamp(max=14.0); bb = o[:, 2 * k:].clamp(-0.8, 0.8); self.sr_last = pr
+            if self.sr_n >= 200 and self.sr_hit > 0.7 and getattr(self, "Pu", None) is not None and self.C is not None:
+                if getattr(self, "_po", None) is None:
+                    self._po = PathOrgan(1, dev)
+                for b, c in torch.nonzero((pr > 0.5) & live[:, None]).tolist():       # more likely than not; how strongly it is written follows how sure it is
+                    q = p[b] + float(dd[b, c]) * torch.stack([torch.cos(h[b] + bb[b, c]), torch.sin(h[b] + bb[b, c])])
+                    self._po.p = q[None].clone(); self._po.h = torch.zeros(1, device=dev); code = self._po(torch.zeros(1, 6, device=dev))[:, :PC]
+                    u_ = int(self.unit(code)[0])
+                    self.R[u_, c] = torch.maximum(self.R[u_, c], 0.2 * float(pr[b, c]) * self.Vn[u_].clamp(min=1.0))   # an expected relief there (fainter than lived)
+                    if float(self.Pn[u_]) < 1.0:
+                        self.Pu[u_] = q; self.Pn[u_] = 1.0
+                    self.sr_writes += 1
+
+    @torch.no_grad()
+    def imagine_route(self, goal_xy):
+        """IM1: its imagined way to a place - walking its own wall map in its head (breadth-first over cells not known as wall, unknown
+        cells allowed) -> distance field [64, 64] in steps. One field per distinct target, recomputed when the map has changed."""
+        import collections
+        Gs = 64; c0 = Gs // 2; wall = (self.wmap > 1.0).cpu().numpy()
+        gx, gy = [int(min(Gs - 1, max(0, round(float(v) + c0)))) for v in goal_xy]
+        D = np.full((Gs, Gs), np.inf); D[gx, gy] = 0; q = collections.deque([(gx, gy)])
+        while q:
+            i, j = q.popleft()
+            for di, dj in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                a_, b_ = i + di, j + dj
+                if 0 <= a_ < Gs and 0 <= b_ < Gs and not wall[a_, b_] and D[a_, b_] == np.inf:
+                    D[a_, b_] = D[i, j] + 1; q.append((a_, b_))
+        return D
+
+    @torch.no_grad()
+    def _home(self, x, tgt, ok, lack, vec=None):
         """The homing vector to the next unit on its own chain, in the body's frame; each gesture scored by how its own forecaster says the
         body would then move: progress along the vector + alignment of the heading after the turn (equal weight, each standardised)."""
         O = self.organs; p, h = O.path.p, O.path.h
-        v = self.Pu[tgt] - p; c, s = torch.cos(h), torch.sin(h)
-        bx, by = v[:, 0] * c + v[:, 1] * s, -v[:, 0] * s + v[:, 1] * c; d = (bx * bx + by * by).sqrt().clamp(min=1e-3); th = torch.atan2(by, bx)
+        if vec is None:
+            v = self.Pu[tgt] - p; c, s = torch.cos(h), torch.sin(h)
+            bx, by = v[:, 0] * c + v[:, 1] * s, -v[:, 0] * s + v[:, 1] * c
+        else:
+            bx, by = vec
+        d = (bx * bx + by * by).sqrt().clamp(min=1e-3); th = torch.atan2(by, bx)
         nb = sum(int(np.prod(O.c.sensors[i].shape)) for i in O.bed); off = nb
         for i in O.vec:
             if i == O.mo:
@@ -359,6 +707,26 @@ class Going:
         self.last_th, self.last_d, self.last_ok, self.last_ph, self.last_tgt = th, d, ok, ph, tgt                   # judge-side read only (C2); changes nothing
         if getattr(self, "home_rem", False):                              # D46b: what is left of the way after the gesture (overshoot counts), not how far along it
             prog = -((bx[:, None] - f) ** 2 + (by[:, None] - sd) ** 2).sqrt()
+        if vec is None and os.environ.get("ATANOR_IMAGINE_MAP", "0") == "1" and getattr(self, "wmap", None) is not None and bool(ok.any()):   # IM1: the way in its head, around its own walls
+            Gs = 64; c0 = Gs // 2; wver = int((self.wmap > 1.0).sum())         # only walls change the imagined ways (unknown cells count as passable)
+            if getattr(self, "_fver", None) != wver:
+                self._fields = {}; self._fver = wver
+            idx_ok = torch.nonzero(ok)[:, 0]; gl = tgt[idx_ok].tolist()
+            for g in set(gl):
+                if g not in self._fields:
+                    D = self.imagine_route(self.Pu[g].tolist()); D[~np.isfinite(D)] = 99.0
+                    self._fields[g] = torch.tensor(D, device=self.dev, dtype=torch.float32)
+            Fd = torch.stack([self._fields[g] for g in gl])                       # [k, 64, 64]
+            pk, hk = p[idx_ok], h[idx_ok]; cs, sn = torch.cos(hk)[:, None], torch.sin(hk)[:, None]
+            look = lambda xy: Fd[torch.arange(len(gl), device=self.dev)[:, None], (xy[..., 0] + c0).round().long().clamp(0, Gs - 1), (xy[..., 1] + c0).round().long().clamp(0, Gs - 1)]
+            fx, fy = f[idx_ok] * 3, sd[idx_ok] * 3                                 # each gesture held 3 beats, by its own foresight
+            dest = torch.stack([pk[:, 0:1] + fx * cs - fy * sn, pk[:, 1:2] + fx * sn + fy * cs], -1)
+            d_now = look(pk[:, None, :])                                           # [k, 1]
+            prog = prog.clone(); prog[idx_ok] = d_now - look(dest)
+            nbr = torch.tensor([[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]], device=self.dev, dtype=torch.float32)
+            dn = look(pk[:, None, :] + nbr[None]); best = dn.argmin(1)               # which way the imagined route goes from here
+            way = torch.atan2(nbr[best, 1], nbr[best, 0]) - torch.atan2(torch.sin(hk), torch.cos(hk))
+            algn = algn.clone(); algn[idx_ok] = torch.cos(way[:, None] - tn[idx_ok])
         z = lambda a: (a - a.mean(1, keepdim=True)) / (a.std(1, keepdim=True) + 1e-6)
         out = self.W * lack[:, None] * (z(prog) + z(algn))
         return torch.where(ok[:, None], out, torch.zeros_like(out))

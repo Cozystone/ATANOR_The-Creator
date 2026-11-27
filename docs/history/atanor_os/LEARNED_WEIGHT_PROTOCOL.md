@@ -271,3 +271,13 @@ Run: train = a2_moving_food, 64 bodies, 9104_0, s3_b, 6,000 beats, rep 9 (not a 
 6,000 beats, with the carried trust (arm LC) against B1's LW (fresh trust) and L1 (full weight) on the same reps.
 Bars (pooled): LC's deaths <= L1's (18) and LC's median food wait not worse than LW's (407.5). Met -> carry becomes the default for the
 being file (train many, live as one). Not met -> report (the lone body's poor life is the walk, M1b).
+
+## M1a result: waits met, deaths missed by 2 - not met as registered; carry stays off by default
+Trained trust (64 bodies, 9104, rep 9, 6,000 beats): kept 81.8 / broken 117.9 -> .41. One body, reps 0-4, carried trust (LC):
+deaths 5 4 3 3 5 = 20; waits 264 378 243 256 504 -> median 264; 32 hungry->food events; trust stayed .37-.40 all life.
+Against B1 on the same reps: LW (fresh trust) 26 deaths, wait 407.5, 27 events; L1 (full weight) 18 deaths, wait 417.5, 26 events.
+Bars: deaths <= 18 - not met (20); wait not worse than 407.5 - met (264, 35% shorter). Reading: the carried trust holds steady (no
+relearning from a .5 prior) and the lone body finds food sooner than with either fresh trust or full weight; deaths sit between the two
+on a handful of deaths (18 / 20 / 26). As registered, not met: carry stays off by default (ATANOR_TRUST_FROM). Said plainly: by the
+two numbers together it is the best of the three lone-body arms; the bar on deaths was set at the hand-set arm's 18, which 20 misses by 2
+deaths over five lives. Revisited with the M2 place store (the carried trust then goes with the being file by design).

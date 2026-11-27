@@ -13,6 +13,13 @@ class RetinaGPU:
         self.cx = torch.full((n,), 0.5, device=device); self.cy = torch.full((n,), 0.5, device=device)
         self.prev = None
         self.boxes = []
+        # A1 (founder 2026-11-27, "build gaze attention now"): top-down attention learned from the bedrock only. The eye keeps a short trace
+        # of the colours in view; when the body's insides rise (a relief), the colours that were in view before it gain relevance (and lose
+        # it when in view without relief). The gaze then goes to the centre of (picture change + learned relevance of what is where), each
+        # part normalised - the eyes go to what has mattered, not only to what moved. No colour or object is named. Off unless ATANOR_ATTEND=1.
+        import os as _os
+        self.attend = _os.environ.get("ATANOR_ATTEND", "0") == "1"
+        self.aw = torch.zeros(3, device=device); self.ae = torch.zeros(n, 3, device=device); self.ab = torch.zeros(3, device=device); self.phi = None
 
     def reset(self, which):
         self.cx[which] = 0.5; self.cy[which] = 0.5
@@ -71,9 +78,25 @@ class RetinaGPU:
         else:
             fresh = self.prev[:, 0, 0] < 0
             s = (g - self.prev).abs(); s[fresh] = 0; self.prev = g.clone()
+        if self.attend:
+            phi = F.adaptive_avg_pool2d(rgb.permute(0, 3, 1, 2) / 255.0, (GRID, GRID)).permute(0, 2, 3, 1)      # [n, 12, 12, 3] colour of each place in view
+            self.phi = phi; m = phi.mean((1, 2))
+            self.ae = 0.9 * self.ae + 0.1 * m; self.ab = 0.999 * self.ab + 0.001 * m.mean(0)                     # what was in view lately; its usual
+            rel = ((phi - self.ab) * self.aw).sum(3).clamp(min=0)                                                   # learned relevance of each place now
+            rs = rel.sum((1, 2), keepdim=True); ss = s.sum((1, 2), keepdim=True)
+            s = s / ss.clamp(min=1e-9) * (ss > 1e-6) + rel / rs.clamp(min=1e-9) * (rs > 1e-6)
         tot = s.sum((1, 2))
         gy, gx = torch.meshgrid(torch.arange(GRID, device=self.dev, dtype=torch.float32), torch.arange(GRID, device=self.dev, dtype=torch.float32), indexing="ij")
         ty = (s * gy).sum((1, 2)) / tot.clamp(min=1e-9) / (GRID - 1); tx = (s * gx).sum((1, 2)) / tot.clamp(min=1e-9) / (GRID - 1)
         mv = tot > 1e-6
         self.cx = torch.where(mv, INERTIA * self.cx + (1 - INERTIA) * tx, self.cx); self.cy = torch.where(mv, INERTIA * self.cy + (1 - INERTIA) * ty, self.cy)
         return out.clamp(0, 1)
+
+    @torch.no_grad()
+    def relief(self, rose):
+        """A1: rose [n] bool - the body's insides rose this beat. What was in view before gains relevance; in view without relief, loses a little."""
+        if not self.attend:
+            return
+        d = (self.ae - self.ab)                                                                     # [n, 3]
+        r = rose.float()[:, None]
+        self.aw += 0.05 * (r * d).mean(0) - 0.0005 * ((1 - r) * d).mean(0)

@@ -11,7 +11,7 @@
 새 갈래가 생기면 (새 장치) 알맹이를 키워 (body_gpu.expand처럼 새 이음은 0에서) 붙일 수 있다 - 다음 일.
 """
 from dataclasses import dataclass, field, asdict
-import itertools, math, numpy as np, torch, torch.nn.functional as F
+import os, itertools, math, numpy as np, torch, torch.nn.functional as F
 from .common_senses import Enc, focus_enc, Stat, OUT, Z, ZF
 from .eye_gpu import RetinaGPU
 
@@ -121,11 +121,21 @@ class Organs:
     def __call__(self, raw):
         """raw: 갈래마다 텐서 [n, *shape] (계약 차례의 목록). -> 느낌 x [n, dx]."""
         parts = [raw[i].reshape(self.n, -1).float() for i in self.bed]
+        if parts:                                                              # A1: the eye's attention learns from the bedrock's rise (its own insides)
+            bnow = torch.cat(parts, 1); bp = getattr(self, "_bprev", None)
+            if bp is not None and bp.shape == bnow.shape:
+                rose = ((bnow - bp) > 0.01).any(1)
+                for i in self.img:
+                    if hasattr(self.ret[i], "relief"):
+                        self.ret[i].relief(rose)
+            self._bprev = bnow.clone()
         for i in self.vec:
             parts.append(self.stats[i](raw[i].reshape(self.n, -1).float(), unbiased=self.c.sensors[i].kind != "audio"))
         for i in self.img:
             fr = raw[i].float()                                            # [n, H, W, 3] 0~255
             r = self.ret[i].look(fr); self.r = r                         # (뷰어가 중심야·주변야를 그리려고 읽음)
+            if os.environ.get("ATANOR_SEEN", "0") == "1":                  # SM1: a small whole view kept for the seen-map learner (not part of x)
+                self.view = F.interpolate(fr.permute(0, 3, 1, 2) / 255.0, size=(12, 20), mode="bilinear", align_corners=False).reshape(self.n, -1)
             z = self.E(r); self.z = z
             zf = self.FE(torch.cat([r[:, 0:3], r[:, 15:18]], 1))
             gaze = torch.stack([self.ret[i].cx, self.ret[i].cy], 1) * 2 - 1

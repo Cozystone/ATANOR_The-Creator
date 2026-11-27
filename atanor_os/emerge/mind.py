@@ -5,7 +5,7 @@
   m = Mind(organs, contract); act = m.choose(x); m.after(x, act, x2, died, cut)   # cut: 손이 옮겼거나 다시 태어남 (사슬 끊기)
   m.save(path) / Mind.load(path, organs, contract)
 """
-import math
+import math, os
 import numpy as np
 import torch, torch.nn.functional as F
 from .core import Core, Worth
@@ -28,6 +28,36 @@ class LearnedWeight:
         # the body's trace of how much its choices followed the content, minus what that trace usually is, moves the weight by the
         # event's size and sign. The trace reaches back `reach` x its own mean interval between events (a long wait = a long memory).
         self.mode, self.reach = mode, reach; self.T = 100.0; self.since = None; self.M = 0.0; self.Ev = 1e-6; self.am = 0.0; self.av = 1e-6; self.rs = 1e-6; self.n_ev = 0
+
+    @torch.no_grad()
+    def _contingent(self, r, alive):
+        """TC1 (WORLD_A_PROTOCOL.md, registered 2026-11-27): the trust = how much more relief comes after following the content than after
+        not following it (contingency; Rescorla 1968, ANCCR - Jeong et al. 2022), judged on every held beat, not at arrival. Each body keeps two
+        traces fading over ~30 beats - of beats it followed and of beats it did not, while the content was held. A relief event (a wholeness rise
+        far outside its own usual, as LW3) credits both traces; each trace's credit is divided by how much of that trace was lived (its own
+        opportunity). w = p(relief | followed) / (p(followed) + p(not followed)): .5 = following makes no difference, 1 = only following brings
+        relief. Counts fade x .9995 a beat. Nothing named; its only teacher is its own wholeness."""
+        n = len(r); dev = r.device
+        if getattr(self, "ef", None) is None or self.ef.shape[0] != n:
+            self.ef = torch.zeros(n, device=dev); self.en = torch.zeros(n, device=dev); self.Kf, self.Kn, self.Sf, self.Sn = 1.0, 1.0, 1.0, 1.0; self.n_rel = 0
+        fol = getattr(self, "_fol", None); held = getattr(self, "_held", None)
+        if fol is None or fol.shape[0] != n:
+            fol = torch.zeros(n, dtype=torch.bool, device=dev); held = fol.clone()
+        self._fol = self._held = None
+        k = 1.0 - 1.0 / 30.0
+        self.ef = torch.where(alive, k * self.ef + fol.float(), torch.zeros_like(self.ef)); self.en = torch.where(alive, k * self.en + (held & ~fol).float(), torch.zeros_like(self.en))
+        a_ = r.abs()
+        if bool(alive.any()):
+            self.am = 0.999 * self.am + 0.001 * float(a_[alive].mean()); self.av = 0.999 * self.av + 0.001 * float(((a_[alive] - self.am) ** 2).mean())
+        rel = alive & (r > self.am + 3.0 * self.av ** 0.5)
+        d = 0.9995
+        self.Kf *= d; self.Kn *= d; self.Sf *= d; self.Sn *= d
+        self.Sf += float(self.ef.sum()); self.Sn += float(self.en.sum())
+        if bool(rel.any()):
+            self.Kf += float(self.ef[rel].sum()); self.Kn += float(self.en[rel].sum()); self.n_rel += int(rel.sum())
+        pf, pn = self.Kf / self.Sf, self.Kn / self.Sn; self.w = pf / max(pf + pn, 1e-12)
+        if len(self.hist) < 10000:
+            self.hist.append(self.w)
 
     @torch.no_grad()
     def arrive(self, at_goal, goal, wrise, alive):
@@ -55,6 +85,29 @@ class LearnedWeight:
         if len(self.hist) < 10000:
             self.hist.append(self.w)
 
+    @torch.no_grad()
+    def stall(self, goal, d, ok, alive, W=30, need=1.0):
+        """S1 (founder 2026-11-27, "if going round gets nothing it should stop"): the homing content promises that following it brings the
+        body closer to its goal. While a goal is held, every W beats the body's own homing distance d (its path organ to its goal's place) is
+        compared with W beats before: not closer by `need` cells -> one broken promise (same record as arrival; nothing counted as kept)."""
+        n = len(goal)
+        if getattr(self, "sg", None) is None or self.sg.shape[0] != n:
+            self.sg = torch.full((n,), -1, dtype=torch.long, device=goal.device); self.sd = torch.zeros(n, device=goal.device); self.st = torch.zeros(n, dtype=torch.long, device=goal.device)
+            self.n_stall = 0
+            if not hasattr(self, "kept"):
+                self.kept, self.broken = 1.0, 1.0
+        on = (goal >= 0) & ok & alive
+        fresh = on & (goal != self.sg)
+        self.sd = torch.where(fresh, d, self.sd); self.st = torch.where(fresh, torch.zeros_like(self.st), self.st); self.sg = torch.where(on, goal, torch.full_like(self.sg, -1))
+        self.st = torch.where(on, self.st + 1, torch.zeros_like(self.st))
+        due = on & (self.st >= W)
+        if bool(due.any()):
+            b = int((due & (d > self.sd - need)).sum())
+            for _ in range(b):
+                self.kept *= 0.995; self.broken *= 0.995
+            self.broken += b; self.n_stall += b; self.w = self.kept / (self.kept + self.broken)
+            self.sd = torch.where(due, d, self.sd); self.st = torch.where(due, torch.zeros_like(self.st), self.st)
+
     def state(self):
         """M1a: the trust's own record, kept with the being (what it has learned of this organ's promises)."""
         return dict(kept=float(getattr(self, "kept", 1.0)), broken=float(getattr(self, "broken", 1.0)), am=float(self.am), av=float(self.av))
@@ -67,6 +120,9 @@ class LearnedWeight:
         """f [n, M] content, pi [n, M] the choice's own probabilities, act [n] what the body did, made [n] whether a choice was made this beat."""
         g = f.gather(1, act[:, None])[:, 0] - (pi * f).sum(1); g = torch.where(made, g, torch.zeros_like(g))
         self.gv = 0.999 * self.gv + 0.001 * float((g * g).mean())
+        if self.mode == "cont":                                                   # TC1: did this beat's gesture go the content's way (above its usual gesture)?
+            self._held = f.abs().sum(1) > 0; self._fol = (f.gather(1, act[:, None])[:, 0] > 0) & self._held
+            return
         if self.mode == "retro":
             dec = float(torch.exp(torch.tensor(-1.0 / max(self.reach * self.T, 1.0)))); gz = g / (self.gv ** 0.5 + 1e-8)
             self.e = gz if self.e is None or self.e.shape != g.shape else dec * self.e + gz
@@ -75,6 +131,8 @@ class LearnedWeight:
 
     @torch.no_grad()
     def learn(self, r, alive):
+        if self.mode == "cont":
+            return self._contingent(r, alive)
         if self.e is None:
             return
         if self.mode == "reli":                                                    # LW3: the weight = how often this organ's promise was kept on arrival
@@ -336,12 +394,16 @@ class Mind:
             if gl is not None and getattr(self, "going_earned", None) is not None and self.wo is not None:   # D37e: the lean weighed by its own record
                 self.going_earned.track(gl.max(1).values - gl.mean(1), self.wo.whole(x), ~self.cut)
                 gl = gl * self.going_earned.weight()
+            if gl is not None and os.environ.get("ATANOR_TRUST_LEAN", "0") == "1" and getattr(self, "learned_home", None) is not None and getattr(go, "homing", False):
+                gl = gl * self.learned_home.w                                    # S1b: the going lean reads the same homing vector, so the same learned trust weighs it
             if gl is not None:
                 sc = sc + gl
                 if rec:
                     parts["going"] = gl
             if getattr(go, "seek", False) and getattr(self, "plan_goal", None) is None and getattr(self, "beat_n", 0) >= 50:   # gate 1 adopted: its own goal at full weight
                 self.plan_goal = go.own_goal(x); self.plan_full = True
+                if os.environ.get("ATANOR_GUT", "0") == "1" and self.plan_goal is not None:
+                    self.plan_goal = self._gut_goal(x, self.plan_goal)
                 if self.plan_goal is not None:                                 # judge-side count only (Copilot's question): how often its own goal changes while held
                     gp = getattr(self, "goal_prev", None)
                     if gp is not None:
@@ -378,8 +440,14 @@ class Mind:
             wr_ = lwr.w if lwr is not None else self.roam
             self._roam_swing = (u_.argmax(1), sc.argmax(1) != u_.argmax(1))      # judge-free: which way the unfamiliarity points, and whether it differs from the rest of the score
             sc = sc + wr_ * u_
+        alw = getattr(self, "allowed", None)                                  # R1 (founder 2026-11-27, "one operation at a time, like a robot vacuum"): the body
+        if alw is not None:                                                    # offers only the gestures it has; the rest are not choosable
+            sc = sc.masked_fill(~alw[None], -1e9)
+            if lw is not None:
+                lw = lw.masked_fill(~alw[None], -1e9)
         pick = torch.multinomial(torch.softmax(sc / LOOSE, 1), 1)[:, 0]
-        rnd = torch.randint(0, self.M, (n,), device=d); usedv = torch.zeros(n, dtype=torch.bool, device=d)
+        rnd = torch.randint(0, self.M, (n,), device=d) if alw is None else torch.nonzero(alw)[:, 0][torch.randint(0, int(alw.sum()), (n,), device=d)]
+        usedv = torch.zeros(n, dtype=torch.bool, device=d)
         if roam_on and getattr(self, "roam_mode", "slot") == "slot":             # E1: with no strong pull, drawn to the gesture whose foreseen state its place memory knows least
             rnd = torch.multinomial(torch.softmax(self.roam * self.unfamiliar(x), 1), 1)[:, 0]
         if lw is not None:
@@ -413,7 +481,72 @@ class Mind:
                 f_ = torch.zeros(n, self.M, device=d)
             lwh.credit(f_, torch.softmax(sc / LOOSE, 1), self.cur, again); self._lw_f = None
         tried = torch.rand(n, device=d) < self.try_p
-        act = torch.where(tried, torch.randint(0, self.M, (n,), device=d), self.cur)
+        act = torch.where(tried, torch.randint(0, self.M, (n,), device=d) if alw is None else torch.nonzero(alw)[:, 0][torch.randint(0, int(alw.sum()), (n,), device=d)], self.cur)
+        nt = getattr(self, "turn_once", None)                                  # T1 (registered): a turn is one act (30 degrees, like a head turn or a
+        if nt is not None:                                                     # saccade); a held gesture keeps its walking and hand, not its turn
+            act = torch.where(again | tried, act, nt[act])
+        if os.environ.get("ATANOR_W0", "0") == "1" and go is not None and getattr(go, "organs", None) is not None and getattr(go, "V", None) is not None and self.wo is not None:
+            # W0 (registered 2026-11-27: the smallest world-model test). Prophet: its own learned forecaster (core.foresee: the next senses per
+            # gesture), rolled H beats for a few futures made of its own gestures (walk on; turn 1, 2, 3 or 6 times either way, then walk).
+            # Judge: its own wholeness in the imagined end (+ what its place memory holds there for what it lacks). Executor: the first
+            # `K` beats of the best future. Called only while it lacks (a goal is held) and its last plan has run out. Habit otherwise.
+            H_, K_ = 20, 4
+            if getattr(self, "w0_plan", None) is None or self.w0_plan.shape[0] != n:
+                self.w0_plan = torch.zeros(n, K_, dtype=torch.long, device=d); self.w0_i = torch.full((n,), K_, dtype=torch.long, device=d); self.w0_n = 0; self.w0_spread = 0.0
+            gp_ = getattr(self, "goal_prev", None)
+            need = (gp_ >= 0) if gp_ is not None else torch.zeros(n, dtype=torch.bool, device=d)
+            due = need & (self.w0_i >= K_)
+            if bool(due.any()):
+                fo_ = go._foreseen(x); fw, tn_ = fo_[..., 0], fo_[..., 2]
+                tmax = tn_.abs().amax(1, keepdim=True).clamp(min=1e-6)
+                b_ = torch.where(tn_.abs() < 0.2 * tmax, fw, torch.full_like(fw, -1e9)).argmax(1)       # its own best walking gesture
+                L_, R_ = tn_.argmax(1), tn_.argmin(1)
+                seqs = [b_[:, None].expand(-1, H_)]
+                for k in (1, 2, 3, 6):
+                    for t_ in (L_, R_):
+                        seqs.append(torch.cat([t_[:, None].expand(-1, k), b_[:, None].expand(-1, H_ - k)], 1))
+                S_ = torch.stack(seqs, 1); C_ = S_.shape[1]                                             # [n, 9, H]
+                xi = x[:, None, :].expand(-1, C_, -1).reshape(n * C_, -1)
+                for t in range(H_):
+                    g_ = S_[:, :, t].reshape(-1)
+                    xi = self.net.foresee(xi).gather(1, g_[:, None, None].expand(-1, 1, xi.shape[-1]))[:, 0]
+                wh = self.wo.whole(xi).view(n, C_)
+                lk_, ch_ = go.needs(x); u_ = go.unit(go.place(xi)).view(n, C_)
+                sc_ = wh + lk_[:, None] * go.V[u_, ch_[:, None].expand(-1, C_)]
+                best = sc_.argmax(1); self.w0_spread = 0.99 * self.w0_spread + 0.01 * float((sc_.amax(1) - sc_.amin(1))[due].mean())
+                self.w0_plan = torch.where(due[:, None], S_[torch.arange(n, device=d), best, :K_], self.w0_plan); self.w0_i = torch.where(due, torch.zeros_like(self.w0_i), self.w0_i)
+                self.w0_pick = torch.bincount(best[due], minlength=C_) + (getattr(self, "w0_pick", None) if getattr(self, "w0_pick", None) is not None else 0)
+            run = need & (self.w0_i < K_)
+            if bool(run.any()):
+                pa = self.w0_plan.gather(1, self.w0_i.clamp(max=K_ - 1)[:, None])[:, 0]
+                act = torch.where(run, pa, act); self.cur = torch.where(run, pa, self.cur); again = again | run; tried = tried & ~run
+                self.w0_i = torch.where(run, self.w0_i + 1, self.w0_i); self.w0_n += int(run.sum())
+            self.w0_i = torch.where(need, self.w0_i, torch.full_like(self.w0_i, K_))
+        if os.environ.get("ATANOR_E1", "0") == "1" and go is not None and getattr(go, "organs", None) is not None:
+            # E1 control arm (Astra's one-step prototype, LOKI 27f33dd loki_memory/embodied_choice.py, fetched with the founder's approval):
+            # each gesture's learned effect on its own path position (given its heading) + the remembered place of relief per channel; the
+            # present deficits join the two - the gesture whose foreseen next place is nearest to where it was relieved. One beat ahead only.
+            # Same calling rule as W0: while it lacks (a goal is held) and it remembers a relief place; habit otherwise.
+            ec = self._e1()
+            P_ = go.organs.path.p; h_ = go.organs.path.h; sn_ = torch.stack([torch.cos(h_), torch.sin(h_)], 1)
+            df_ = 1.0 - torch.stack([x[:, go.ins[2]], x[:, go.ins[1]]], 1).clamp(0, 1)
+            gp_ = getattr(self, "goal_prev", None)
+            need = ((gp_ >= 0) if gp_ is not None else torch.zeros(n, dtype=torch.bool, device=d)) & bool((ec.mass > 0).any())
+            if bool(need.any()):
+                pa = act.clone()
+                for i in torch.nonzero(need)[:, 0].tolist():
+                    pa[i] = ec.choose(sn_[i], P_[i], df_[i])
+                act = torch.where(need, pa, act); self.cur = torch.where(need, pa, self.cur); again = again | need; tried = tried & ~need
+                self.e1_n = getattr(self, "e1_n", 0) + int(need.sum())
+            self._e1_prev = (sn_.clone(), P_.clone(), df_.clone())
+        b0m = os.environ.get("ATANOR_B0", "0")
+        if b0m in ("own", "oracle") and go is not None and getattr(self, "goal_prev", None) is not None and getattr(go, "organs", None) is not None:
+            wsc, on_ = go.b0_foresight(x, self.goal_prev)   # B0 (Plan B first step): the imagined outcome chooses
+            if wsc is not None and bool(on_.any()):
+                if alw is not None:
+                    wsc = torch.where(alw[None, :], wsc, torch.full_like(wsc, -1e9))
+                best = wsc.argmax(1); act = torch.where(on_, best, act); self.cur = torch.where(on_, best, self.cur)
+                again = again | on_; tried = tried & ~on_; self.b0_n = getattr(self, "b0_n", 0) + int(on_.sum())
         # 재는 쪽 기록 (고름을 바꾸지 않음): 이 박자의 몸짓을 누가 정했나 - 0 강한 끌림 (기억·다침·헛됨·값을 더한 점수), 1 값 (끌림이 약할 때 믿음만큼),
         # 2 고른 무작위 (끌림이 약할 때), 3 하던 것 유지, 4 시도
         src = torch.where(strong, 0, torch.where(usedv, 1, 2)); src = torch.where(again, src, torch.full_like(src, 3)); src = torch.where(tried, torch.full_like(src, 4), src)
@@ -424,11 +557,69 @@ class Mind:
         self.steps += 1
         return act
 
+    @torch.no_grad()
+    def _gut_goal(self, x, default):
+        """G1 (registered 2026-11-28; Astra's somatic readout, LOKI de50f9f): the gut feeling over journeys. A journey = setting out for a
+        remembered place until it ends (relief, giving up, death). The gut remembers, for "where I was and what I lacked" and "which place I
+        set out for", how its insides changed by the journey's end (the drain on the way included; a death = everything lost). Choosing a
+        goal asks the gut: among its best-remembered places for each inside, the one whose past journeys leave it most whole. No record for
+        any of them -> the relief memory's own choice (as before). A journey is kept until it ends; it gives up after three times as long
+        as its own paying journeys have usually taken."""
+        go = self.going; n = len(default); d = default.device; k = go.k
+        if getattr(self, "gut", None) is None:
+            import sys as _s
+            _s.path.insert(0, "ext/LOKI-v13")
+            from loki_memory.somatic_readout import SomaticReadout
+            self.gut = SomaticReadout(cue_width=2 + k, channels=k, slots=64, events=256).to(d)
+            self.gj = torch.full((n,), -1, dtype=torch.long, device=d); self.gcue = torch.zeros(n, 2 + k, device=d); self.gbefore = torch.zeros(n, k, device=d)
+            self.gt = torch.zeros(n, dtype=torch.long, device=d); self.g_len = 100.0; self.g_asked = 0; self.g_known = 0; self.g_diff = 0; self.g_ends = 0
+        df = 1.0 - (torch.stack([x[:, go.ins[2]], x[:, go.ins[1]]], 1) if go.chan == "room" else x[:, go.ins]).clamp(0, 1)
+        P_ = go.organs.path.p if getattr(go, "organs", None) is not None and getattr(go.organs, "path", None) is not None else torch.zeros(n, 2, device=d)
+        cue = torch.cat([P_ / 8.0, df], 1)
+        self.gt = torch.where(self.gj >= 0, self.gt + 1, self.gt)
+        rose = (self.gbefore - df).max(1).values > 0.05                         # an inside rose since it set out: the journey paid
+        end = (self.gj >= 0) & (rose | (default < 0) | (self.gt > 3 * self.g_len) | self.cut)
+        for i in torch.nonzero(end)[:, 0].tolist():
+            after = torch.ones(k, device=d) if bool(self.cut[i]) and not bool(rose[i]) else df[i]
+            self.gut.remember(self.gcue[i], int(self.gj[i]), self.gbefore[i], after); self.g_ends += 1
+            if bool(rose[i]):
+                self.g_len = 0.95 * self.g_len + 0.05 * float(self.gt[i])
+        self.gj = torch.where(end, torch.full_like(self.gj, -1), self.gj)
+        out = default.clone(); start = (default >= 0) & (self.gj < 0)
+        if bool(start.any()) and getattr(go, "V", None) is not None:
+            V = go.V.clone()
+            if go.used < go.KU:
+                V[go.used:] = -1e9
+            top = torch.cat([V[:, c].topk(2).indices for c in range(V.shape[1])])   # its two best-remembered places for each inside
+            for i in torch.nonzero(start)[:, 0].tolist():
+                acts = torch.unique(torch.cat([top, default[i:i + 1]]))
+                known = (self.gut.fast_action[None, :] == acts[:, None]).any(1)
+                pick = int(default[i]); self.g_asked += 1
+                if bool(known.any()):
+                    pick, conf, called = self.gut.choose(cue[i], acts, df[i]); self.g_known += 1; self.g_diff += int(pick != int(default[i]))
+                self.gj[i] = pick; self.gcue[i] = cue[i]; self.gbefore[i] = df[i]; self.gt[i] = 0
+        held = self.gj >= 0
+        return torch.where(held, self.gj, out)
+
+    def _e1(self):
+        if getattr(self, "e1", None) is None:
+            import sys as _s
+            _s.path.insert(0, "ext/LOKI-v13")
+            from loki_memory.embodied_choice import EmbodiedChoice
+            self.e1 = EmbodiedChoice(senses=2, channels=2, actions=self.M, path_width=2).to(self.going.dev)
+        return self.e1
+
     def after(self, x, act, x2, died, cut):
         """한 걸음의 겪음. died [n] bool: 이 걸음에 죽음. cut [n] bool: 다음 걸음과 잇지 않음 (손이 옮김, 다시 태어남)."""
         ins = self.net.inside
         if getattr(self, "going", None) is not None:                           # L1: the going organ keeps its own place memory and ring
             self.going.observe(x, act, x2, died | cut)
+        if os.environ.get("ATANOR_E1", "0") == "1" and getattr(self, "_e1_prev", None) is not None and getattr(self.going, "organs", None) is not None:
+            go_ = self.going; ec = self._e1(); sn_, P0, d0 = self._e1_prev; P1 = go_.organs.path.p
+            d1 = 1.0 - torch.stack([x2[:, go_.ins[2]], x2[:, go_.ins[1]]], 1).clamp(0, 1)
+            if sn_.shape[0] == P1.shape[0]:
+                for i in torch.nonzero(~died & ~cut)[:, 0].tolist():           # one aligned transition per living body (one mind, one wiring)
+                    ec.experience(sn_[i], P0[i], d0[i], int(act[i]), P1[i], d1[i])
         with torch.no_grad():
             rise = (x2[:, ins] - x[:, ins]).clamp(min=0)
             ok = ~died & ~cut & (rise > 0.01).any(1)
@@ -440,9 +631,28 @@ class Mind:
             if lwh is not None and self.wo is not None:                          # LW1: the bedrock's own change this beat (a death = all its wholeness lost)
                 w0_, w1_ = self.wo.whole(x), self.wo.whole(x2)
                 lwh.learn(torch.where(died, -w0_, w1_ - w0_), ~cut | died)
-                if lwh.mode == "reli" and getattr(self, "going", None) is not None and getattr(self, "goal_prev", None) is not None:
-                    go_ = self.going; u2_ = go_.unit(go_.place(x2)); gp_ = self.goal_prev
+            if self.wo is not None and getattr(self, "going", None) is not None and getattr(self, "goal_prev", None) is not None:
+                # J1 and S1 no longer sit inside the learned trust (2026-11-27: with ATANOR_LEARNED_TRUST=0 they were silently off - found while
+                # building TC1; gate 2 run 4's RW and the R1 full-weight diagnostics ran without J1)
+                w0_, w1_ = self.wo.whole(x), self.wo.whole(x2)
+                go_ = self.going; u2_ = go_.unit(go_.place(x2)); gp_ = self.goal_prev
+                if lwh is not None and lwh.mode == "reli":
                     lwh.arrive((gp_ >= 0) & (u2_ == gp_), gp_, torch.where(died, -w0_, w1_ - w0_), ~died & ~cut)
+                if os.environ.get("ATANOR_MISMATCH", "0") == "1" and getattr(go_, "V", None) is not None:   # J1 (registered): expectation broken -> judge again at once
+                    lk_, ch_ = go_.needs(x2); ins_ = go_.ins
+                    rose_ = torch.stack([x2[:, ins_[2]] - x[:, ins_[2]] > 0.01, x2[:, ins_[1]] - x[:, ins_[1]] > 0.01], 1).gather(1, ch_[:, None])[:, 0]
+                    at_ = (gp_ >= 0) & (u2_ == gp_) & ~died & ~cut & (lk_ > 0.3)
+                    mm_ = getattr(self, "_mm", None)
+                    mm_ = torch.zeros(len(gp_), dtype=torch.long, device=gp_.device) if mm_ is None or mm_.shape[0] != len(gp_) else mm_
+                    mm_ = torch.where(at_ & ~rose_, mm_ + 1, torch.zeros_like(mm_)); fire_ = mm_ >= 5      # 5 beats at its believed place, lacking, nothing comes
+                    if bool(fire_.any()):
+                        go_.R[gp_[fire_], ch_[fire_]] = 0.0                   # the place's relief memory for that need is the present: empty now
+                        go_.refresh(); self.force = fire_ if getattr(self, "force", None) is None else (self.force | fire_)
+                        self.mm_n = getattr(self, "mm_n", 0) + int(fire_.sum()); mm_ = torch.where(fire_, torch.zeros_like(mm_), mm_)
+                    self._mm = mm_
+                if lwh is not None and os.environ.get("ATANOR_STALL", "0") == "1" and getattr(go_, "Pu", None) is not None and getattr(go_, "organs", None) is not None:   # S1 (registered)
+                    dg_ = (go_.Pu[gp_.clamp(min=0)] - go_.organs.path.p).norm(dim=1)   # its own distance to the goal's own place (not the hop target, which moves ahead)
+                    lwh.stall(gp_, dg_, go_.Pn[gp_.clamp(min=0)] > 0, ~died & ~cut)
             lwr = getattr(self, "learned_roam", None)
             if lwr is not None and self.wo is not None:                          # G2 run 2: a promise = a choice the unfamiliarity swung; kept = a relief event within 30 beats
                 sw_ = getattr(self, "_roam_swing", None); r0_, r1_ = self.wo.whole(x), self.wo.whole(x2)

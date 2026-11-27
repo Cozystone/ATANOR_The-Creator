@@ -1,0 +1,33 @@
+{
+ "test": "shortcut",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 3000,
+ "after": 2000,
+ "blocked_side": null,
+ "first_gap_food_beats_after": 36,
+ "phases": [
+  {
+   "deaths": 105,
+   "food_fills": 227,
+   "food_wait_median": 157.0,
+   "ways_left_right_gap": [
+    91,
+    136,
+    0
+   ]
+  },
+  {
+   "deaths": 0,
+   "food_fills": 217,
+   "food_wait_median": 55.0,
+   "ways_left_right_gap": [
+    73,
+    54,
+    90
+   ]
+  }
+ ],
+ "remaps": 29,
+ "seconds": 718
+}

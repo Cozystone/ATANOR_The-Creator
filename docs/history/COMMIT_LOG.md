@@ -1344,3 +1344,62 @@
 - 2026-11-27 `f7d08fb4` Tidy: walk diagnostics C1-C7 moved to tools/walk_diag.py (outputs identical); C4 correction - choices list order misread, circling is mostly held
 - 2026-11-27 `ad622fc4` CURRENT_STATE: main-line map (one frame, files, flags, tools, protocols, gates); old text-world state kept below
 - 2026-11-27 `1efc3879` Export: public roadmap M1-M5, new tools (a2_view, walk_diag) and results of the learned-trust, gate 2 and walk lines
+- 2026-11-27 `21f405e3` Side review: compute breakdown (world 22 ms, being ~39 ms per beat), human traits present/absent (no sleep or dreams in the room mind)
+- 2026-11-27 `8c6ff110` M2a sleep as memory consolidation: theory (place memory fills at 64 units, a second world overwrites) and S0 registered
+- 2026-11-27 `de3c1bb0` D50: nearer aim lives worse (k1 67 vs k4 14 deaths); hops stays 4; C7 circling bouts are true traps; circling hunt paused, re-examined with M2 place memory
+- 2026-11-27 `e3364229` LOKI request for Astra: M2 memory store (multi-world, cue recall, consolidate handle, novelty/confidence, aliasing, budgets, acceptance tests)
+- 2026-11-27 `f5e62084` LOKI remodel request (v13 design): TraceStore replacing the going organ's place tables - key+position+context aliasing, re-anchoring, sleep consolidate, budgets, tests; prediction/belief/planning removed
+- 2026-11-27 `576a3af8` S0 round-trip tool (A2 -> A3 -> A2, one mind): unit use, drift, A2 before vs after
+- 2026-11-27 `ad7ce017` M1a: carried trust - wait 264 vs 407.5 (met), deaths 20 vs bar 18 (missed by 2); not met as registered, carry stays off by default
+- 2026-11-27 `f99c1b70` M2: appearance context tells A2 from A3 only 60-65% - same-material rooms; LOKI context separates looks, not layouts
+- 2026-11-27 `953b0222` S0 run settings noted before results
+- 2026-11-27 `d8db0089` S0: A2 after A3 fewer deaths, +24% wait; confounded with learning time; S0b control (A2->A2->A2) registered
+- 2026-11-27 `68bea2f1` Research request for Astra: four walls (sameness representation, exploration credit, one-body sparse experience, unnamed-sense alignment) with measured facts and acceptance tests
+- 2026-11-27 `6de0be4a` S0b: excursion to A3 costs A2 (deaths 104 vs 27, wait +28%) - identity confusion confirmed as the M2 block
+- 2026-11-27 `0e3ab02d` P1 registered: RouteWitness (LOKI f65d767) read-only beside the going organ in the round trip; tools/witness_probe.py
+- 2026-11-27 `1a72b5e0` P1: witness withholds ~99.5% on ego-centred picture features; P1b registered - boundary code from own depth + innate heading (BVC-like)
+- 2026-11-27 `bea56191` R1 one-operation body (founder: like a robot vacuum) built behind ATANOR_ONE_OP; registered
+- 2026-11-27 `602c51a7` P1b not met: boundary code reads early then withholds; A3 written into A2 memory; probe line paused
+- 2026-11-27 `7b7af9c9` R1/R1b fail (grown being stops turning, deaths ~250); R1c registered - regrow the being in the robot-vacuum body
+- 2026-11-27 `a36cf986` S1: homing promise also broken when 30 beats bring the body no closer (founder: circling should stop); registered, behind ATANOR_STALL
+- 2026-11-27 `0202897d` S1: stall judged on distance to the goal's own place (hop target moves ahead) - fixed before runs
+- 2026-11-27 `7fd00d5f` R2 registered: grow the being at eye height 1.1 (founder), queued after R1c
+- 2026-11-27 `ae9f4a54` R1c growth failed (no eating learned); S1 rep0: trust falls but circling stays - trust only weighed the minor plan channel; S1b/S1c registered (trust on the going lean)
+- 2026-11-27 `bc747fde` S1b/S1c: weighing homing down raises circling (circle is the default; homing cuts it); T1 registered - a turn is one act, held gestures keep walking not turning
+- 2026-11-27 `6cb6f262` T1: circling -69% but old-grown being lives worse; T1g (grow with single-act turns) registered
+- 2026-11-27 `fd2ff75d` R2: eye-1.1 grown being dies less (33 vs 47) but waits +9%; not met; eye stays 1.6
+- 2026-11-27 `0f9dfb58` J1: expectation broken at its goal place -> memory set to the present, values recomputed, choose again at once (founder: judgement too slow); registered behind ATANOR_MISMATCH
+- 2026-11-27 `fd2c1e6d` P2: head pitch up/down (10 deg steps, 15 up to 30 down) behind ATANOR_PITCH (founder); registered
+- 2026-11-27 `5c0e541d` World fix 2: walls drawn behind 1-cell springs (rays stopped at springs and showed sky); ATANOR_RENDER_FIX
+- 2026-11-27 `943defb7` P2: head-tilt sense carries the pitch (it was always zero in the room)
+- 2026-11-27 `ecf02854` A1 gaze attention (learned from bedrock rise) behind ATANOR_ATTEND; M1d carry place positions (one body stayed home) registered
+- 2026-11-27 `06746b95` A1 registration text
+- 2026-11-27 `dcd634a4` J1 met on rep 0 in both pairs (deaths -43% / -78%); viewer telemetry line (plain inner-state axes)
+- 2026-11-27 `8ce9dcd8` Inner-state dashboard on 8777: time series of plain axes + the being's own map (place units by its path sense, remembered relief, lived crossings, goal)
+- 2026-11-27 `52dc715f` IM1: own wall map (walked = free, pushed-and-stopped = wall) and imagined route around its walls as homing content; T1g not met
+- 2026-11-27 `44eb228d` IM1 rep0: deaths -27% but wait same - not met; J1 confirmation reps registered
+- 2026-11-27 `df07d966` J1 confirmation: met with T1 (deaths -49%), not alone; combination s3_e eye1.1 + T1 + J1 meets T1's bars vs main line (circling -72%, survival equal) - adopted as room main-line recipe
+- 2026-11-27 `6c51b6f5` Register gate 2 run 4 (R1 remap, full homing weight); record gate 2 run 3, G2L ladder, R1 first look
+- 2026-11-27 `a685b83c` R1 place remapping (ATANOR_REMAP), G2L judge ladder (oracle vector, forced choice), A3 viewer mode, whole-roadmap reset, Astra R2 request
+- 2026-11-27 `85d8978b` TC1 contingency trust (ATANOR_TRUST_MODE=cont); J1/S1 decoupled from learned trust (confound recorded)
+- 2026-11-27 `be67748f` Gate 2 run 4: not met narrowly (deaths -13%, water wait -32%, food wait -5%)
+- 2026-11-27 `43e4bf2a` R2: Astra's place bundles wired into Going behind ATANOR_R2 (viewer + dashboard read-out); first look recorded
+- 2026-11-27 `e1fcf07b` P2b neck tone: unheld head drifts back to level (ATANOR_PITCH_RETURN)
+- 2026-11-27 `0127ea3e` TC1 comparison recorded (not met; J1 hurts under R1; TC1 unfair to homing); IM2 imagined way to the goal when no lived way
+- 2026-11-27 `2eb90088` S5 shortcut/detour test tool + registration; IM2 diagnostic (no-way only 10%, IM2 worse); hops diagnostic hook
+- 2026-11-27 `086d8b53` Whole-project reassessment: score-sum choice loses lives even with perfect content; propose world-model choice (founder decision)
+- 2026-11-27 `bd2d1479` B0 work in progress (imagined-outcome choice behind ATANOR_B0, default off; not working yet); Plan B as main line recorded
+- 2026-11-27 `419c01a3` W0 smallest world-model test registered and built (ATANOR_W0); Astra theory request; hops diagnostic results
+- 2026-11-27 `685bf3a8` E1 control arm (Astra one-step prototype) wired and registered; yardstick amended to the detour; Astra long-foresight request
+- 2026-11-27 `e8eb08a7` Astra long-foresight request: three walls (blur, detour, real time) as one principle; ask for a new hypothesis
+- 2026-11-27 `216642d6` S5 strong detour (pocket opening away from food) built and registered; S5 baseline results recorded
+- 2026-11-27 `5fcf4d46` SM1 seen map (eye -> own map, taught by its own feet); strong detour fast probe recorded (no arm lives); viewer strong-detour mode
+- 2026-11-27 `0533684d` SM2 seen relief: what it sees enters its relief memory (taught by its own insides)
+- 2026-11-27 `414ec092` Astra long-foresight request: intuition (gut feeling) item and tests
+- 2026-11-28 `e3694ed7` F100: room eye field of view as a setting (ATANOR_FOV), growth registered; seen eyes saved to the being file
+- 2026-11-28 `d2021576` Fetched Astra somatic readout (LOKI de50f9f, kept off); G1 wiring plan registered (gut over journeys, not gestures)
+- 2026-11-28 `ec4b06ff` Seen map and seen spring grown in a 64-body life: error .68 cells, springs 88% right; carried to the viewer
+- 2026-11-28 `2be1254b` SM2: write strength follows its own certainty (above even odds) instead of a hand-set .8 bar
+- 2026-11-28 `04d3c160` TF1 touch feel per side; G1 gut over journeys (Astra somatic readout) wired; SM2 learns bearing; growth G registered
+- 2026-11-28 `40ec301e` Roadmap check: five stages, each with what to build, the wall, the world and the yardstick
+- 2026-11-28 `30406b58` Public README and roadmap for the 2026-11-28 turn; export list extended (spatial tests, dashboard, ladder results); ASTRA request docs kept out

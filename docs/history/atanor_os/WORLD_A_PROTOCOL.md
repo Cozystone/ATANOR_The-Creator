@@ -737,3 +737,449 @@ What stands from C4: the going lean picks ~70-83% of new choices in both. What f
 refuted; D49 (scoring the held gesture over 4 beats) still did not reduce circling, so the hold is not fixed by a longer view of the
 homing content alone. C5-C6 are unaffected. tools/walk_diag.py now writes every list as [circling, else]; outputs checked identical to the
 old inline code on a 300-beat run (all fields equal).
+
+## D50 result (fast probe, rep 0): no nearer aim helps - 4 hops stays; and C7: circling bouts are real traps
+64 bodies (deaths; median food wait; hungry->food events; circling share; line blocked circling/else; C7 bouts: own distance start ->
+end, share ending within 1 cell of where it began): k1 67; 291; 221; .152; .36/.28; 1.35 -> 1.34, .90 | k2 31; 239; 279; .147;
+.52/.43; 2.47 -> 2.43, .79 | k4 14; 187.5; 320; .124; .72/.62; 4.70 -> 4.66, .86.
+One body (1-3 food events a life - too few to read): k1 4 deaths, k2 2, k4 3; circling .23 / .12 / .15.
+Reading: a nearer aim blocks less and lives worse (k1 deaths 67 vs 14), so the blocked line is not what traps it (C6's reading falls);
+no k cuts circling by 30% with life no worse: not adopted, hops stays 4. The registered "next = direction of the next lived unit" is
+answered by k1 itself (aiming at the next unit) - worse. C7 (Copilot's measure): 79-90% of circling bouts end at the same distance -
+true traps, not slow detours. Eliminated so far: eye, heading, forecaster, target jumps, held one-beat view (D49), walls / aim distance
+(D50). Open (Copilot's suspicion): the target's representation - states the being takes as different that lead nowhere new.
+Decision (founder 2026-11-27: focus on what is built): the circling hunt pauses here with this list; the walk is re-examined when the
+place memory is rebuilt in M2 (place units are the target's representation).
+
+# R1 (registered before running; founder 2026-11-27: "one operation at a time, like a robot vacuum"): a body that does one thing at a time
+One change (ATANOR_ONE_OP=1; RoomBody.one_op, Mind.allowed): the body offers only gestures that step, or turn, or use the hand - never two
+at once (26 of 90 combos). A body's make-up, not a behaviour rule: nothing says when to turn or walk. Rationale from C1: the circling
+gestures are step-and-turn combos (side-step + turn, forward + turn); held, they orbit.
+Runs: a2_moving_food --circ 1, 9104_0, s3_b, 3,000 beats, reps 0-2, 64 bodies and one body; control = D49's H=1 arm (same code path for
+the main line, same seeds: 64 bodies 47 deaths, waits 187.5 / 224 / 206.5, circling .128). Bars (pooled): circling down >= 30% and 64-body
+deaths and median wait not worse by > 10%. Met -> into the main line and the viewer. Shown in the viewer at once, labelled as a trial.
+
+## R1 result (early verdict, rep 0): fails badly - circling gone but the body stops turning and cannot eat
+64 bodies: deaths 251 (control 14), median food wait 392 (187.5), 41 hungry->food events (320); circling .005 (.124). One body: 4 deaths,
+no food event. Gestures done: turns 1-3%, steps 83-90% (most of them side-steps), hand 8-9%. Reading: the founder saw it in the viewer
+("it does not seem to know how to turn its head"): with step-and-turn combos gone, the grown being strafes toward its targets and almost
+never turns - so it rarely faces food, and eating needs the food in front of the hand. Stopped after rep 0 (fast-probe rule); not adopted.
+# R1b (registered before running): the robot vacuum proper - one operation at a time and no side-steps (drive or rotate)
+One change from R1 (ATANOR_ONE_OP=2, RoomBody.vacuum, 18 of 90 combos): side-steps removed too, so the only way to face a target is to
+turn. Fast probe: 64 bodies, rep 0, 3,000 beats, --circ; same control. Readings: deaths <= control x 1.5 with circling down -> run reps
+1-2 and the one-body case; else -> a body change needs the being regrown on it (s3_b grew with combos), registered next.
+
+## R1b result (rep 0): fails as R1 - deaths 253 (control 14), 41 food events (320); turns 3.7% of gestures even with no side-steps
+The being grown with step-and-turn combos does not take up turning in place when the combos are gone: its value, going skill and
+habits were all learned on the old body. Not adopted.
+# R1c (registered before running): grow the being in the robot-vacuum body from the start (same recipe as s3_b)
+s3_worlds with ATANOR_ONE_OP=2 (drive or rotate, one at a time): 9104_0 9105_1 9106_0 (6,000 beats each, childhood 3,000 at the start,
+then 9104_0 again), tag _v -> probe-work/s3_v. Then the fast probe: a2_moving_food --circ 1, 9104_0, s3_v with ATANOR_ONE_OP=2, rep 0,
+64 bodies, 3,000 beats, against s3_b's main line (14 deaths, wait 187.5, circling .124). Readings: deaths <= 1.5x and circling down ->
+reps 1-2, one body, the viewer; else -> report: the one-operation body is not the way out of the orbit for this mind.
+
+# S1 (registered before running; founder 2026-11-27 on the viewer: "why does it keep going round? if circling gets nothing it should stop")
+Found in the code: the homing trust (LW3) is judged only on arrival (relief within 30 beats of reaching the goal unit). A circling body
+never arrives (C1: 11% of circling beats at the goal unit), so no broken promise is ever recorded and the trust never falls; and C7 shows
+79-90% of circling bouts end no closer. One change (ATANOR_STALL=1, LearnedWeight.stall): the homing content promises that following it
+brings the body closer; while a goal is held, every 30 beats the body's own distance to its goal's own place (path organ to the goal unit's kept position - not the 4-hop
+target, which moves ahead as it walks; caught in the smoke before any run) is compared with 30 beats before - not closer
+by 1 cell -> one broken promise in the same record (nothing new counted as kept). Its own distance only; no judge, no rule of when to stop.
+Runs: a2_moving_food --circ 1, 9104_0, s3_b, 3,000 beats, reps 0-2, 64 bodies and one body; control = D49's H=1 arm (64 bodies 47 deaths,
+waits 187.5 / 224 / 206.5, circling .128; one body 8 deaths, circling .159). Bars (pooled): circling down >= 30% and 64-body deaths and
+median wait not worse by > 10%. Met -> main line and viewer. Shown in the viewer at once as a trial.
+
+# R2 (registered before running; founder 2026-11-27: "grow it again at eye height 1.1 too")
+Why: at eye 1.6 (walls 2.0, springs 1.0, 35 degrees up / 22 down) a spring vanishes from the picture within ~1.2 cells - it cannot see what
+it is about to eat; E-height (eye 1.1 on the 1.6-grown being) cut deaths 12 -> 7 but missed its docking bar, and a grown being does not
+take a changed body well (R1, R1b). One change: the being grown at eye 1.1 from the start, same recipe as s3_b (s3_worlds 9104_0 9105_1
+9106_0, tag _e, ATANOR_EYE=1.1; ordinary body, main line). Queued after R1c's growth (GPU kept to two heavy runs).
+Then: a2_moving_food --eye 1.1 --circ 1, 9104_0, s3_e, 3,000 beats, reps 0-2, 64 bodies and one body; control = s3_b main line (64 bodies
+47 deaths, waits 187.5 / 224 / 206.5, circling .128). Bars (pooled): deaths and median wait better than control by >= 10%, circling not
+up. Met -> eye 1.1 becomes the room body's eye (main line, viewer).
+
+## R1c result: the growth itself failed - the being grown in the robot-vacuum body never learned to eat or drink
+Growth (s3_worlds, ATANOR_ONE_OP=2): need-directed fills 0 in every stay (s3_b's growth: 2.8-7.6 per 1,000 body-beats), deaths a flat
+1.33 per 1,000 (every body dying of drain). Probe: 253 deaths, 35 food events, turns 14% of gestures. Reading: inconclusive about the
+body - the growth recipe (childhood, practice, the base being it starts from) does not take in this body at all. The one-operation line
+stops here (R1, R1b, R1c); recorded.
+## S1, rep 0 (early look): circling not down although the homing trust falls to .14 - and the reason is in the code
+64 bodies: 49 deaths (control 14), wait 257.5 (187.5), circling .130 (.124), trust .14 after 2,158 stall-breaks. One body: 1 death (3),
+wait 191 (266.5), circling .137 (.152). The learned trust weighs only the own-goal channel (Mind: plan, spread ~.2), while the going
+organ's lean - which reads the same homing vector inside going.lean, spread 2-4.7, and picks 70-83% of choices (C4) - runs at full weight
+(going_earned is not set in the main line). So since LW3 the being's trust in the homing content has governed the minor channel only.
+# S1b (registered before running): the same learned trust weighs the going lean's homing content too
+One change (ATANOR_TRUST_LEAN=1): gl x learned_home.w when the going organ walks by the homing vector. Arms after S1 finishes: S1b (trust on
+lean, no stall) and S1c (trust on lean + stall), fast probe rep 0, 64 bodies, 3,000 beats, --circ; control s3_b main line (14 deaths,
+wait 187.5, circling .124). Bars as S1. If one arm meets them -> reps 1-2 and one body, then main line and viewer.
+
+## S1b / S1c result (rep 0): circling rises when the homing content is weighed down - circling is the default, homing reduces it
+64 bodies (deaths; wait; food events; circling; trust end): S1b trust on lean 43; 248.5; 208; .163; .56 | S1c trust on lean + stall
+203; 359.5; 134; .225; .00 (control 14; 187.5; 320; .124). Not adopted. Reading: with the homing content at weight 0 (S1c) the body
+circles MORE (.225) and dies far more - the circle is not made by the homing vector; it is what the body does when nothing pulls it
+well, and the homing content cuts it. Why a circle: ~75% of beats keep the current gesture; 2 of 5 neck options turn (30 degrees) and
+5 of 6 leg options move, so a held gesture is often a step-and-turn - and a held turn turns again every beat: an arc, then a circle.
+# T1 (registered before running): a turn is one act - a held gesture keeps its walking and hand, not its turn
+One change (ATANOR_TURN_ONCE=1; RoomBody.no_turn, Mind.turn_once): a 30-degree neck turn happens on the beat the gesture is chosen (as a head
+turn or a saccade is one act); on held beats the same gesture runs with the neck still. The body's motor make-up, not a rule of when to
+turn; all 90 gestures stay choosable. Fast probe: rep 0, 64 bodies, 3,000 beats, --circ, s3_b main line; control 14 deaths, wait 187.5,
+circling .124. Met (circling down >= 30%, deaths and wait not worse by > 10%) -> reps 1-2, one body, viewer.
+## T1 result (rep 0): circling cut by 69% (.124 -> .039) - but the old-grown being lives worse (deaths 44 vs 14, wait 228 vs 187.5)
+Bars: circling met; deaths / wait not (worse by > 10%). Not adopted on s3_b. As with R1, a being grown on the old motor make-up does not
+live as well in the changed one. The circling itself is gone - the body change does what it was for.
+# T1g (registered before running): grow the being with turns as single acts (same recipe as s3_b, tag _t, ATANOR_TURN_ONCE=1)
+Queued after R2's growth. Then the same probe with s3_t; bars as T1. Met -> main line (T1 body + s3_t being) and viewer.
+Meanwhile the viewer shows T1 on s3_b as a trial (founder wants to see the change).
+
+## R2 result: not met - grown at eye 1.1 it dies less (33 vs 47) but waits a little longer (226 vs 206.5); circling the same
+Growth healthy (need-directed fills rise 0.6 -> 8 per 1,000 body-beats across stays, deaths fall to 0, like s3_b). A2, 3,000 beats,
+reps 0-2: 64 bodies deaths 2 / 20 / 11 = 33 (control 47), waits 204 / 226 / 234 -> 226 (206.5), circling .121 (.128); one body deaths
+5 (8), waits 464 / 503.5 / 355 on 1-3 food events (too few to read). Bars: deaths better by >= 10% - met (-30%); wait better by >= 10% -
+not met (+9%). Not adopted as registered; the eye stays 1.6 on the main line. Said plainly: fewer deaths with a lower eye is the second
+time (E-height 12 -> 7); the eye height is worth carrying into T1g's successor if T1g is adopted (one change at a time).
+
+# J1 (registered before running; founder 2026-11-27: "its judgement is slow - turn the corner, no food, at once go where it likely is")
+Found: when the body reaches the place its own memory says holds relief and nothing comes, nothing happens at once - the relief memory
+only fades (.99 a beat), the place values are recomputed every 100 beats, the goal is re-taken from those stale values, and "expected
+relief did not come" is not a surprise to the chooser (only foreseen motion errors are). One change (ATANOR_MISMATCH=1): a body that has
+been 5 beats at its own goal place, lacking, with no relief of that need -> that place's relief memory for that need is set to the
+present (empty), the place values are recomputed at once (64 units, milliseconds), and the body chooses again this beat; its next goal is
+whatever its own memory now values most. Its own expectation and its own memory only; no judge, no rule of where to go.
+Fast probe: newest viewer arm (s3_e eye 1.1, T1) with and without J1, rep 0, 64 bodies, 3,000 beats, --circ; and the main line (s3_b) with
+and without J1. Bars: deaths and median food wait better by >= 10% in both pairs. Shown in the viewer at once (newest arms together).
+
+# P2 (registered before running; founder 2026-11-27 on the viewer: "right up against it the box is just hidden - loosen the head up / down
+# a little; the eyes catch first and the head follows")
+One change (ATANOR_PITCH=1; RoomBody.pitch): the neck's up / down options, which did nothing in the room, tilt the view 10 degrees a
+gesture, between 15 degrees up and 30 degrees down (start level; reset at birth). The eye's fovea and rings already move by the reflex to
+picture change inside the frame (eyes first); the head now can follow down. No rule of when to look down. Shown in the viewer at once with
+the newest arms; measured on the same fast probe as J1 (rep 0, 64 bodies, s3_e eye 1.1 + T1 + J1, with and without P2), and on a
+being grown with it later if it is adopted.
+
+## World fix 2 (founder 2026-11-27 on the viewer: "is the wall behind the box opened on purpose?") - no: a render bug
+RoomBody.render stopped each ray at the first non-floor cell, springs included; a spring is 1 cell high, so above it the picture showed
+open sky where the wall behind should stand (checked: standing 0.6 cells from water, facing it, eye 1.1 - 1,632 sky pixels in the centre
+columns; with the fix 362, the sky above the wall's top). Fix (ATANOR_RENDER_FIX=1; room3d_gpu.World.cast(through=...)): a second ray
+passes springs and draws the wall behind them. A world-side correction (the world looked wrong), not a change to the being. On in the
+viewer at once; default off until a check that the main line is not worse (as world fix 1).
+P2 amended before any run: the body's head-tilt sense (contract slot 4, zero in the room until now) carries its own pitch, so the being
+feels where its head points (as the Minecraft body's tilt does).
+
+# M1d (registered before running; founder 2026-11-27 on the viewer: "it hardly leaves home")
+Found: the place units' own path positions (Going.Pu, the homing positions) are not part of the saved being (going.pt predates the homing
+vector) - every life starts with none, and a goal unit with no position is walked toward the birth point (gate 2 run 1's bug). With 64
+bodies the positions fill within beats; a lone body fills them slowly, so its homing walks it back home. One change: train many, live as
+one, for place too - a 64-body life writes Pu / Pn (a2_moving_food --save-place), the next life starts with them (ATANOR_PLACE_FROM), and
+keeps learning them. With M1a's carried trust (ATANOR_TRUST_FROM) for the same being. Viewer at once; measured on one body, reps 0-2,
+against the same arm without carry.
+
+# A1 (registered; founder 2026-11-27 + Copilot: "vision is there, attention is not - build gaze attention now")
+The gaze has moved only by a reflex to picture change (bottom-up: when it turns, the sky-wall edge moves most, so it looks at the sky).
+One change (ATANOR_ATTEND=1; eye_gpu.RetinaGPU): the eye keeps a short trace of the colours in view (12 x 12 places); when the body's own
+insides rise (the bedrock, read in Organs), colours that were in view before gain relevance, and slowly lose it when in view without
+relief. The gaze goes to the centre of (picture change + learned relevance of what is where), each normalised. No colour, object or target
+named; the only teacher is its own relief. Viewer at once; measured with the newest arms, with and without A1 (rep 0, 64 bodies).
+
+## J1 result (fast probe, rep 0): met in both pairs - judging again at once when expected relief fails
+64 bodies, 3,000 beats (deaths; median food wait; food events; circling; mismatch events):
+- s3_b main line: without J1 14; 187.5; 320; .124 | with J1 8; 163.5; 336; .134; 207 -> deaths -43%, wait -13%.
+- s3_e (eye 1.1) + T1: without J1 51; 249; 281; .034 | with J1 11; 179; 332; .036; 312 -> deaths -78%, wait -28%.
+Bars (deaths and wait better by >= 10% in both pairs) met on rep 0. Next: reps 1-2 for both pairs, then into the main line.
+Side: T1 with the eye-1.1 being keeps circling at .034-.036 (T1's -70%), and J1 removes most of T1's cost in deaths (51 -> 11).
+## T1g, rep 0 (being grown with single-act turns): 75 deaths, wait 289, circling .040 - grown with T1 it lives worse than s3_b's main line
+(14) and worse than T1 on the eye-1.1 being; reps 1-2 running. Reading after all three.
+
+## T1g result: not met - the being grown with single-act turns lives worse (deaths 75 / 47 / 59 = 181 vs s3_b main line 47)
+Circling .037-.040 (T1's cut holds), waits 289 / 215 / 259.5. Growth healthy (fills 4-8 per 1,000). The best arm so far remains the eye-1.1
+being + T1 + J1 (rep 0: 11 deaths, wait 179, circling .036); its reps 1-2 come with J1's confirmation.
+# IM1 (registered before running; founder 2026-11-27: "attach the wall map and the imagination organ now")
+Checked first: the being's learned depth sense cannot carry a wall map - against true wall distance it reads close walls as far (median
+estimate 25 at 0-1 cells, corr -.51); not usable. Built instead from what it knows for sure: Going.wall_map_observe - a fixed 64 x 64 map in
+its own path frame: free where it walked; a wall where its own forecaster foresaw a step and its own felt motion stayed ~0 (pushed, did
+not move). Judge check after 400 beats, 64 bodies: 32 of 38 wall cells on true walls, 56 of 70 free cells on true floor (rounding at
+cell borders). Imagination (ATANOR_IMAGINE_MAP=1): the homing content walks its own map in its head - the distance from each place to its
+target around the walls it knows (unknown cells passable) - and offers per gesture how much its own foresight (held 3 beats) shortens that
+imagined way, and which way the imagined route leaves from here; the same two measures as before, now around walls instead of through
+them (C6: the straight line was blocked 2/3 of the time). Content only; its trust learned as before. Fast probe: newest arm (s3_e eye
+1.1 + T1 + J1) with and without IM1, rep 0, 64 bodies, 3,000 beats; bars: deaths and wait better by >= 10%. Viewer and dashboard at once
+(the dashboard map now shows its own walls).
+## IM1 result (fast probe, rep 0): deaths 8 vs 11 (-27%), wait 178 vs 179 (same), food events 308 vs 332 - not met (wait bar)
+The imagined route around its own walls does not shorten the food wait in A2 on rep 0; deaths fewer. Not adopted; kept on the viewer as the
+newest arm. A2's corridors are short and the map fills only as walls are bumped; the place where routes around walls should matter more is
+A3 (gate 2), registered after J1's confirmation.
+# J1 confirmation (registered): reps 1-2 for both pairs (s3_b main line +-J1; s3_e eye 1.1 + T1 +-J1), 64 bodies, 3,000 beats.
+Pooled over reps 0-2, the same bars. Met -> J1 into the main line (ATANOR_MISMATCH default 1).
+
+## J1 confirmation result (reps 0-2 pooled): met in one pair, not the other - not adopted alone
+64 bodies, 3,000 beats (deaths per rep; total; median of the three waits):
+- s3_b main line: without J1 14 2 31 = 47, 206.5 | with J1 8 14 25 = 47, 198 -> deaths 0%, wait -4%: not met.
+- s3_e (eye 1.1) + T1: without J1 51 15 26 = 92, 235 | with J1 11 18 18 = 47, 199 -> deaths -49%, wait -15%: met.
+Reading: rep 0's large gain on the main line was a lucky start; on the plain main line J1 is within noise. Where the body turns once (T1),
+J1 halves the deaths: judging again at once matters when the body no longer circles in place. Not adopted alone (bar: both pairs).
+## The newest combination against the main line (same reps, pooled): meets T1's registered bars
+s3_e eye 1.1 + T1 + J1 vs s3_b main line: deaths 47 vs 47, median wait 199 vs 206.5, circling .036 / .034 / .036 vs .124-.134 (-72%).
+T1's bars (circling down >= 30%; deaths and wait not worse by > 10%) are met by the combination over three starts. Decision: the
+combination becomes the room main-line recipe (being s3_e, eye 1.1, ATANOR_TURN_ONCE=1, ATANOR_MISMATCH=1; env defaults left off so older
+runs stay reproducible; CURRENT_STATE records the recipe). Said plainly: three changes were adopted together because each was tested in
+this order and the combination is what met the bar; their separate shares are T1 (circling), J1 (deaths, given T1), R2 (deaths -30%).
+
+# Gate 2, run 3 (registered before running; founder 2026-11-27 "Yes, run gate 2"): the imagined route around its own walls, in A3
+Theory: in A2 the corridors are short, so routes around walls barely differ from straight lines (IM1 rep 0: wait same). In A3 every
+spring is out of view behind a doorway and the straight line from the stem to a far corner is blocked by walls most of the way; if the
+imagined route (Going.imagine_route on its own wall map) carries homing content around walls, journeys should end sooner here.
+Runs: a3_rooms, being s3_e at eye 1.1 (--eye 1.1), with the adopted room recipe (ATANOR_TURN_ONCE=1, ATANOR_MISMATCH=1), 6,000 beats,
+64 bodies, true world, seeds 9301, 9302, 9303; arms R (recipe) and RI (recipe + ATANOR_IMAGINE_MAP=1). 6 runs, serial.
+Bars, pooled over the three starts: (1) gate 2's own (second-half deaths <= 32 per quarter, fills of each kind >= 200 per start);
+(2) the frame: RI's total deaths and the median waits of both kinds better than R's by >= 10%. Readings: (2) met -> IM1 into the room
+recipe and MineLand check; (1) met -> gate 2 passed. (2) not met -> the imagined route does not move journeys; report how much of its own
+map is filled and how often the imagined first step differs from the straight one. Context, not a bar: gate 2 run 2's M (s3_a, 1385 deaths).
+Gate 2 budget: this is run 3 of 5.
+
+## Gate 2 run 3 result: not met - the imagined route does not move journeys in A3 (deaths -3%)
+s3_e eye 1.1 + T1 + J1, 64 bodies, 6,000 beats (deaths by quarter; total; water fills / median wait; food fills / median wait; trust end):
+| seed | R recipe | RI recipe + IM1 |
+|---|---|---|
+| 9301 | 128 124 116 115; 483; 195 / 152; 228 / 236; .34 | 128 121 113 110; 472; 199 / 140; 238 / 320.5; .41 |
+| 9302 | 128 121 117 124; 490; 184 / 81; 219 / 201; .42 | 128 125 116 103; 472; 227 / 137; 194 / 262; .45 |
+| 9303 | 128 122 110 116; 476; 172 / 220.5; 269 / 170; .40 | 127 122 115 99; 463; 196 / 236; 320 / 143.5; .45 |
+| pooled | 1449 | 1407 (-3%) |
+Bars: (1) gate 2's own - not met (second-half deaths 99-124 a quarter vs <= 32; fills near 200). (2) RI vs R by >= 10% in deaths and both
+waits - not met (deaths -3%, waits mixed). Context: gate 2 run 2's M (s3_a) 1385 - the new recipe does not change A3. Gate 2 budget: 3 of 5.
+Reading as registered: the imagined route does not move journeys. What it was (measured after, judge side - see G2L below): the place units
+were not this world's.
+
+# G2L ladder (judge-side diagnostics, never a pass; registered as diagnostics 2026-11-27 night, founder: "re-examine the whole")
+Rung 1 - a scripted walker (turn toward the given vector, else forward and reach) with the judge's vector, 64 bodies, 3,000 beats, A3 9301:
+way around the walls (next cell on the true shortest way) - deaths 0, fills water 1,408 / food 1,344; the straight vector to the spring -
+deaths 256, food 0. The world and body are sound; in A3 going around walls is everything.
+Rung 2 - the being's own choice with the judge's way-around vector as its homing content (Going.oracle; the rest of the being as is), 3,000
+beats: deaths 230 vs 252 without (-9%), trust .17. The being does not follow correct content. Choice re-decides only on surprise or a big
+gap (dashboard: ~8% of beats) and otherwise holds its gesture.
+Place units in A3 (judge side, s3_e's saved unit centres over every A3 cell): all 64 were used in growth (used = 64, no birth possible);
+34 cover A3, 30 lie nowhere in A3; the far rooms are 2-3 units each (unit 55 = the water room + its doorway + the corridor's left end).
+Dying bodies' goals (first 900 beats, 64 deaths): all at a unit no body has stood in in this world. Full 3,000 beats: 189-192 of 230-252.
+
+# R1 (registered before running; EMERGE_PLAN "전체 재정비"): place remapping with a fixed number of units
+One change (ATANOR_REMAP=1; Going._remap): when a body stands farther than one cell's worth of code (rad, the birth rule) from every unit and
+all KU units are used, the unit longest unvisited - if longer than its own map's memory span 1 / (1 - decay) = 2,000 beats - is cleared and
+placed here (code, relief memory, crossings, homing position afresh). At a life's first beat in a world every unit counts as last visited one
+span ago (it comes from elsewhere). Nothing named; which units are used is its own walking. Known cost: the old world is forgotten (R2's job).
+Gate 2 run 4: a3_rooms, s3_e eye 1.1 + T1 + J1, 6,000 beats, 64 bodies, seeds 9301-9303; arms R (= run 3's R, reused) and RM (+ ATANOR_REMAP=1).
+Bars as run 3: (1) gate 2's own; (2) RM's total deaths and both median waits better than R's by >= 10%. Also report: remaps, share of dying
+bodies' goals at units never stood in (run 3's R: ~80%). Readings: (2) met -> R1 into the room recipe, then R2 (world sets, sleep) and
+MineLand; (2) not met with the never-stood-in share near 0 -> place was not the bottleneck alone - rung 2b (choice) decides the next build.
+Rung 2b (diagnostic, with run 4): the judge's way-around vector + every body chooses afresh every beat (Mi.force), with learned trust and at
+full weight - does the being follow correct content when it re-decides?
+## R1 first look (one start, 3,000 beats, 64 bodies; not the registered run): "where" is fixed, "getting there" is not
+RM (ATANOR_REMAP=1) vs the same arm without (g2l o0): deaths 240 vs 252, fills water 74 vs 39, food 66 vs 48, remaps 38. Dying bodies' goals:
+at the right spring's unit 144 of 240 (without: 0), wrong 32, never stood in 64 (all in the first life, before remapping took hold).
+## Rung 2b result: the being lives on correct content only when it re-decides AND the content keeps its full weight
+Judge's way-around vector as homing content, 3,000 beats: every body chooses afresh every beat + learned trust - deaths 64 64 64 64 = 256,
+trust .14 (worse than holding: the trust has sunk, so the content barely counts and fresh choices go elsewhere); every beat + full weight
+(ATANOR_LEARNED_TRUST=0) - deaths 64 64 0 2 = 130, water 254 fills / wait 70, food 230 / 96: second half 2 deaths (gate 2's own bar is
+<= 32 a quarter). Two holes on the choice side: (a) the learned trust sinks in A3 (.14-.17; promises are judged at arrival at a goal unit,
+and the goals were old-world units never reached), (b) holding. Next diagnostics (running): oracle + full weight without forcing (is (b) a
+hole on its own?); R1 + full weight with and without forcing (rung 3: its own content with both fixes).
+## Rung 2b/3 diagnostics (one start, 3,000 beats): full weight matters most; forcing is not the fix; R1 at full weight -24% deaths
+- judge's way-around vector, full weight, no forcing: deaths 64 30 22 15 = 131, water 255 / 193, food 185 / 260 - lives (holding costs
+  waits, not lives: forcing gave waits 70 / 96).
+- R1 + full weight + forcing every beat: 256 deaths, remaps 21, every dying goal never stood in - forcing with its own content breaks it.
+- R1 + full weight, no forcing: deaths 64 40 39 49 = 192 (R1 with learned trust 240; neither 252), water 211 / 150, food 111 / 341; every
+  dying body aimed at the right spring's unit (192 / 192). It knows where and still dies on the way. Rung 1 says what kills on the way in
+  A3: the straight vector (the homing vector aims at a unit `hops` ahead on its lived chain, then straight - and R1's new units have few
+  lived crossings yet). Next (running): R1 + IM1 (its own way around its own walls) at full weight and with learned trust.
+## R1 + IM1 (one start, 3,000 beats): IM1 still does not help even with the right goals
+R1 + IM1 full weight: deaths 64 63 49 35 = 211 (R1 full weight without IM1: 192), water 175 / 271, food 61 / 350; dying goals right 161 / 211.
+R1 + IM1 learned trust: 253, trust .27. IM1's own wall map + BFS does not carry what rung 1's true way around carries (131); left for later.
+Fetched (founder approved): Astra's R2 prototype, LOKI c7c304c (loki_memory/place_bundles.py) into ext/LOKI-v13 -
+kept off; R1 vs R2 on the same being and starts after gate 2 run 4.
+
+# Gate 2, run 4 (registered before running): R1 place remapping, homing content at full weight
+Arms on s3_e eye 1.1 + T1 + J1, a3_rooms, 64 bodies, 6,000 beats, seeds 9301-9303: R (= run 3's R, reused, learned trust on) and RW
+(ATANOR_REMAP=1 + ATANOR_LEARNED_TRUST=0). Two changes against R, said plainly: R1 makes the goals this world's; the learned trust was
+adopted (LW3) to distrust the old map, which R1 now replaces - and in A3 that trust sinks (.14-.39) because promises are judged by arrival at
+goals that were unreachable. Rung 2b and the one-start look show full weight is what lets correct content work (130-192 vs 240-256).
+The trust question is not closed: if RW meets its bars, the next registered step is a fairer trust rule (contingency, followed vs not
+followed) that must match RW without fixing the weight by hand.
+Bars, pooled: (1) gate 2's own (second-half deaths <= 32 per quarter, fills of each kind >= 200 per start); (2) RW's total deaths and both
+median waits better than R's by >= 10%. Report: remaps, dying bodies' goals (right / wrong / never stood in). Budget: run 4 of 5.
+## Confound found (my error, said plainly): with ATANOR_LEARNED_TRUST=0, J1 (and S1) were silently off
+In Mind.after, J1's block sat inside the learned-trust block, so every run without learned trust also ran without J1: the R1 full-weight
+diagnostics (r1w 192, r1iw 211, o2w, o2fw) and gate 2 run 4's RW arm (launched before the fix; its processes run the old code). RW is
+therefore "R1 + full weight - J1" against R "learned trust + J1". Fixed (mind.py): J1 and S1 run whenever a goal is held, trust or not;
+learned-trust runs are unchanged (same code path). Run 4 is judged as registered, with this stated next to its result.
+
+# TC1 (registered before running): the homing trust by contingency, not by arrival
+LearnedWeight mode "cont" (ATANOR_TRUST_MODE=cont): on every beat the homing content is held, did the gesture go its way (its content for the
+done gesture > 0)? Each body keeps two traces fading over ~30 beats (followed / not followed); a relief event (as LW3) credits both; each
+credit is divided by its own lived opportunity; w = p(relief | followed) / (p(relief | followed) + p(relief | not followed)); .5 = no
+difference. Rescorla 1968; ANCCR. Reward only its own wholeness; no fixed weight.
+Runs (after gate 2 run 4, J1 fixed): a3_rooms, s3_e eye 1.1 + T1 + J1 + R1, 64 bodies, 6,000 beats, seeds 9301-9303; arms RW2 (full weight)
+and RT (TC1). Bar (non-inferiority, pooled): RT's deaths and both median waits within 10% of RW2's, and RT's trust above .5 at the end in
+every start. Met -> TC1 replaces LW3 as the homing trust (the weight learned, not fixed); not met -> report its path and what it learned.
+
+## Gate 2 run 4 result: not met, narrowly - deaths -13%, water wait -32%, food wait -5% (bar: all three >= 10%)
+RW (R1 + full weight; ran without J1 - see the confound above), 64 bodies, 6,000 beats (deaths by quarter; total; water fills / median wait;
+food fills / median wait; remaps; dying goals right / wrong / never stood in):
+| seed | RW | R (run 3) |
+|---|---|---|
+| 9301 | 104 88 102 40; 334; 488 / 103.5; 376 / 198; 39; 334 / 0 / 0 | 483; 195 / 152; 228 / 236 |
+| 9302 | 125 90 117 95; 427; 416 / 116.5; 242 / 190.5; 34; 361 / 2 / 64 | 490; 184 / 81; 219 / 201 |
+| 9303 | 128 121 125 128; 502; 281 / 76; 92 / 167.5; 34; 357 / 81 / 64 | 476; 172 / 220.5; 269 / 170 |
+| pooled | 1263 (-13%); waits (median of starts) water 103.5 vs 152, food 190.5 vs 201 | 1449 |
+Bars: (1) gate 2's own - not met (9301's last quarter 40, nearest yet to <= 32; 9303 food fills 92). (2) deaths -13% met, water wait -32% met,
+food wait -5% not met -> not met as registered. Gate 2 budget: 4 of 5 used.
+Reading: R1 makes dying bodies aim at the right spring (1,052 of 1,263; run 3's R mostly at units never stood in) and cuts deaths and the
+water wait; it is uneven by start (9301 learns the room - deaths fall to 40 in the last quarter; 9303 does not improve, 81 wrong goals).
+RW ran without J1, so the registered TC1 comparison (RW2 full weight + J1 vs RT contingency trust + J1) also shows what J1 adds back.
+
+# R2 wired (founder 2026-11-27: "attach R2 now and show it on the viewer") - Astra's place bundles, LOKI c7c304c, behind ATANOR_R2=1
+Going._r2_observe: Astra's PlaceBundles (64 units shared by all worlds; relief and walked crossings per context, 3 bundles) takes over place
+learning; Going reads its snapshot (C, R, Vn, T, Pu) every beat. Inputs are the being's own: path code, inside rises per channel, and a
+blocked move (its forecaster foresaw a step, its path sense did not move). The grown being's map is imported as context 0; each unit's
+place is read from its own path code (odometry). Consolidation (sleep) every 100 beats with the map's refresh - an interim stand-in.
+J1's erasing of a place's relief is overwritten by the snapshot (R lives in the bundles) - J1 is weaker under R2.
+First look (64 bodies, 1,200 beats, A3 9301, TC1 + J1 + T1; not a registered run): fills water 6 / food 19, deaths 64 in the third quarter
+(the first lives), dying goals: none at units never stood in (the old world's relief is no longer read; R1's first lives: all 64), all 64
+"wrong". Churn: 2,283 unit recycles in 1,200 beats (64 bodies bumping walls -> blocked moves count as informative and lower the recruit
+threshold) and 9 bundle overwrites - Astra's tests were one body. Registered comparison R1 vs R2 to follow (same being, starts, recipe).
+## P2b (founder 2026-11-27: "the head goes down on purpose and comes back to facing ahead, as a person's does - is that in?") - it was not
+P2 kept the pitch where the last neck gesture left it, so the being (grown without pitch; neck 3/4 did nothing in its growth) random-walked
+its head to the limits and looked at the floor for long stretches (the all-green picture on the viewer). Body change (ATANOR_PITCH_RETURN=1,
+room_body.step): a head not held up or down this beat drifts back toward level by x .7 a beat (~1 s), the neck's own tone - body mechanics,
+not a choice. Viewer at once; P2 + P2b stay trial flags until measured (pitch off vs P2 vs P2 + P2b, rep 0, 64 bodies, A2).
+
+## TC1 comparison result (J1 decoupled, R1, 6,000 beats; RW2 9302 crashed without a trace and is being rerun): not met - and two findings
+RW2 (R1 + full weight + J1): 9301 126 106 102 103 = 437 (RW without J1: 334), water 372 / 126.5, food 220 / 239, J1 fired 803;
+9303 128 x 4 = 512, no fills, J1 fired 3,248 (RW: 502). RT (R1 + TC1 + J1): 453 / 456 / 469; trust ends .26 / .28 / .35 (path .5 -> ~.27).
+(1) J1 hurts under R1: it erases a place's relief after 5 lacking beats at its goal unit, and with new, coarse-to-fine remapped units the
+body is "at" its goal unit while the spring is still a cell or two away - it erases the right memory (9303: 3,248 erasures, no fills).
+(2) TC1 as built is unfair to the homing content (my design flaw): drinking / eating gestures are not "going the homing way", so the
+relief that comes while reaching at the spring credits "not followed" - p(relief | not followed) > p(relief | followed), trust < .5.
+Not adopted. A fair version must judge the journey (the beats that brought the body to the spring), not the reaching beat.
+Found in the code (Going.lean_to): when there is no lived chain of crossings from where it is to its goal, the homing content is zero -
+R1's new units have few crossings, so a body knowing where to go gets no direction there. IM2 (ATANOR_IMAGINE_GOAL=1, with IMAGINE_MAP):
+then the way is imagined on its own wall map to the goal itself. Diagnostic (one start, 3,000 beats): RW's recipe with and without IM2,
+counting goal-held beats with no lived way.
+
+# S5 spatial tests (registered before running; founder 2026-11-27: "build the shortcut and detour tests now") - judge side, tools/s5_space.py
+World: 16 x 16 room, a central block (rows 4-11, columns 3-12); food top middle, water bottom middle, birth below the block; two ways round.
+After 3,000 beats of living, for every body and its rebirths: shortcut - a 2-wide corridor opens straight through the block (way to food
+~22 -> ~11 cells); detour - the side used more for food is walled (2 cells across the side corridor). 2,000 beats after. 64 bodies, seed 9501.
+Arms: RW's recipe (R1, full weight, J1 off, T1, eye 1.1, s3_e) with and without IM2. Read-outs: which way food journeys came (left / right /
+gap), beats to the first food journey through the gap, deaths and food wait before / after.
+Readings (Tolman 1948): shortcut - a share of food journeys through the gap >= 50% within the 2,000 beats = it uses space, not only a lived
+chain; detour - food fills after >= 50% of before and deaths after not above before's rate = it goes round. Expected for now (said before
+running): the shortcut fails - its wall map keeps the block as wall until it walks there, and nothing it sees corrects the map.
+## IM2 diagnostic (one start, 3,000 beats): the "no lived way" case is only 10% of goal-held beats; IM2 makes it worse
+RW recipe without IM2: deaths 64 40 39 49 = 192 (reproduces r1w exactly), goal-held beats 172,951, with no lived way 17,711 (10%);
+with IM2: 64 64 55 40 = 223, water 117 / 263, food 75 / 330. Reading as set beforehand: the path layer's "no way" is not the main gap -
+90% of the time a body with a goal has a lived way and still dies on it. What remains on the way (rung 1: the straight vector is lethal in
+A3): the lean aims `hops` = 4 units ahead on its chain and then straight, which cuts corners through walls in A3's doorways. Diagnostic
+(running): hops 1 and 2 on the RW recipe. Then S5 (shortcut / detour) as registered.
+
+# B0 (Plan B first step; founder 2026-11-27 "Yes, build B") - work in progress, NOT working yet, behind ATANOR_B0 (default off)
+Going.b0_foresight + a hook at the end of Mind.choose: while a goal is held, each gesture is scored by imagined wholeness (1 - mean squared
+deficit) at a horizon - its own forecaster's direction for the gesture, its own free pace and felt drain (learned in observe), then the
+best of 12 imagined headings walked `hold` beats, then the imagined way left on its map (ATANOR_B0=own: its wall map; =oracle: the judge's
+true field, a ladder rung, never a pass). State at stop (4-body debug, oracle map): bodies leave the stem at first and then stand still
+choosing gesture 0 (ties between candidates near walls; argmax takes the null gesture), and the GPU ran out of memory with the viewer, the
+hops diagnostic and S5 running. Next: break ties toward moving gestures / check the wall stop, rerun the ladder (oracle map -> own map)
+when the GPU is free; then S5. Nothing measured yet.
+
+# W0 (registered before running; founder 2026-11-27 "run the smallest world-model test now"; Copilot's three powers: prophet / judge / executor)
+Prophet: the being's own learned forecaster (core.foresee: next senses per gesture), rolled 20 beats for 9 futures made of its own gestures
+(walk on; turn 1, 2, 3 or 6 times left or right, then walk). Judge: its own wholeness in the imagined end, plus lack x what its place
+memory holds at the imagined place for the lacking channel. Executor: the first 4 beats of the best future. Called only while it lacks (a
+goal is held) and its last plan has run out; habit (the main line's choice) otherwise. ATANOR_W0=1, default off. Nothing from the judge.
+Runs: RW's recipe (R1, full weight, J1 off, T1, eye 1.1, s3_e) with W0 - S5 shortcut and detour (seed 9501, as registered) and A3 9301
+3,000 beats (without W0: 192 deaths).
+Pass (the only one that counts, set by the founder's side before running): the shortcut is taken - >= 50% of food journeys through the gap
+after it opens, where the arm without W0 does not. Fold: survival numbers move a little and the shortcut is not taken.
+Expected (said before running): fail - a 20-beat roll of a one-beat forecaster blurs, and nothing tells it the block has opened.
+
+# E1 control arm (registered before running): Astra's one-step prototype (LOKI 27f33dd, loki_memory/embodied_choice.py; fetched, approved)
+Astra's own synthetic result: oracle ladder 24/24, first-opened shortcut 24/24, familiar detour (first step away from the spring) 0/24 - and
+Astra's point: a one-step predictor passes the shortcut, so the shortcut is not evidence of multi-beat foresight; the detour is.
+Wired as ATANOR_E1=1 (Mind): EmbodiedChoice with the being's own path position (2 numbers) as "path" and its own heading (cos, sin) as the
+sense; one instance for the mind, a transition per living body per beat. Same calling rule as W0 (a goal held and a remembered relief
+place; habit otherwise). Runs: as W0 (S5 shortcut, S5 detour seed 9501; A3 9301 3,000 beats), RW's recipe.
+Amended yardstick (after Astra's report, before any W0 result was read): W0 is judged by the shortcut as registered, but multi-beat foresight
+counts only if W0 beats E1 on the detour (food fills after the block and deaths). W0 ~ E1 on the detour -> its 20-beat roll does nothing.
+
+## S5 baseline results (RW's recipe, seed 9501; before / after the change: deaths, food fills, median wait, ways left / right / gap)
+shortcut: without IM2 256, 0 | 80, 192, 152.5, 42 / 36 / 114 (never found food before the gap - not a shortcut test); with IM2 105, 227, 157,
+91 / 136 / 0 | 0, 217, 55, 73 / 54 / 90 (41% through the gap, first at 36 beats; bar 50% - not met, near). detour: without IM2 no food at
+all; with IM2 (right side walled) 105, 227 | 40, 195, 177, 176 / 18 - goes round (86% of fills kept, death rate not up): met.
+Caveats: the gap lies on the straight line birth -> food (path integration alone can take it); the detour's two ways are equal, so no first
+step away from the goal is needed. IM2 helps in this open room and hurt in A3.
+
+# S5 strong detour (registered before running; Copilot / Astra: "the first step must go away from the goal")
+tools/s5_space.py --test strong: the body is born inside a pocket (walls above, left, right; open only at the bottom), the food straight
+ahead beyond the pocket's top wall, water below. Every life must first walk away from the food to leave the pocket, then go round a side.
+No world change; 5,000 beats, 64 bodies, seed 9501, RW's recipe. Arms: plain, IM2, W0, E1 (Astra's one-step control).
+Read-outs: food fills and deaths by half, beats from birth to leaving the pocket (median, by half), share of hungry beats at the pocket's
+top. The claim "it gives up a near gain for a later one" needs: an arm with food fills >= 200 in the second half and deaths in the second
+half below E1's by >= 30%. Expected (said before): E1 fails as in Astra's synthetic test; W0 fails (blur); IM2 may pass once its wall map
+holds the pocket (walls are learned by bumping).
+Amended before any run (founder 2026-11-27: "verify the likely failures fast and move on"): W0's and E1's queued long runs stopped unread;
+the strong detour goes first as a fast probe - 2,000 beats (1,000 + 1,000), four arms at once. A clear failure here closes an arm; only an
+arm that lives gets the registered 5,000-beat run.
+
+## Strong detour, fast probe (2,000 beats = 1,000 + 1,000, 64 bodies, seed 9501; deaths, food fills, median wait by half)
+plain 64, 1 | 44, 49, 332 (hungry beats at the pocket's top 28%); IM2 64, 0 | 64, 0 (pocket top 4%, leaves the pocket in 10 beats - and
+never finds the food at all); W0 63, 12 | 49, 53, 113 (pocket top 41%); E1 (Astra's one-step control) not finished - its per-body loop is
+slow with 64 bodies. No arm lives: in 1,000 beats a body has ~1.5 lives, and the food has to be found first. Expected "IM2 may pass" was
+wrong: with no food yet found there is no food goal for it to imagine a way to. W0 does not differ from plain enough to say anything.
+Reading: the strong detour as built mixes two things - finding the food the first time and going round to it. Nothing closed, nothing passed.
+
+# SM1 seen map (registered; founder 2026-11-27: "does what it sees enter its map? build it now and show it")
+Going._seen (ATANOR_SEEN=1, with the wall map): a small net from a 12 x 20 picture to "how far ahead is free", grown from scratch, taught
+only by its own feet - pictures of the last 32 beats facing the way it is going are paired with how far it then got (exactly at a stop, at
+least that far while walking). Once its own error on new stops is under a cell (and >= 300 stops), looking writes its map: free as far as it
+expects, a faint wall where it expects a stop (weaker than touched; looking through a touched wall clears it). No geometry given.
+Smoke (64 bodies, 600 beats): 232 stops, its error 3.3 cells - not yet writing. Viewer at once. To measure: its error over a 6,000-beat
+life; then strong detour and the S5 shortcut with the gap off the straight line.
+
+# SM2 seen relief (registered; founder 2026-11-27 on the viewer: "the water is in view and it does not look at it")
+Going._seen_relief (with ATANOR_SEEN=1): when an inside rises, the pictures of the last 32 beats that were facing the place where it rose
+learn "relief of this kind lies ahead, this far"; pictures kept 32 beats with no relief learn "none". Once it has 200 such pictures and
+calls > 70% of new ones right, looking alone writes an expected relief (fainter than lived) into its place memory at the place it expects,
+with that place's position - a spring it sees can become its goal before it has drunk there in this world. Teacher: its own insides and
+path sense. Smoke: runs; nothing learned in 1,500 beats of A3 without a fill. To measure with SM1 (long life, then S5).
+
+# F100 (registered; founder 2026-11-28: "decide the field of view by generality - glasses, ordinary cameras" -> "go ahead")
+Looked up: Rokid Glasses camera 109 degrees, Ray-Ban Meta (Gen 2) 100 (one regional page), HP webcams 66-92 diagonal; Minecraft's default
+~100 across. The room eye was 82.6 degrees across (256 px at the Minecraft focal length; I had said 80). Change: ATANOR_FOV=100 sets the
+room eye's horizontal field of view (room_body.FY); unset = as before, so every earlier run reproduces.
+Growth: s3_worlds 9104_0 9105_1 9106_0, tag _f, ATANOR_EYE=1.1 ATANOR_FOV=100 (as s3_e's growth but for the field of view; ordinary body).
+Then the seen-map / seen-spring eyes grown on it in a 64-body life (a2_moving_food 9104_0, 6,000 beats, --save-seen) and carried.
+Check before use: s3_f against s3_e on A2 9104 (64 bodies, 3,000 beats, T1): deaths and food wait not worse by > 10%; share of beats with
+the whole picture one wall colour (judge side) lower. The 82.6-degree seen-eye training (running) only answers "can it be learned at all".
+
+# Fetched (founder approved, 2026-11-28): Astra's gut-feeling prototype, LOKI de50f9f (loki_memory/somatic_readout.py) - kept off
+Astra's result (synthetic, 24 wirings x 2 needs): on a fork whose first 20 beats are alike and whose relief differs at beat 24, the fast
+readout alone 48/48; erased 23/48, pairs shuffled 22/48, random 25/48; in the familiar fork the slow readout was never called; with the look
+kept and the effect flipped the first choice was wrong 24/24, recovering 1% -> 4% -> 27% -> 96% over four blocks of four.
+How it is to be wired (registered before building; G1): not per gesture - a held gesture's change of the insides is drain alike for all
+gestures except at a spring, where the pull already works. The unit of a gut feeling is a journey: cue = where it is (its place unit's own
+position) and what it lacks, action = which remembered place it sets out for, outcome = how its insides changed from setting out to the
+journey's end (arrival, giving up, or death), drain on the way included. Goal choice then asks the gut, not "the highest relief memory for
+the lacking channel": among its few best-remembered places per channel, the one whose remembered journeys leave it most whole. Where the
+gut has no record (confidence low) the choice falls back to the relief memory. Tests: ties between two remembered places (near small, far
+large) - choice follows past journeys >= 80%; erased / shuffled gut -> as the relief memory alone. After F100's check.
+## SM1 / SM2 grown in a 64-body life (A2 9104, 6,000 beats, s3_e, eye 1.1, field of view 82.6): both learn
+Seen map: its own error on new stops .68 cells (bar < 1) over 2,062 stops; it wrote its map 243,061 times. Seen spring: 88% of new relief
+pictures called right (bar > 70%) over 12,355; 28,876 writes into its place memory. Saved to probe-work/s3_e_seen.pt and carried into the
+viewer's one body (ATANOR_SEEN_FROM). Not yet measured: whether they hold at a place never seen (Astra's second condition), and what they do
+to a life (deaths, waits) - both with the strong detour's three conditions. Head pitch is off on the viewer for now: these eyes were grown
+with a level head.
+
+# TF1 touch feel (registered; founder 2026-11-28: "it backs into something and does not know what is behind it" -> "grow it with direction
+# and feel"). Correction of what I told the founder: the body's skin already feels which side is touched (front / right / behind / left,
+# within .8 cells; skin 0-3, and a copy in 4-7) - I had said there was one bump bit only (that is the felt-motion channel). What it lacked
+# is what the touched thing feels like. ATANOR_TOUCH_FEEL=1: skin 4-7 = closeness x feel per side (wall .3 hard, food .65 soft, water 1.0
+# wet) - a feel on the skin, not a name; the sense vector's size is unchanged. Unset = as before.
+# Growth G (replaces F100's growth, stopped 14 minutes in, unread): s3_worlds 9104_0 9105_1 9106_0, tag _g, ATANOR_EYE=1.1 ATANOR_FOV=100
+# ATANOR_TOUCH_FEEL=1; then the seen eyes (with bearing) grown on it. Two body changes at once (field of view, touch feel) - said plainly;
+# the check against s3_e is of the pair. Separate later only if the pair is worse.

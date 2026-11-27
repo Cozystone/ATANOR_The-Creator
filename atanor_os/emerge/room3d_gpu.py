@@ -129,7 +129,7 @@ class World:
                 self.map[i, int(here[0]), int(here[1])] = FLOOR; self.map[i, c[0], c[1]] = kind; self.src[i, j] = torch.tensor(c, device=self.dev)
 
     # ---- 눈 ----
-    def cast(self, ang, step=0.1, far=None, chunk=64):
+    def cast(self, ang, step=0.1, far=None, chunk=64, through=()):
         """ang [n, K] -> (종류 [n, K], 거리 [n, K]). 시선의 걸음들을 한 번에 (덩이씩) 내다본다 - 파이썬 고리 대신 GPU가 한꺼번에."""
         n, K = ang.shape; far = far or 1.1 * self.S
         dx, dy = torch.cos(ang)[..., None], torch.sin(ang)[..., None]
@@ -142,6 +142,8 @@ class World:
             cx = (self.pos[:, 0, None, None] + dx * r).long().clamp(0, self.S - 1); cy = (self.pos[:, 1, None, None] + dy * r).long().clamp(0, self.S - 1)
             m = torch.gather(flat, 1, (cx * self.S + cy).view(n, -1)).view(n, K, -1)
             hit = m != FLOOR
+            for k_ in through:                                                    # render fix: see past low things to the wall behind
+                hit = hit & (m != k_)
             any_ = hit.any(2)
             first = hit.float().argmax(2)
             new = live & any_

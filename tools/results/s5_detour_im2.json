@@ -1,0 +1,33 @@
+{
+ "test": "detour",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 3000,
+ "after": 2000,
+ "blocked_side": 1,
+ "first_gap_food_beats_after": null,
+ "phases": [
+  {
+   "deaths": 105,
+   "food_fills": 227,
+   "food_wait_median": 157.0,
+   "ways_left_right_gap": [
+    91,
+    136,
+    0
+   ]
+  },
+  {
+   "deaths": 40,
+   "food_fills": 195,
+   "food_wait_median": 177.0,
+   "ways_left_right_gap": [
+    176,
+    18,
+    0
+   ]
+  }
+ ],
+ "remaps": 29,
+ "seconds": 654
+}

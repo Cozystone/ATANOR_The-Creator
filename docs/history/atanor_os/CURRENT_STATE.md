@@ -17,6 +17,11 @@
 | ml_body.py, mc_*.py | MineLand / Minecraft 몸 |
 | laptop_*.py | 노트북 몸 (atanor-body) |
 
+## 방 주선 조합 (2026-11-27 채택, WORLD_A_PROTOCOL.md "newest combination")
+존재 probe-work/s3_e (눈높이 1.1로 기름) + ATANOR_TURN_ONCE=1 (돌기는 한 번) + ATANOR_MISMATCH=1 (기대가 어긋나면 즉시 다시 판단), 눈 1.1.
+s3_b 주선 대비 시작 3개: 죽음 47 = 47, 대기 199 vs 206.5, 맴돎 -72%. 환경 기본값은 옛 실행 재현을 위해 꺼둠 (조합은 이 환경 변수로 켬).
+시험 중 (뷰어에만): P2 고개 위아래, 그리기 수정, A1 시선 주의, M1a/M1d 이어받기, IM1 벽 지도와 상상한 길. 계기판 8777.
+
 ## 주선 켜짐 (환경 변수로 옛 판 재현)
 - ATANOR_INNATE_HOMING=1 (관문 1: 귀가 벡터 + 제 목표), ATANOR_LEARNED_TRUST=1 (LW3 믿음), ATANOR_WORLD_FIX=1, 눈 높이 1.6.
 - 꺼진 채 대기: ATANOR_GOAL_FIX, ATANOR_HOME_HOLD (D49, 채택 안 됨), ATANOR_TRUST_FROM (M1a, 확인 중), Mind.roam / learned_roam (낯섦, 관문 2).

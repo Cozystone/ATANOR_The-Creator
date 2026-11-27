@@ -1,0 +1,45 @@
+{
+ "e1": 0,
+ "w0": {
+  "beats": 0,
+  "spread": 0.0,
+  "picks": null
+ },
+ "test": "strong",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 1000,
+ "after": 1000,
+ "blocked_side": null,
+ "first_gap_food_beats_after": 104,
+ "phases": [
+  {
+   "deaths": 64,
+   "food_fills": 1,
+   "food_wait_median": 263.0,
+   "ways_left_right_gap": [
+    0,
+    1,
+    0
+   ]
+  },
+  {
+   "deaths": 44,
+   "food_fills": 49,
+   "food_wait_median": 332.0,
+   "ways_left_right_gap": [
+    13,
+    14,
+    22
+   ]
+  }
+ ],
+ "strong": {
+  "share_of_hungry_beats_at_pocket_top": 0.284,
+  "exits": 172,
+  "exit_beats_median_first_half": 57.0,
+  "exit_beats_median_second_half": 53.5
+ },
+ "remaps": 47,
+ "seconds": 331
+}

@@ -1,0 +1,196 @@
+{
+ "force": 0,
+ "remaps": 38,
+ "oracle": 0,
+ "eye": 1.1,
+ "mismatch_events": 0,
+ "roam_trust": null,
+ "roam": 0.0,
+ "trust_end": null,
+ "lw": null,
+ "why": {
+  "held": 175131,
+  "at_goal": 4411,
+  "bumped_held": 0,
+  "bumped_free": 0,
+  "free": 13669,
+  "death_goal": {
+   "none": 0,
+   "right": 161,
+   "wrong": 49,
+   "unknown_place": 1,
+   "near_right_spring": 9,
+   "n": 211
+  },
+  "goals": [
+   {
+    "unit": 41,
+    "share": 0.519,
+    "judge_cell": [
+     2.3,
+     1.7
+    ],
+    "judge_seen": 4578,
+    "in_spur": false,
+    "relief_rate": [
+     0.0315,
+     0.0
+    ],
+    "V": [
+     0.959,
+     0.0
+    ],
+    "homing_cell_own": [
+     11.83,
+     -5.66
+    ]
+   },
+   {
+    "unit": 62,
+    "share": 0.259,
+    "judge_cell": [
+     14.5,
+     2.0
+    ],
+    "judge_seen": 5139,
+    "in_spur": false,
+    "relief_rate": [
+     0.0,
+     0.0161
+    ],
+    "V": [
+     0.001,
+     0.603
+    ],
+    "homing_cell_own": [
+     11.51,
+     6.52
+    ]
+   },
+   {
+    "unit": 42,
+    "share": 0.164,
+    "judge_cell": [
+     1.1,
+     2.1
+    ],
+    "judge_seen": 4735,
+    "in_spur": false,
+    "relief_rate": [
+     0.0151,
+     0.0
+    ],
+    "V": [
+     0.911,
+     0.001
+    ],
+    "homing_cell_own": [
+     11.37,
+     -6.9
+    ]
+   },
+   {
+    "unit": 43,
+    "share": 0.042,
+    "judge_cell": [
+     3.8,
+     5.6
+    ],
+    "judge_seen": 2309,
+    "in_spur": false,
+    "relief_rate": [
+     0.0,
+     0.0
+    ],
+    "V": [
+     0.236,
+     0.002
+    ],
+    "homing_cell_own": [
+     7.91,
+     -4.18
+    ]
+   },
+   {
+    "unit": 45,
+    "share": 0.012,
+    "judge_cell": [
+     4.3,
+     10.7
+    ],
+    "judge_seen": 1136,
+    "in_spur": true,
+    "relief_rate": [
+     0.0,
+     0.0
+    ],
+    "V": [
+     0.036,
+     0.004
+    ],
+    "homing_cell_own": [
+     2.8,
+     -3.65
+    ]
+   }
+  ],
+  "best_relief_rate_units": [
+   [
+    41,
+    42,
+    60
+   ],
+   [
+    62,
+    57,
+    46
+   ]
+  ]
+ },
+ "goal_held": 174820,
+ "goal_switch": 802,
+ "seen": 0,
+ "staged": 0,
+ "stage2_fills": {
+  "water": 0,
+  "food": 0
+ },
+ "world": "a3",
+ "mirror": 0,
+ "seed": 9301,
+ "being": "s3_e",
+ "beats": 3000,
+ "deaths_by_quarter": [
+  64,
+  63,
+  49,
+  35
+ ],
+ "need_fills_by_quarter": [
+  0,
+  1,
+  27,
+  55
+ ],
+ "deaths_per_1000_first_quarter": 1.333,
+ "hunger_to_fill": {
+  "water": {
+   "n": 175,
+   "median": 271.0,
+   "first_half_median": 383.0,
+   "last_half_median": 206.0
+  },
+  "food": {
+   "n": 61,
+   "median": 350.0,
+   "first_half_median": 311.0,
+   "last_half_median": 449.0
+  }
+ },
+ "died_lacking": [
+  154,
+  209
+ ],
+ "share_of_lacking_beats_in_spurs": 0.2228,
+ "seconds": 314
+}

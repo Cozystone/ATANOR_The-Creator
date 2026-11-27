@@ -70,9 +70,14 @@ def main():
     if a.view:
         from tools import room_live_view as VIEW_
         VIEW_.start(); VIEW = VIEW_
-    V2["on"] = True; RoomBody.default_cues = True; t0 = time.time(); d = f"{SAVE}{a.tag}"; os.makedirs(d, exist_ok=True)
+    V2["on"] = True; RoomBody.default_cues = True; RoomBody.default_eye = float(os.environ.get("ATANOR_EYE", RoomBody.default_eye));   # R2: grown at another eye height
+    t0 = time.time(); d = f"{SAVE}{a.tag}"; os.makedirs(d, exist_ok=True)
     seq = list(a.lays) + [a.lays[0]]; s0_, m0_ = map(int, seq[0].split("_")); rows0, info0 = t_room(s0_, bool(m0_))
     n = 64; B0 = make(rows0, n, 1, V2["drain"]); O = Organs(B0.c, n, dev=DEV, depth=DEPTH); Mi = Mind(O, B0.c, n, dev=DEV, value_arm="relief"); Mi.grow(BEING); Mi.wo.on = True
+    if os.environ.get("ATANOR_TURN_ONCE", "0") == "1":                   # T1g: the being grows up with turns as single acts
+        Mi.turn_once = B0.no_turn
+    if os.environ.get("ATANOR_ONE_OP", "0") in ("1", "2"):              # R1c: the being grows up in the one-operation body (2 = no side-steps)
+        Mi.allowed = B0.vacuum if os.environ["ATANOR_ONE_OP"] == "2" else B0.one_op
     Mi.going = Going(O.dx, Mi.M, n, O.inside, DEV, W=1.0, ctx=a.ctx, ctx_by=a.ctx_by, hold=a.hold); res = []
     if a.ctx:
         Mi.going.do_mask = B0.hand == 2                                # the reaching gesture (S3b scores relief expectations on reaching beats)

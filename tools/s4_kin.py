@@ -63,11 +63,18 @@ def being(B, n, path=None):
         G.skill.load_state_dict(st["skill"]); G.C, G.Cn, G.T, G.R, G.fitted = st["C"], st["Cn"], st["T"], st["R"], st["fitted"]
         G.mended = st.get("mended", True); G.Vn = st.get("Vn", G.Vn); G.born = st.get("born", True); G.used = st.get("used", G.KU); G.refresh()
     Mi.wo.on = True; Mi.going = G
+    if os.environ.get("ATANOR_TURN_ONCE", "0") == "1" and hasattr(B, "no_turn"):   # T1: a held gesture does not keep turning
+        Mi.turn_once = B.no_turn
+    if os.environ.get("ATANOR_ONE_OP", "0") in ("1", "2") and hasattr(B, "one_op"):   # R1: the body offers one operation at a time; 2 = R1b, no side-steps
+        Mi.allowed = B.vacuum if os.environ["ATANOR_ONE_OP"] == "2" else B.one_op
     if os.environ.get("ATANOR_INNATE_HOMING", "1") == "1":            # gate 1 adopted (WORLD_A_PROTOCOL.md): homing vector + own goal; =0 reproduces runs before 2026-11-26
         G.innate(O, Mi.net)
         if os.environ.get("ATANOR_LEARNED_TRUST", "1") == "1":       # LW3f adopted (LEARNED_WEIGHT_PROTOCOL.md): trust in the homing content = its kept promises; =0 = full weight (gate 1)
             from atanor_os.emerge.mind import LearnedWeight
-            Mi.learned_home = LearnedWeight(w0=0.0, mode="reli")
+            Mi.learned_home = LearnedWeight(w0=0.0, mode=os.environ.get("ATANOR_TRUST_MODE", "reli"))   # TC1: "cont" = contingency trust (registered)
+            pf = os.environ.get("ATANOR_PLACE_FROM", "")                  # M1d (registered): where each place unit is, by its own path sense, learned in training
+            if pf:
+                sp = torch.load(pf, map_location=DEV, weights_only=False); G.Pu, G.Pn = sp["Pu"].to(DEV), sp["Pn"].to(DEV)
             tf = os.environ.get("ATANOR_TRUST_FROM", "")                  # M1a (registered): the trust learned in training carried into this life (default: none)
             if tf:
                 import json as _j

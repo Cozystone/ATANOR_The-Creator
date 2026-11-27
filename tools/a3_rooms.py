@@ -41,11 +41,17 @@ def layout(mirror=False, both=False, seen=False):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--being", required=True); ap.add_argument("--mirror", type=int, default=0)
-    ap.add_argument("--beats", type=int, default=6000); ap.add_argument("--seed", type=int, default=9301); ap.add_argument("--staged", type=int, default=0); ap.add_argument("--seen", type=int, default=0); ap.add_argument("--why", type=int, default=0); ap.add_argument("--lw-mode", default=""); ap.add_argument("--roam", type=float, default=0.0); ap.add_argument("--roam-trust", type=int, default=0)   # LW3: learned trust in the homing content   # gate 2 run 1 explained (judge side only): where its own goals are, whether bodies get there   # A3-1: beats of stage 1 (both kinds in both rooms), then the A3 layout
-    a = ap.parse_args(); V2["on"] = True; RoomBody.default_cues = True; t0 = time.time(); n = 64
+    ap.add_argument("--beats", type=int, default=6000); ap.add_argument("--seed", type=int, default=9301); ap.add_argument("--staged", type=int, default=0); ap.add_argument("--seen", type=int, default=0); ap.add_argument("--why", type=int, default=0); ap.add_argument("--lw-mode", default=""); ap.add_argument("--roam", type=float, default=0.0); ap.add_argument("--roam-trust", type=int, default=0); ap.add_argument("--eye", type=float, default=0.0); ap.add_argument("--oracle", type=int, default=0); ap.add_argument("--force", type=int, default=0)   # LW3: learned trust in the homing content   # gate 2 run 1 explained (judge side only): where its own goals are, whether bodies get there   # A3-1: beats of stage 1 (both kinds in both rooms), then the A3 layout
+    a = ap.parse_args(); V2["on"] = True
+    if a.eye:                                                             # gate 2 run 3: eye height of the being grown at it (s3_e: 1.1)
+        RoomBody.default_eye = a.eye
+    RoomBody.default_cues = True; t0 = time.time(); n = 64
     assert not 7701 <= a.seed <= 7712
     rows, info, spurs = layout(bool(a.mirror), both=bool(a.staged), seen=bool(a.seen)); torch.manual_seed(a.seed)
     B = make(rows, n, a.seed, V2["drain"]); O, Mi = being(B, n, a.being); w = B.w
+    import os as _os
+    if _os.environ.get("ATANOR_HOPS"):                                   # D50 in A3 (diagnostic): how far ahead on its own chain the homing lean aims
+        Mi.going.hops = int(_os.environ["ATANOR_HOPS"])
     if a.roam > 0:                                                        # G2a diagnostic: E1b unfamiliarity in the score (Mind.roam_mode="score")
         Mi.roam = a.roam; Mi.roam_mode = "score"
         if a.roam_trust:                                                  # gate 2 run 2: the unfamiliarity's weight learned from its kept promises
@@ -61,6 +67,71 @@ def main():
     since = torch.full((n, 2), -1, dtype=torch.long, device=DEV); waits = [[], []]; lost = [0, 0]; deaths = [0] * 4; need = [0] * 4; spur_lacking = [0, 0]
     from atanor_os.emerge.room3d_gpu import FLOOR, WATER, FOOD
     fixed = {WATER: (14, 1) if a.mirror else (1, 1), FOOD: (1, 1) if a.mirror else (14, 1)}
+    if a.oracle:                                                          # G2L ladder (judge-side diagnostic, never a pass): 1 = the straight vector to the true spring of the
+        import collections                                                # lacking kind; 2 = the vector to the next cell on the true shortest way around the walls
+        gm = np.array([list(r_) for r_ in rows]); NX = torch.zeros(2, S, S, 2, device=DEV)
+        for j, kind in enumerate((WATER, FOOD)):
+            sx, sy = fixed[kind]; D = np.full((S, S), np.inf); q = collections.deque()
+            for dx_, dy_ in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                x_, y_ = sx + dx_, sy + dy_
+                if 0 <= x_ < S and 0 <= y_ < S and gm[y_, x_] == ".":
+                    D[x_, y_] = 0; q.append((x_, y_))
+            while q:
+                i_, j_ = q.popleft()
+                for dx_, dy_ in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    x_, y_ = i_ + dx_, j_ + dy_
+                    if 0 <= x_ < S and 0 <= y_ < S and gm[y_, x_] == "." and D[x_, y_] == np.inf:
+                        D[x_, y_] = D[i_, j_] + 1; q.append((x_, y_))
+            for x_ in range(S):
+                for y_ in range(S):
+                    tx, ty = sx + 0.5, sy + 0.5
+                    if a.oracle == 2 and np.isfinite(D[x_, y_]) and D[x_, y_] > 0:
+                        best = None
+                        for dx_, dy_ in ((1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)):
+                            u_, v_ = x_ + dx_, y_ + dy_
+                            if not (0 <= u_ < S and 0 <= v_ < S) or not np.isfinite(D[u_, v_]):
+                                continue
+                            if dx_ and dy_ and not (np.isfinite(D[x_ + dx_, y_]) and np.isfinite(D[x_, y_ + dy_])):
+                                continue                                  # no cutting a wall's corner
+                            if best is None or D[u_, v_] < best[0]:
+                                best = (D[u_, v_], u_ + 0.5, v_ + 0.5)
+                        if best is not None and best[0] < D[x_, y_]:
+                            tx, ty = best[1], best[2]
+                    NX[j, x_, y_, 0] = tx; NX[j, x_, y_, 1] = ty
+
+        def oracle(c):
+            cx_, cy_ = w.pos[:, 0].long().clamp(0, S - 1), w.pos[:, 1].long().clamp(0, S - 1)
+            v_ = NX[c, cx_, cy_] - w.pos.float(); co, si = torch.cos(w.head), torch.sin(w.head)
+            return v_[:, 0] * co + v_[:, 1] * si, -v_[:, 0] * si + v_[:, 1] * co
+        Mi.going.oracle = oracle
+    if _os.environ.get("ATANOR_B0", "0") == "oracle":                     # B0 ladder rung (judge-side, never a pass): the imagination walks the true map
+        import collections
+        gm = np.array([list(r_) for r_ in rows]); DW = torch.full((2, S, S), 99.0, device=DEV)
+        for j, kind in enumerate((WATER, FOOD)):
+            sx, sy = fixed[kind]; D = np.full((S, S), np.inf); q = collections.deque()
+            for dx_, dy_ in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                x_, y_ = sx + dx_, sy + dy_
+                if 0 <= x_ < S and 0 <= y_ < S and gm[y_, x_] == ".":
+                    D[x_, y_] = 0; q.append((x_, y_))
+            while q:
+                i_, j_ = q.popleft()
+                for dx_, dy_ in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    x_, y_ = i_ + dx_, j_ + dy_
+                    if 0 <= x_ < S and 0 <= y_ < S and gm[y_, x_] == "." and D[x_, y_] == np.inf:
+                        D[x_, y_] = D[i_, j_] + 1; q.append((x_, y_))
+            D[~np.isfinite(D)] = 99.0; DW[j] = torch.tensor(D, device=DEV, dtype=torch.float32)
+
+        def _field(c, xy, near=False):                                    # bilinear over cell centres (x + .5)
+            if near:
+                i_ = xy[..., 0].floor().long().clamp(0, S - 1); j_ = xy[..., 1].floor().long().clamp(0, S - 1)
+                return DW[c.view(-1, *([1] * (xy.dim() - 2))).expand_as(i_), i_, j_]
+            u_ = (xy[..., 0] - 0.5).clamp(0, S - 1.001); v_ = (xy[..., 1] - 0.5).clamp(0, S - 1.001)
+            i0, j0 = u_.floor().long(), v_.floor().long(); a_, b_ = u_ - i0, v_ - j0
+            cc = c.view(-1, *([1] * (xy.dim() - 2))).expand_as(i0)
+            g_ = lambda i, j: DW[cc, i.clamp(0, S - 1), j.clamp(0, S - 1)]
+            from atanor_os.emerge.going import _blend
+            return _blend(((1 - a_) * (1 - b_), g_(i0, j0)), (a_ * (1 - b_), g_(i0 + 1, j0)), ((1 - a_) * b_, g_(i0, j0 + 1)), (a_ * b_, g_(i0 + 1, j0 + 1)))
+        Mi.going.b0_true = dict(pos=lambda: w.pos.float(), head=lambda: w.head.float(), field=_field)
     side = [[0, 0], [0, 0]]                                              # stage 2: fills per channel at its fixed spring
     for t in range(a.beats):
         q = min(3, t * 4 // a.beats)
@@ -68,6 +139,8 @@ def main():
             for j, kind in enumerate((WATER, FOOD)):
                 old = w.src[:, j].clone(); w.map[torch.arange(n, device=DEV), old[:, 0], old[:, 1]] = FLOOR
                 c = fixed[kind]; w.map[:, c[0], c[1]] = kind; w.src[:, j] = torch.tensor(c, device=DEV); w.spots[kind] = torch.tensor([c], device=DEV)
+        if a.force:                                                       # G2L rung 2b (judge-side probe, never a pass): every body chooses afresh every beat
+            Mi.force = torch.ones(n, dtype=torch.bool, device=DEV)
         act = Mi.choose(x); al = ~B.dead.clone(); s0 = B.w.store.clone(); f = B.step(act); x2 = O(B.raw()); died = al & B.dead
         if a.why:
             G_ = Mi.going; KU = G_.KU
@@ -79,6 +152,22 @@ def main():
                 why["free"] += int((~hd & al).sum()); why["bumped_free"] += int((~hd & al & bump).sum())
                 if bool(hd.any()):
                     gcount += torch.bincount(gp[hd], minlength=KU).float()
+            if t == 0:
+                dg = dict(none=0, right=0, wrong=0, unknown_place=0, near_right_spring=0, n=0)
+            if gp is not None and bool(died.any()):                       # gate 2 run 3 explained: what each dying body was aiming at (judge side only)
+                for i in torch.nonzero(died)[:, 0].tolist():
+                    dg["n"] += 1; j = int(s0[i].argmin()); sp = torch.tensor(fixed[(WATER, FOOD)[j]], device=DEV, dtype=torch.float)
+                    if float((w.pos[i].float() - sp).norm()) < 3.0:
+                        dg["near_right_spring"] += 1
+                    g_ = int(gp[i])
+                    if g_ < 0:
+                        dg["none"] += 1
+                    elif useen[g_] == 0:
+                        dg["unknown_place"] += 1
+                    elif float((upos[g_] - sp).norm()) < 2.5:
+                        dg["right"] += 1
+                    else:
+                        dg["wrong"] += 1
             with torch.no_grad():
                 uu = G_.unit(G_.place(x2)); lv = ~B.dead
                 if bool(lv.any()):
@@ -107,11 +196,11 @@ def main():
     whyr = None
     if a.why:
         G_ = Mi.going; rr = (G_.R / G_.Vn.clamp(min=1)[:, None]); top = torch.argsort(gcount, descending=True)[:5].tolist(); tot = float(gcount.sum())
-        whyr = dict(why, goals=[dict(unit=u_, share=round(float(gcount[u_]) / max(tot, 1), 3), judge_cell=[round(float(v), 1) for v in upos[u_].tolist()], judge_seen=int(useen[u_]),
+        whyr = dict(why, death_goal=dg, goals=[dict(unit=u_, share=round(float(gcount[u_]) / max(tot, 1), 3), judge_cell=[round(float(v), 1) for v in upos[u_].tolist()], judge_seen=int(useen[u_]),
                     in_spur=bool(spur[int(upos[u_][0]), int(upos[u_][1])]) if useen[u_] > 0 else None, relief_rate=[round(float(v), 4) for v in rr[u_].tolist()],
                     V=[round(float(v), 3) for v in G_.V[u_].tolist()], homing_cell_own=[round(float(v), 2) for v in G_.Pu[u_].tolist()]) for u_ in top],
                     best_relief_rate_units=[[int(v) for v in torch.argsort(rr[:, c], descending=True)[:3].tolist()] for c in range(rr.shape[1])])
-    r = dict(roam_trust=(dict(end=round(float(Mi.learned_roam.w), 3), path=Mi.learned_roam.hist[::300], promises=getattr(Mi.learned_roam, 'n_arr', 0)) if getattr(Mi, 'learned_roam', None) is not None else None), roam=a.roam, trust_end=(round(float(Mi.learned_home.w), 3) if getattr(Mi, "learned_home", None) is not None else None), lw=(dict(mode=a.lw_mode, end=Mi.learned_home.w, path=Mi.learned_home.hist[::500], arrivals=getattr(Mi.learned_home, "n_arr", None)) if a.lw_mode else None), why=whyr, goal_held=getattr(Mi, 'goal_held', 0), goal_switch=getattr(Mi, 'goal_switch', 0), seen=a.seen, staged=a.staged, stage2_fills=dict(water=side[0][0], food=side[0][1]), world="a3", mirror=a.mirror, seed=a.seed, being=a.being, beats=a.beats, deaths_by_quarter=deaths, need_fills_by_quarter=need,
+    r = dict(gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), differed=getattr(Mi, "g_diff", 0), journeys_ended=getattr(Mi, "g_ends", 0), usual_len=round(float(getattr(Mi, "g_len", 0)), 1)), seen_relief=dict(hit=round(float(getattr(Mi.going, "sr_hit", -1)), 3), samples=getattr(Mi.going, "sr_n", 0), writes=getattr(Mi.going, "sr_writes", 0)), seen_map=dict(err=round(float(getattr(Mi.going, "sm_err", -1)), 3), stops=getattr(Mi.going, "sm_n", 0), writes=getattr(Mi.going, "sm_writes", 0)), e1=getattr(Mi, "e1_n", 0), w0=(dict(beats=getattr(Mi, "w0_n", 0), spread=round(float(getattr(Mi, "w0_spread", 0)), 5), picks=(Mi.w0_pick.tolist() if getattr(Mi, "w0_pick", None) is not None else None))), b0=dict(mode=_os.environ.get("ATANOR_B0", "0"), chose=getattr(Mi, "b0_n", 0), drain=round(float(getattr(Mi.going, "b0_dr", 0)), 5)), hops=Mi.going.hops, goal_beats=getattr(Mi.going, "n_goal", 0), noway_beats=getattr(Mi.going, "n_noway", 0), r2=(dict(reads=[int(v) for v in Mi.going.r2_reads[::100]], splits=int(Mi.going.r2.splits), moves=int(Mi.going.r2.moves), forgotten=int(Mi.going.r2.forgotten)) if getattr(Mi.going, "r2", None) is not None else None), trust_path=(Mi.learned_home.hist[::300] if getattr(Mi, "learned_home", None) is not None else None), trust_reliefs=getattr(getattr(Mi, "learned_home", None), "n_rel", None), force=a.force, remaps=getattr(Mi.going, "remaps", 0), oracle=a.oracle, eye=RoomBody.default_eye, mismatch_events=getattr(Mi, "mm_n", 0), roam_trust=(dict(end=round(float(Mi.learned_roam.w), 3), path=Mi.learned_roam.hist[::300], promises=getattr(Mi.learned_roam, 'n_arr', 0)) if getattr(Mi, 'learned_roam', None) is not None else None), roam=a.roam, trust_end=(round(float(Mi.learned_home.w), 3) if getattr(Mi, "learned_home", None) is not None else None), lw=(dict(mode=a.lw_mode, end=Mi.learned_home.w, path=Mi.learned_home.hist[::500], arrivals=getattr(Mi.learned_home, "n_arr", None)) if a.lw_mode else None), why=whyr, goal_held=getattr(Mi, 'goal_held', 0), goal_switch=getattr(Mi, 'goal_switch', 0), seen=a.seen, staged=a.staged, stage2_fills=dict(water=side[0][0], food=side[0][1]), world="a3", mirror=a.mirror, seed=a.seed, being=a.being, beats=a.beats, deaths_by_quarter=deaths, need_fills_by_quarter=need,
              deaths_per_1000_first_quarter=round(1000 * deaths[0] / (n * a.beats / 4), 3), hunger_to_fill=dict(water=wt(waits[0]), food=wt(waits[1])),
              died_lacking=lost, share_of_lacking_beats_in_spurs=round(spur_lacking[0] / max(spur_lacking[1], 1), 4), seconds=round(time.time() - t0))
     print(json.dumps(r), flush=True); json.dump(r, open(a.out, "w"), indent=1)

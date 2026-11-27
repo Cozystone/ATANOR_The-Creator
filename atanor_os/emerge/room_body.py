@@ -9,10 +9,21 @@ from . import room3d_gpu as G
 from .body_contract import Channel, Contract
 
 H, W, HORIZON = 160, 256, 102
-FY = 0.5 * 204 / math.tan(math.radians(35.0))               # 마크와 같은 초점 거리 (px)
+import os as _os_fov
+# The room eye's focal length (px). Unset = as every being so far was grown (the Minecraft body's focal length; across the 256-wide picture
+# that is 82.6 degrees). ATANOR_FOV=100 (founder 2026-11-28) sets the horizontal field of view in degrees: the class of the target bodies -
+# display glasses ~100-109, Minecraft's default ~100 across; a laptop webcam (70-90) is then a crop of what it grew with.
+FY = 0.5 * 204 / math.tan(math.radians(35.0))
+if _os_fov.environ.get("ATANOR_FOV"):
+    FY = 0.5 * W / math.tan(math.radians(float(_os_fov.environ["ATANOR_FOV"]) / 2.0))
 EYE = 1.6                                                    # 눈 높이 (칸)
 WALL_H, SPRING_H = 2.0, 1.0
 KIN_H, KIN_R, KIN_COLOR = 1.4, 0.3, (0.35, 0.85, 0.35)         # N1: another body of its kind as the eye sees it (a body-high round shape of its own colour)
+
+
+def _os_render_fix():
+    import os
+    return os.environ.get("ATANOR_RENDER_FIX", "0") == "1"
 
 
 def contract():
@@ -31,9 +42,19 @@ class RoomBody:
         self.combos, _ = self.c.codes()
         cb = torch.tensor(self.combos, device=device)              # [90, 3]
         self.legs, self.neck, self.hand = cb[:, 0], cb[:, 1], cb[:, 2]
+        # R1 (founder 2026-11-27): a body that does one thing at a time (like a robot vacuum) - step, or turn, or use the hand, never two at once.
+        # The body's own make-up (what it can do), not a rule of behaviour; off unless ATANOR_ONE_OP=1.
+        self.one_op = ((self.legs != 0).long() + ((self.neck == 1) | (self.neck == 2)).long() + (self.hand != 0).long()) <= 1
+        idx = {tuple(c): i for i, c in enumerate(self.combos)}          # T1: each gesture's twin with the neck still (same legs and hand)
+        self.no_turn = torch.tensor([idx[(c[0], 0 if c[1] in (1, 2) else c[1], c[2])] for c in self.combos], device=device)
+        self.vacuum = self.one_op & (self.legs != 3) & (self.legs != 4)   # R1b: as a robot vacuum also - no side-steps (drive or rotate, never strafe)
         self.cols = torch.atan((torch.arange(W, device=device) + 0.5 - W / 2) / FY)      # 열마다 시선 각
         self.rows = torch.arange(H, device=device).float()[:, None] + 0.5 - HORIZON
         self.prev_store = self.w.store.clone(); self.felt = torch.zeros(n, 3, device=device)
+        # P2 (founder 2026-11-27, "loosen the head up / down a little - the eyes catch first, the head follows"): neck up / down tilt the view
+        # 10 degrees a gesture, from 15 up to 30 down (0 = as before). Off unless ATANOR_PITCH=1 (until then up / down do nothing, as before).
+        import os as _os
+        self.pitch_on = _os.environ.get("ATANOR_PITCH", "0") == "1"; self.pitch = torch.zeros(n, device=device)
         # 어둠 (R1: 세계가 기억을 요구하게 - 불이 꺼지면 눈으로는 아무것도 보이지 않고, 샘이 어디 있는지는 들고 있는 것으로만 안다). 몸마다 다른 때에.
         self.dark_every, self.dark_len = 0, 0
         self.dark_phase = torch.randint(0, 10 ** 6, (n,), device=device); self.t = 0
@@ -48,6 +69,7 @@ class RoomBody:
 
     def reset(self, which):
         self.w.reset(which); self.felt[which] = 0; self.prev_store = self.w.store.clone()
+        self.pitch[which] = 0.0
 
     @torch.no_grad()
     def render(self):
@@ -57,6 +79,8 @@ class RoomBody:
         hgt = torch.where(kind == G.WALL, torch.full_like(z, WALL_H), torch.full_like(z, SPRING_H))
         eye = RoomBody.default_eye; top = -FY * (hgt - eye) / z; bot = FY * eye / z                                # 화면에서 수평선 위아래로 (px)
         r = self.rows[None]                                                             # [1, H, 1]
+        if self.pitch_on:                                                               # P2: looking down moves the scene up in the picture
+            r = r + (FY * torch.tan(self.pitch))[:, None, None]                         # [n, H, 1]
         hit = (r >= top[:, None, :]) & (r <= bot[:, None, :]) & (dist[:, None, :] < 90)
         col = G.COLOR.to(self.dev)[kind.long()] * (1.0 - z / 14.0).clamp(0.3, 1.0)[..., None]
         if self.cues:                                                                   # which face of the wall the ray met (from the ray direction and the hit cell's side)
@@ -69,6 +93,13 @@ class RoomBody:
             col = torch.where((kind == G.WALL)[..., None], col * tint, col)
         sky, gnd = G.SKY.to(self.dev), G.GROUND.to(self.dev)
         base = torch.where((r < 0)[..., None], sky, gnd).expand(self.n, H, W, 3)
+        if _os_render_fix():                                                            # render fix (founder 2026-11-27: "the wall behind the box is open"):
+            kw, dw = w.cast(w.head[:, None] + self.cols[None], step=0.05, through=(G.WATER, G.FOOD))   # a spring is 1 cell high; the wall behind it
+            zw = (dw * torch.cos(self.cols)[None]).clamp(min=0.05)                       # shows above it (before, the ray stopped at the spring: sky)
+            topw = -FY * (WALL_H - eye) / zw; botw = FY * eye / zw
+            hitw = (r >= topw[:, None, :]) & (r <= botw[:, None, :]) & (dw[:, None, :] < 90) & (kw == G.WALL)[:, None, :]
+            colw = G.COLOR.to(self.dev)[kw.long()] * (1.0 - zw / 14.0).clamp(0.3, 1.0)[..., None]
+            base = torch.where(hitw[..., None], colw[:, None].expand(-1, H, -1, -1), base)
         img = torch.where(hit[..., None], col[:, None].expand(-1, H, -1, -1), base)
         if self.kin is not None:                                                        # the other body, where no wall or spring stands in front of it
             ang = w.head[:, None] + self.cols[None]; dxr, dyr = torch.cos(ang), torch.sin(ang)
@@ -102,6 +133,9 @@ class RoomBody:
         drop = kind == G.PIT                                                            # ground touch (founder 2026-11-25): a drop is not touched - the ground is felt missing
         touch = torch.where(drop, torch.zeros_like(close), close)
         skin = torch.zeros(n, 20, device=d); skin[:, 0:4] = touch; skin[:, 4:8] = touch; skin[:, 8] = 1.0
+        if _os_fov.environ.get("ATANOR_TOUCH_FEEL", "0") == "1":                        # TF1 (founder 2026-11-28: "it backs into the water and does not know"): what the
+            feel = torch.where(kind == G.WATER, 1.0, torch.where(kind == G.FOOD, 0.65, torch.where(kind == G.WALL, 0.3, 0.5)))   # thing touched feels like, per side
+            skin[:, 4:8] = touch * feel                                                 # (front, right, behind, left) - a feel, not a name: wall hard, food soft, water wet
         skin[:, 9:13] = torch.where(drop, close, torch.zeros_like(close))                # no ground just ahead / right / behind / left (feet, whiskers)
         ga = w.head[:, None] + torch.tensor([math.pi / 4, -math.pi / 4], device=d)[None]       # D37g: and on the two forward diagonals
         gk, gn = w.cast(ga, step=0.02, far=0.8)
@@ -116,7 +150,8 @@ class RoomBody:
             spec = torch.tensor([0.1, 0.4, 1.0, 1.0, 0.6, 0.3, 0.1, 0.05], device=d)
             heard = torch.cat([(loud * ga)[:, None] * spec, (loud * gb)[:, None] * spec], 1)
             ear = torch.where(con[:, None], torch.log(heard + 1e-4).clamp(min=-9.0), ear)
-        return [bed, torch.zeros(n, 1, device=d), self.felt.clone(), skin, torch.zeros(n, 1, device=d), ear, self.render()]
+        tilt = self.pitch[:, None].clone() if self.pitch_on else torch.zeros(n, 1, device=d)   # P2: the head-tilt sense carries its own pitch (radians, + = down)
+        return [bed, torch.zeros(n, 1, device=d), self.felt.clone(), skin, tilt, ear, self.render()]
 
     @torch.no_grad()
     def step(self, act, dt=None):
@@ -129,6 +164,12 @@ class RoomBody:
         side = torch.where(lg == 3, -1.0, torch.where(lg == 4, 1.0, 0.0))
         turn = torch.where(nk == 1, -1.0, torch.where(nk == 2, 1.0, 0.0)) * (math.radians(30) / (G.TURN * G.TICK))      # 고개 돌림은 한 번의 몸짓 (30도), 걷기는 흐른 시간만큼
         do = hd == 2
+        if self.pitch_on:                                                              # P2: neck 3 = up, 4 = down, 10 degrees a gesture
+            import os as _os
+            held_ = (nk == 3) | (nk == 4)
+            if _os.environ.get("ATANOR_PITCH_RETURN", "0") == "1":                      # P2b (founder 2026-11-27): the neck's own tone - a head not held
+                self.pitch = torch.where(held_, self.pitch, self.pitch * 0.7)            # up or down drifts back to level (~1 s), as a body does; no choice in it
+            self.pitch = (self.pitch + torch.where(nk == 4, 1.0, torch.where(nk == 3, -1.0, 0.0)) * math.radians(10)).clamp(-math.radians(15), math.radians(30))
         was = w.pos.clone(); h0 = w.head.clone()
         hh, t = 1 / 60.0, 0.0
         while t < TICK - 1e-9:
