@@ -1861,3 +1861,224 @@ Left alone it fills 34% (52% when the food is straight ahead, about 30% when it 
 away as toward (5.4 toward, 4.2 away at 135 degrees). The gap that remains is between knowing where and being told where - the seat, not
 the steering. The pocket-room read (chain 3: beside the food, no turn) was in a proper frame and is untouched by this.
 The founder's question ("not intelligent, or cannot drive its body?") gets a different answer than I gave on the day: it drives.
+
+## RG1: a being grown in the corrected world (registered before the run, 2026-11-28; founder: "grow it now")
+Why: RF1 - the world drew sky above every spring; s3_e grew in that world and dies more when it is corrected (11 -> 30, 18 -> 19). The
+reason I gave (it never saw a spring drawn rightly) is not measured. This measures it.
+One change: the same growth as s3_e (tools/s3_worlds 9104_0 9105_1 9106_0, ATANOR_EYE=1.1, ordinary body, 64 bodies, the tool unchanged
+- its re-read at rebirth is the old one, as in s3_e's growth) with ATANOR_RENDER_FIX=1. Saved as probe-work/s3_r.
+Then: A2 room 9104, the recipe (TURN_ONCE, MISMATCH, LEARNED_TRUST=1), eye 1.1, 64 bodies, 3,000 beats, two starts, the corrected
+re-read (today's default), three arms run together: s3_e fix off (the main line as it stands; HC1 gave 14 / 20), s3_r fix on, s3_r fix
+off (what the new being does in the world it did not grow in).
+Judge: the corrected world with its own being becomes the room's main line (being s3_r, RENDER_FIX on) if s3_r fix-on has deaths not
+higher than s3_e fix-off in both starts. If higher in both: the corrected world is harder for this kind of being, not just unfamiliar -
+said so, the main line stays, and the wrong world is flagged on every room number until that is understood. Split: a third start.
+Read too: fills, wait, s3_r in the wrong world (if it also dies more there, "unfamiliar picture" is supported from the other side).
+Limits said before: one growth is one sample - s3_e against s3_r differ by the fix AND by the chance of a growth (no second growth of
+either exists); the room measured is one of the three it grew in, as for s3_e.
+
+# Astra's reply to the 11-28 bundle (relayed by the founder that night) - what it decides
+1. Turning: reuse the gesture-proposing interface, change the cue. The lever organ pools a gesture's effect and applies it to the present
+   lack; nothing tells "food on the left" from "food on the right", so the right turn averages away. First pair scenes (same lack,
+   like distance, left / right swapped) and see whether the first turn flips with the eye's cue.
+2. Driving: DR1b's numbers are the base (alone 34%, told 72%, last third 82%). The largest candidate left is getting a usable direction
+   out of its own senses. Body play, if tested: fork one checkpoint, same beats lived, then learning frozen and unseen bearings.
+   Continuous joints and a long arm after that.
+3. The three closed in the room stay off; keep recording the eye's direction and what followed. Q1 stays a candidate, against 14 / 20.
+4. Before the candidate acts in the room: observe only; collect the beats where it would propose another gesture than the one chosen;
+   clone the state, run both, compare the real wholeness after the same time; by "food in sight" and "ordinary"; with the sample size.
+5. Regrow in the corrected world: yes, the room's next reference being. Keep s3_e with the old picture. If possible grow one in each
+   picture on the same budget and evaluate both on both (2 x 2). Tag earlier room results with the renderer; cite DR1b, not DR1.
+6. Per-body statistics in the lever world: FIRST. Same version (with the re-read fix): no candidate / 16 bodies sharing / each body its
+   own (statistics and running traces both unmixed); learning against each body's own count of accepted presses; one run at a time.
+7. Classic games: after per-body learning and turning by its own sight; then a good stage-3 ground (one being going there and back).
+The scene she wants from the room: the same being, equally lacking, food on the left -> turns left, on the right -> turns right, and goes
+on to its first fill; no "turn to the food" put in; gone when sight and past gesture are unpaired.
+
+## MC2: does each body learn the wiring from its own life? (Astra's 6; registered before the run, 2026-11-28)
+Lever world as MC1, today's tool (re-read fix, life-boundary fix). Arms, seeds 9601 and 9602, one run at a time:
+  none   - no candidate
+  shared - Astra's organ, one statistic for 16 bodies (MC1's choice arm)
+  own    - sixteen of the same organ, one per body: its statistic, its running trace and its set of gestures it may propose are its own;
+           nothing of another body enters (her class, one instance a body, imported at run time as before)
+Judge: a body learns it from its own life if in BOTH starts the own arm's causal share at the end of phase 2 AND of phase 3 is nearer
+shared's than none's, and its deaths after the swap are under half of none's. If it is nearer none's in both: the gain needs the pooled
+record at this length of life - said so. Split: said, no verdict.
+Read (Astra's): per body, accepted lone presses and the causal share in 500-beat windows - the share against the body's own count of
+accepted presses, for shared and own, before and after the swap (does own catch up after the same number of direct experiences?).
+Limits said before: a death does not clear a body's statistic in the own arm (one continuing self over rebirths, as the being's other
+memory); the 20-beat window and the .995 fading are hers; with one body's presses the statistic fades faster than it fills if presses
+are rare (about 1 accepted press in 25 beats).
+
+## LR1: Astra's scene as a baseline - does the first turn go to the side the food is on? (registered before the run, 2026-11-28)
+Read-only addition to tools/drive_test.py (nothing in the being changes): per trial, the first turning gesture and the side the food
+stood on at the start (bearings +-45, +-90, +-135; same lack .4, same distance 2.5 cells, the two sides mirrored by construction).
+Arms: own (the being as it is, recipe) and told (the judge gives the direction), fixed frame, 768 trials each, as DR1b.
+Reported: share of trials with any turn; the first turn's share toward the food's side (chance .5); the same by bearing and by third of
+the test; fills after a first turn toward against away.
+Fixed readings: own toward-share within .5 +- .05 -> the being's first turn does not use where the food is (the baseline Astra's
+candidate with an eye cue must beat); above .6 -> it already does in part and the gap is elsewhere; told is the ceiling of this body with
+the direction given. No adoption follows from this run.
+
+# THREE SCENES (founder 2026-11-28 night: "go by three scenes, break through one at a time"; atanor_os/EMERGE_PLAN.md, same date)
+One wall: what it knows does not become what it does now. No more tuning of the room's survival numbers. Scene 1 = MC2 (one body
+re-finds the swapped lever from its own life). Scene 2 = left / right: the first turn goes to the food's side and ends in a fill (LR1 is
+its baseline). Scene 3 = the first meeting with food at a new place (pocket room b). Bars are in the plan file, fixed before each run;
+every scene carries an unpairing control from the start, per-body statistics, no rule put in, and no part fitted to that scene alone.
+Housekeeping at the start (founder: "take down what is useless in the background"): the lever-world viewer (8780) stopped - it showed
+the old native being on the old tool; the room viewer (8768, dashboard 8777) stays. Nothing of others was touched.
+
+# VOICE (side line; founder 2026-11-28 night: "start with babbling; connect the ear too")
+The mouth: CHIMERA (github jamesondh/chimera-vocal-synth, MIT, fetched with the founder's approval into ext/, nothing of it copied
+here) - a physical model of an airway; sound comes only from breath pressure and the posture of tongue, lips, jaw. A small program of
+mine wraps it: control values in, 48 kHz sound out; no text, no phonemes, no stored sound. Checked on the desktop CPU: 7-14% of one core
+in real time; the same input gives the same bytes; with four values opened in three steps each, 72 of 81 postures sound and nearly all
+differ to a 16-band ear (pairs nearer than 0.3 log units: 0.2%); below a breath pressure of about 4 there is no sound.
+Standing of this line: beside the three scenes, CPU only, not a scene and not a gate. It is NOT the being yet: a mouth is a new motor
+branch and the grown being's gesture space is fixed, so this first step is the loop alone (as tools/lever2.py was before the whole being
+went into the lever world). Said so that it is not read as "ATANOR babbles". To tell Astra before it goes into the body.
+
+## VO1: babbling - does lived babble teach "this mouth gesture from here -> this is what my ear will hear"? (registered before the run)
+Body: 8 mouths (8 bodies), a beat = 0.2 s of sound. Mouth gestures as the body's other gestures are: four values (tongue front-back,
+tongue height, lip opening, breath pressure), each a step down / hold / step up a beat (81 gestures), clipped at the limits. Senses: the
+ear (16 bands, log energy of the beat just made - its own voice heard) and the felt posture of the four values (as it feels its head's
+tilt). No sound is named or rewarded.
+Life: 3,000 beats of babble a body (a random gesture, held 1-4 beats). A forecaster of the kind the being already has for its body
+(Going's forecast of its own gestures) learns online from the lived beats only: (heard now, felt posture, gesture) -> heard next.
+Test 1 (knows its mouth), on the last 20% of beats, never trained on: forecast error against two cheap guesses - "I will hear what I
+hear now" and "the average sound". Reading fixed: it knows its mouth if its error is at least 30% under BOTH; else not shown.
+Test 2 (drives its mouth when told, the DR1b "told" arm of the voice; a judge-side diagnostic, NOT a want put into the being): another
+mouth holds a random posture for 3 beats and that sound is what the body is given as "make this"; from a random posture it picks each
+beat the gesture whose forecast sound is nearest; 12 beats; 200 trials. Arms: own forecast / random gestures / the judge's hand moving
+the posture straight to the other's (the body's best). Reported: share of the starting ear-distance closed (median). Reading fixed: it
+drives its mouth when told if it closes at least half of what the judge's hand closes and random closes less than a quarter of that.
+What this cannot show: wanting to make a sound (nothing here wants), meaning, or exchange with another - that is the next step, where a
+response changes its insides. The four values, the step sizes and the 0.2 s beat are mine.
+
+## VO1 result (8 mouths, 3,000 beats of babble each, 19,200 lived body-beats learned from; CPU, 18 minutes)
+Test 1, knows its mouth (4,800 beats never trained on; error = mean squared difference of the 16-band ear):
+  its forecast .0122 | "what I hear now" .1126 | "the average sound" .3813 -> 89% under the better guess. MET (bar: 30% under both).
+  On the 4,150 beats where the sound changed: forecast .0128 against .1302; the direction of the change it foresaw agrees with the
+  real one (cosine .78).
+Test 2, drives its mouth when told (200 trials, 12 beats; share of the starting ear-distance closed, median):
+  own forecast .81 | random gestures -.04 | the judge's hand .92 -> MET (bar: half of the hand's, random under a quarter).
+  End distance .161 (own) against .072 (hand) from a start of .735.
+So the loop closes: from babble alone it comes to know what a mouth gesture will sound like from where its mouth is, and with that it
+can bring its mouth to a sound another mouth made - by ear, no posture given.
+What this is not, said again: not the being (the loop alone; one forecaster learned from all 8 mouths' babble pooled - the same pooled
+statistic that MC1b warned of; per-mouth not run); not wanting (the "make this" was the judge's); the other mouth is the same model as
+its own (a parrot hearing its own kind; a different voice or a real microphone not tried); the held-out beats are later beats of the
+same babble, not a separate mouth; one start. The four values, the steps and the beat are mine.
+Next, if this line goes on: (1) per-mouth learning; (2) an other that answers one kind of sound with something that changes the body's
+insides - the same question as the lever, with the mouth as the hand; (3) on the laptop. To Astra before it enters the body.
+
+## RG1 result (growth s3_r: as s3_e but in the corrected picture; then A2 room 9104, recipe, 64 bodies, 3,000 beats; deaths; water / food fills)
+Growth (need at the end of each stay, as s3_e's log): 5.52 / 7.82 / 8.21 / 7.14; no deaths in the last 1,500 beats of any stay.
+| arm | rep 0 | rep 1 |
+|---|---|---|
+| s3_e, old picture (the main line) | 14; 751 / 629 | 20; 793 / 574 |
+| s3_r, corrected picture (its own) | 31; 708 / 589 | 37; 659 / 578 |
+| s3_r, old picture (never seen by it) | 12; 896 / 733 | 8; 846 / 701 |
+By the registered judge: s3_r in the corrected world dies more than the main line in both starts (31 > 14, 37 > 20). The corrected
+world with its own being does NOT become the main line. As registered I say: the corrected world is harder for this kind of being, not
+just unfamiliar - and my explanation of RF1 ("it never saw a spring drawn rightly") is refuted: the being that grew in the corrected
+picture does best in the old, wrong picture it never saw (12, 8 deaths; fills +15-20% over the main line), and worst in its own.
+What I think this is (a guess, not measured): the fault was a beacon. A spring is one cell high; the old renderer drew open sky above
+it where the two-cell wall behind should stand, so every spring carried a tall bright column that breaks the wall line and can be seen
+from far and from any side. The corrected picture takes the column away and leaves a low box before a wall. If so, part of what I
+counted as "the eye says the right place" (pocket room: 46 of 55) and of every room survival number leaned on a mark that should not
+exist. To be measured before anything else in the room: from how far and over what share of bearings a spring is picked out by the eye,
+old picture against corrected (judge-side read of the eye's own output, no being changed).
+Also seen, not judged: in the old picture s3_r beats s3_e in both starts. One growth each - the difference may be the chance of a
+growth. The 2 x 2 Astra asked for needs a second old-picture growth on the same budget to say more.
+Decision: the main line stays (s3_e, old picture) only as the reference the past numbers were measured against; every room number of
+this file is flagged "old picture (sky column over springs)". The three scenes are to be measured in the corrected picture (the plan
+file says so); the beacon read comes first, since scene 3 is exactly "finding food at a new place".
+
+## LR1 result (the first turn against the food's side; fixed frame, 768 trials an arm, 672 with the food off to a side)
+| arm | turned at all | first turn toward the food's side | by bearing 45 / 90 / 135 | by third of the test | fills (all trials) |
+|---|---|---|---|---|---|
+| own | 98% | .577 | .61 / .56 / .57 | .54 -> .56 -> .63 | 34% |
+| told the direction | 97% | .742 | .81 / .79 / .72 | .71 -> .74 -> .78 | 72% |
+By the readings fixed before: own is neither within .5 +- .05 nor above .6 - a weak lean, said as it is. Alone, the first turn is
+nearly a coin (58%) and rises a little inside the test; a first turn toward the food is followed by a fill in 34% of trials against 26%
+after a turn away. Told the direction, the first turn goes the right way three times in four, and that is the ceiling of this body and
+this chooser with the direction given - not 1.0.
+The bar of scene 2, fixed again now as the plan file said (before any organ is run): first turn toward the food's side at least .70
+(told's .74 less .05) and fills at least .57 (0.8 x told's .715), per-body learning, and back within .58 +- .05 (today's own) when
+sight and past gesture are unpaired. This was measured in the old picture with s3_e; if the scenes move to the corrected picture the
+baseline is re-run there first and the bar re-derived the same way.
+
+## BC1: was the render fault a beacon? (judge-side read of the picture only; registered before the run, 2026-11-28)
+Room 9104 (and the pocket room), eye 1.1, no being. A body is put on every floor cell facing the food spring (and again facing 45
+degrees off it). Three pictures of each view: old renderer, corrected renderer, and the old renderer with the spring taken out of the
+map. Counted per view: pixels that change when the spring is there ("what in the picture says a spring is here"), split above / below
+the horizon, old against corrected; by distance to the spring; and the share of views in which anything of the spring shows at all.
+Reading fixed: a beacon if, beyond 4 cells, the old picture carries at least twice the spring-pixels of the corrected one or shows
+the spring in at least 1.5 times as many views; else my guess is wrong and RG1's reason is looked for elsewhere.
+
+## BC1 result (room 9104, eye 1.1, a body on each of the 56 floor cells facing the spring; old picture against corrected)
+By the reading fixed before the run: NOT a beacon in the sense I guessed. A spring shows from exactly the same views in both pictures
+(beyond 4 cells: 67% of views at 4-6 cells, 18% at 6-9, none beyond 9, old = corrected) and over the same pixels. The sky column does
+not make a spring visible from farther or from more places.
+What does differ is how strongly those pixels stand out: summed difference from the same view without the spring is 1.8-3.0 times
+larger in the old picture at every distance (4-6 cells: 187k against 102k for water, 147k against 63k for food, on the 0-255 scale).
+So the old picture marks a spring more loudly in the same places, not in more places.
+Two faults of mine in this read: (1) my thresholds (.02, .25) assumed a 0-1 picture; the picture is 0-255, so "strong pixels" equals
+"any pixel" and the pixel counts carry nothing beyond which pixels changed. (2) Found by it: the corrected renderer draws the wall
+behind a spring WITHOUT the face tint that every other wall has (the cue colours), so above each spring there is still a patch that
+differs from the wall around it - a second, weaker mark that should not exist. World fix 2 is itself faulty.
+Where this leaves RG1: its cause is not found. "Unfamiliar picture" is refuted (RG1), "visible from farther" is refuted (here);
+"marked less loudly, so the eye picks springs out less" is open and so is "the untinted patch misleads". No being is to be grown again
+until the corrected renderer is itself correct (tint on the wall behind a spring) - that is the next world correction, then one growth
+in it. The scenes' picture is decided after that; until then lever results (no picture of springs involved) are untouched by any of it.
+
+## MC2 result (scene 1; lever world, 16 bodies, 9,000 beats, one run at a time; deaths linked / apart / swapped; causal share end of phase 2, 3)
+| arm | start 9601 | start 9602 |
+|---|---|---|
+| none | 49 / 140 / 347; .658, .436 | 45 / 111 / 545; .734, .290 |
+| shared (one statistic for 16 bodies) | 33 / 14 / 12; .942, .951 | 46 / 9 / 16; .954, .958 |
+| own (each body its own statistic, trace and gestures) | 48 / 15 / 33; .887, .860 | 46 / 24 / 23; .873, .896 |
+By the registered judge: MET. In both starts the own arm's share is nearer shared's than none's in both phases (midpoints .80 / .69 and
+.84 / .62) and its deaths after the swap (33, 23) are under half of none's (347, 545) - a tenth to a twentieth.
+Each body, not the average: in the last 2,000 beats after the swap every one of the 32 bodies (two starts) presses the causal lever at
+least 75% of the time (.75-.94 and .83-.93). No body is carried by the others, because nothing of the others reaches it.
+Astra's read (share against the body's own count of accepted lone presses): after the swap a body is at .66-.67 in the first 500 beats
+(0-27 presses of its own) and at .86-.87 in the next (27-55 presses); it then stays at .84-.90. Shared: .72-.79, then .95. So one body
+re-finds the cause within about thirty presses of its own, as fast as the crowd does. What it does not do is catch up: own levels off
+near .87, shared near .95, and more presses do not close it (190 presses later the same). The pooled record buys a higher plateau, not
+a faster start. A likely reason, not measured: her statistic fades by .995 a beat, and one body's presses (about one in 25 beats) fill
+it more slowly than it fades.
+What is not yet shown for the own arm: the unpairing control. MC1c showed it for the shared organ; the plan says every scene carries
+one. Scene 1 is called passed only when MC2b below is read.
+Other limits as registered: a death does not clear a body's statistic; the window and fading are hers; the device pairs a gesture with
+its outcome closely; one tool version, two starts.
+
+## MC2b: the own arm with the gesture record unpaired (registered before the run)
+As MC2's own arm, but each body's organ is told a random gesture instead of the one that body made (the change of its lacks true, the
+gestures it may propose still its own) - MC1c's control, per body. Seeds 9601, 9602, one at a time.
+Reading fixed: scene 1 stands if in both starts the share at the end of phase 2 is under none's + .05 (.71, .78) and deaths while
+apart are not under none's (140, 111); the swapped phase is read but not judged (MC1c showed a lever held by chance can be the good
+one after the swap). If the unpaired arm keeps the gain while apart, scene 1 is NOT passed and I say so.
+
+## MC2b result (the own arm with each body's gesture record unpaired; two starts)
+| start | deaths linked / apart / swapped | causal share end of phase 2, 3 |
+|---|---|---|
+| 9601 | 53 / 241 / 287 | .501, .531 |
+| 9602 | 50 / 277 / 291 | .487, .564 |
+By the reading fixed before: the share while apart (.50, .49) is under none's + .05 (.71, .78) and deaths while apart (241, 277) are
+above none's (140, 111). Unpaired, a body's own organ finds nothing - it sits at chance in both phases and costs lives. Scene 1 stands.
+
+# SCENE 1 PASSED (2026-11-28 night): one body re-finds the swapped lever from its own life
+Bar (MC2's judge) met in both starts; every one of 32 bodies at or above .75 after the swap; re-found within about thirty presses of
+its own; gone when its gesture record is unpaired (MC2b). This is the first gate of intellectual stage I as the roadmap words it: by
+its own action it tells which of two changes that used to come together brings the change in its insides, and revises when the wiring
+is changed without a sign.
+What the pass consists of, so it is not read as more: the whole grown being (s3_e) unmodified, plus one organ of Astra's at the
+re-choice beat (her class, one instance a body), in a closed cell with two hand gestures. The organ replaces the being's own pick at
+98% of re-choices - in this world the rest of the being hardly chooses. Its plateau alone (.87) is under the pooled one (.95). A
+gesture and its outcome are 8 beats apart and nothing else happens in the cell. The window (20 beats) and the fading are hers, chosen
+by a designer. Device-size and energy lines for this capability are not measured (the roadmap asks for them beside every capability):
+16 bodies on the desktop GPU, about 16-24 minutes for 9,000 beats; the organ's own tensors are about 18 KB for 8 bodies pooled (her
+figure), per body not counted.
+Not passed by this: scene 2 (the cue is missing - the organ cannot tell left from right) and scene 3.

@@ -1,0 +1,219 @@
+{
+ "layout": "9104_0",
+ "eye": 1.1,
+ "floor_cells": 56,
+ "kinds": {
+  "water": {
+   "off_0": [
+    {
+     "dist": "0-2",
+     "views": 3,
+     "old_px": 31793.3,
+     "new_px": 31793.3,
+     "old_px_above_horizon": 14300.0,
+     "new_px_above_horizon": 14300.0,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "2-4",
+     "views": 4,
+     "old_px": 7821.5,
+     "new_px": 7821.5,
+     "old_px_above_horizon": 1872.8,
+     "new_px_above_horizon": 1872.8,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "4-6",
+     "views": 6,
+     "old_px": 1687.3,
+     "new_px": 1687.3,
+     "old_px_above_horizon": 125.5,
+     "new_px_above_horizon": 125.5,
+     "old_seen_share": 0.667,
+     "new_seen_share": 0.667
+    },
+    {
+     "dist": "6-9",
+     "views": 17,
+     "old_px": 199.4,
+     "new_px": 199.4,
+     "old_px_above_horizon": 0.1,
+     "new_px_above_horizon": 0.1,
+     "old_seen_share": 0.176,
+     "new_seen_share": 0.176
+    },
+    {
+     "dist": "9-99",
+     "views": 26,
+     "old_px": 0.0,
+     "new_px": 0.0,
+     "old_px_above_horizon": 0.0,
+     "new_px_above_horizon": 0.0,
+     "old_seen_share": 0.0,
+     "new_seen_share": 0.0
+    }
+   ],
+   "off_45": [
+    {
+     "dist": "0-2",
+     "views": 3,
+     "old_px": 16580.7,
+     "new_px": 16580.7,
+     "old_px_above_horizon": 7727.3,
+     "new_px_above_horizon": 7727.3,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "2-4",
+     "views": 4,
+     "old_px": 5065.5,
+     "new_px": 5065.5,
+     "old_px_above_horizon": 1625.5,
+     "new_px_above_horizon": 1625.5,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "4-6",
+     "views": 6,
+     "old_px": 983.2,
+     "new_px": 983.2,
+     "old_px_above_horizon": 160.0,
+     "new_px_above_horizon": 160.0,
+     "old_seen_share": 0.667,
+     "new_seen_share": 0.667
+    },
+    {
+     "dist": "6-9",
+     "views": 17,
+     "old_px": 93.7,
+     "new_px": 93.7,
+     "old_px_above_horizon": 8.1,
+     "new_px_above_horizon": 8.1,
+     "old_seen_share": 0.176,
+     "new_seen_share": 0.176
+    },
+    {
+     "dist": "9-99",
+     "views": 26,
+     "old_px": 0.0,
+     "new_px": 0.0,
+     "old_px_above_horizon": 0.0,
+     "new_px_above_horizon": 0.0,
+     "old_seen_share": 0.0,
+     "new_seen_share": 0.0
+    }
+   ]
+  },
+  "food": {
+   "off_0": [
+    {
+     "dist": "0-2",
+     "views": 3,
+     "old_px": 31793.3,
+     "new_px": 31793.3,
+     "old_px_above_horizon": 14300.0,
+     "new_px_above_horizon": 14300.0,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "2-4",
+     "views": 4,
+     "old_px": 7821.5,
+     "new_px": 7821.5,
+     "old_px_above_horizon": 1872.8,
+     "new_px_above_horizon": 1872.8,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "4-6",
+     "views": 6,
+     "old_px": 1687.3,
+     "new_px": 1687.3,
+     "old_px_above_horizon": 125.5,
+     "new_px_above_horizon": 125.5,
+     "old_seen_share": 0.667,
+     "new_seen_share": 0.667
+    },
+    {
+     "dist": "6-9",
+     "views": 17,
+     "old_px": 199.4,
+     "new_px": 199.4,
+     "old_px_above_horizon": 0.1,
+     "new_px_above_horizon": 0.1,
+     "old_seen_share": 0.176,
+     "new_seen_share": 0.176
+    },
+    {
+     "dist": "9-99",
+     "views": 26,
+     "old_px": 0.0,
+     "new_px": 0.0,
+     "old_px_above_horizon": 0.0,
+     "new_px_above_horizon": 0.0,
+     "old_seen_share": 0.0,
+     "new_seen_share": 0.0
+    }
+   ],
+   "off_45": [
+    {
+     "dist": "0-2",
+     "views": 3,
+     "old_px": 16580.7,
+     "new_px": 16580.7,
+     "old_px_above_horizon": 7727.3,
+     "new_px_above_horizon": 7727.3,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "2-4",
+     "views": 4,
+     "old_px": 4475.2,
+     "new_px": 4475.2,
+     "old_px_above_horizon": 1335.8,
+     "new_px_above_horizon": 1335.8,
+     "old_seen_share": 1.0,
+     "new_seen_share": 1.0
+    },
+    {
+     "dist": "4-6",
+     "views": 6,
+     "old_px": 827.3,
+     "new_px": 827.3,
+     "old_px_above_horizon": 121.7,
+     "new_px_above_horizon": 121.7,
+     "old_seen_share": 0.667,
+     "new_seen_share": 0.667
+    },
+    {
+     "dist": "6-9",
+     "views": 17,
+     "old_px": 44.8,
+     "new_px": 44.8,
+     "old_px_above_horizon": 3.1,
+     "new_px_above_horizon": 3.1,
+     "old_seen_share": 0.118,
+     "new_seen_share": 0.118
+    },
+    {
+     "dist": "9-99",
+     "views": 26,
+     "old_px": 0.0,
+     "new_px": 0.0,
+     "old_px_above_horizon": 0.0,
+     "new_px_above_horizon": 0.0,
+     "old_seen_share": 0.0,
+     "new_seen_share": 0.0
+    }
+   ]
+  }
+ }
+}

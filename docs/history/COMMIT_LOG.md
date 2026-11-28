@@ -1448,3 +1448,14 @@
 - 2026-11-28 `9c17cf8e` MC1c: told random gestures the being does not find the cause (.31/.18 apart, deaths 2-3x native); the candidate's gain rests on the gesture record
 - 2026-11-28 `a5a801a3` RF1: render fix raises deaths on the being grown in the faulty world (30 vs 11, 19 vs 18) - stays off for s3_e, regrow proposed; HC1 fixes applied (reborn-rows re-read, pitch reset, flag guard, crash guard)
 - 2026-11-28 `f86a0930` HC1: corrected re-read moves the recipe little (11->14, 18->20), now default; DR1b: in a fixed frame it drives when told (72%), alone 34% - DR1's numbers withdrawn; roadmap, state and Astra bundle updated
+- 2026-11-28 `d0640bce` RG1 registered: a being grown in the corrected world, then the recipe measured there
+- 2026-11-28 `79e69b23` Astra's reply recorded; MC2 registered: per-body statistics in the lever world (none / shared / own)
+- 2026-11-28 `bd39a5aa` LR1 registered: first turn against the food's side (baseline of Astra's left / right scene)
+- 2026-11-28 `ff79b192` Three scenes: one wall, three registered bars, then leave the room
+- 2026-11-28 `d5ffccff` VO1 registered: babbling - the mouth-ear loop alone (side line, CPU)
+- 2026-11-28 `bb9aa1e7` tools/voice_babble.py: the mouth-ear loop (VO1)
+- 2026-11-28 `34a98625` VO1: from babble alone it forecasts its own voice (89% under the cheap guesses) and brings its mouth to a heard sound (81% of the distance; the hand 92%)
+- 2026-11-28 `ea0b7df5` RG1: the being grown in the corrected picture dies more there (31, 37 vs 14, 20) and does best in the old picture - the render fault looks like a beacon; LR1: alone the first turn is nearly a coin (.58), told .74; scene 2 bar fixed
+- 2026-11-28 `c91263c0` BC1: the sky column does not make springs visible from farther - same views, 2-3x the contrast; the render fix itself lacks the wall tint; RG1's cause open
+- 2026-11-28 `95b9ee77` MC2: each body re-finds the swapped lever from its own life (.86-.90, deaths 33, 23 vs 347, 545; all 32 bodies >= .75); MC2b unpairing control registered
+- 2026-11-28 `f6a3f0da` Scene 1 passed: one body re-finds the swapped lever from its own life; unpaired it sits at chance (MC2b); plan, roadmap and Astra bundle updated

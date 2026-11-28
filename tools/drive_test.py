@@ -75,8 +75,11 @@ def main():
     for r in range(a.rounds):
         x = birth(); done = torch.zeros(n, dtype=torch.bool, device=DEV); t_fill = torch.full((n,), -1, device=DEV); t_aim = torch.full((n,), -1, device=DEV); t_face = torch.full((n,), -1, device=DEV)
         turn_to = torch.zeros(n, device=DEV); turn_away = torch.zeros(n, device=DEV); hand_n = torch.zeros(n, device=DEV); still_n = torch.zeros(n, device=DEV)
+        first = torch.zeros(n, device=DEV); side = torch.zeros(n, device=DEV); first_t = torch.full((n,), -1.0, device=DEV)   # LR1: the first turn of the trial and the side the food stood on
         for t in range(a.cap):
             b0, d0 = bearing()
+            if t == 0:
+                side = torch.sign(b0) * (b0.abs() > math.radians(15)).float()
             if a.arm == "script":
                 k0, dd0 = w.cast(w.head[:, None], step=0.02, far=3.0); inreach = (k0[:, 0] == FOOD) & (dd0[:, 0] <= 1.2)
                 act = torch.where(inreach, torch.full((n,), A_DO, device=DEV), torch.where(b0.abs() > math.radians(15), torch.where(b0 > 0, torch.full((n,), A_R, device=DEV), torch.full((n,), A_L, device=DEV)), torch.full((n,), A_F, device=DEV)))
@@ -105,6 +108,7 @@ def main():
             b1, d1 = bearing(); live = ~done
             tsgn = torch.where(neck[act] == 1, -1.0, torch.where(neck[act] == 2, 1.0, 0.0)); off = b0.abs() > math.radians(15)
             turn_to += (live & off & (tsgn * torch.sign(b0) > 0)).float(); turn_away += (live & off & (tsgn * torch.sign(b0) < 0)).float()
+            nf_ = live & (first == 0) & (tsgn != 0); first = torch.where(nf_, tsgn, first); first_t = torch.where(nf_, torch.full_like(first_t, float(t + 1)), first_t)
             hand_n += (live & (hand[act] == 2)).float(); still_n += (live & (legs[act] == 0) & (tsgn == 0) & (hand[act] != 2)).float()
             k1, dd1 = w.cast(w.head[:, None], step=0.02, far=3.0); face = (k1[:, 0] == FOOD) & (dd1[:, 0] <= 1.2)
             t_aim = torch.where(live & (t_aim < 0) & (b1.abs() <= math.radians(15)), torch.full_like(t_aim, t + 1), t_aim)
@@ -115,7 +119,7 @@ def main():
             if bool(done.all()):
                 break
         for i in range(n):
-            trials.append(dict(bear=BEAR[i % len(BEAR)], fill=float(t_fill[i]), aim=float(t_aim[i]), face=float(t_face[i]), turn_to=float(turn_to[i]), turn_away=float(turn_away[i]), hand=float(hand_n[i]), still=float(still_n[i])))
+            trials.append(dict(bear=BEAR[i % len(BEAR)], fill=float(t_fill[i]), aim=float(t_aim[i]), face=float(t_face[i]), turn_to=float(turn_to[i]), turn_away=float(turn_away[i]), hand=float(hand_n[i]), still=float(still_n[i]), first=float(first[i]), side=float(side[i]), first_t=float(first_t[i]), round=r))
     md = lambda v: float(np.median(v)) if len(v) else None
     by = {}
     third = len(trials) // 3; thirds = [round(float(np.mean([q["fill"] > 0 for q in trials[i * third:(i + 1) * third]])), 3) for i in range(3)]
@@ -124,12 +128,20 @@ def main():
         by[str(b_)] = dict(trials=len(T), filled_share=round(len(fl) / max(len(T), 1), 3), fill_beats_median=md(fl), aimed_share=round(float(np.mean([q["aim"] > 0 for q in T])), 3), aim_beats_median=md([q["aim"] for q in T if q["aim"] > 0]),
                            faced_in_reach_share=round(float(np.mean([q["face"] > 0 for q in T])), 3), turns_toward_mean=round(float(np.mean([q["turn_to"] for q in T])), 2), turns_away_mean=round(float(np.mean([q["turn_away"] for q in T])), 2),
                            hand_beats_mean=round(float(np.mean([q["hand"] for q in T])), 2), still_beats_mean=round(float(np.mean([q["still"] for q in T])), 2))
+    def flip(T):                                                         # LR1: does the first turn go to the side the food is on? (the sign convention is the one turn_to uses)
+        L_ = [q for q in T if q["side"] < 0 and q["first"] != 0]; R_ = [q for q in T if q["side"] > 0 and q["first"] != 0]; N_ = [q for q in T if q["side"] != 0]
+        pr_ = lambda Q: round(float(np.mean([q["first"] > 0 for q in Q])), 3) if Q else None
+        tw_ = [q["first"] * q["side"] > 0 for q in L_ + R_]
+        return dict(trials=len(N_), turned_at_all=round(len(L_ + R_) / max(len(N_), 1), 3), first_turn_positive_when_side_neg=pr_(L_), first_turn_positive_when_side_pos=pr_(R_),
+                    first_turn_toward_share=round(float(np.mean(tw_)), 3) if tw_ else None, first_turn_beat_median=md([q["first_t"] for q in L_ + R_]),
+                    filled_when_first_toward=round(float(np.mean([q["fill"] > 0 for q in L_ + R_ if q["first"] * q["side"] > 0] or [0])), 3), filled_when_first_away=round(float(np.mean([q["fill"] > 0 for q in L_ + R_ if q["first"] * q["side"] < 0] or [0])), 3))
+    lr = dict(all=flip(trials), by_abs_bearing={str(b_): flip([q for q in trials if abs(q["bear"]) == b_]) for b_ in (45, 90, 135)}, by_third=[flip([q for q in trials if q["round"] * 3 // a.rounds == k]) for k in range(3)])
     fl = [q["fill"] for q in trials if q["fill"] > 0]
     cls = {nm: (dict(foreseen_forward=round(float(np.average([c[0] for c in v], weights=[c[4] for c in v])), 3), felt_forward=round(float(np.average([c[1] for c in v], weights=[c[4] for c in v])), 3),
                      foreseen_turn_abs=round(float(np.average([c[2] for c in v], weights=[c[4] for c in v])), 3), felt_turn_abs=round(float(np.average([c[3] for c in v], weights=[c[4] for c in v])), 3), beats=int(sum(c[4] for c in v))) if v else None)
            for nm, v in E["cls"].items()}
     res = dict(protocol="atanor_os/WORLD_A_PROTOCOL.md DR1", arm=a.arm, being=a.being, bodies=n, rounds=a.rounds, cap=a.cap, seed=a.seed,
-               all=dict(trials=len(trials), filled_share=round(len(fl) / max(len(trials), 1), 3), fill_beats_median=md(fl), filled_share_by_third=thirds), by_bearing=by,
+               all=dict(trials=len(trials), filled_share=round(len(fl) / max(len(trials), 1), 3), fill_beats_median=md(fl), filled_share_by_third=thirds), by_bearing=by, first_turn=lr,
                body_knowledge=(dict(abs_error_median=dict(forward=md(E["f"]), side=md(E["s"]), turn=md(E["t"])), abs_error_mean=dict(forward=round(float(np.mean(E["f"])), 3), side=round(float(np.mean(E["s"])), 3), turn=round(float(np.mean(E["t"])), 3)),
                                     by_gesture_kind=cls, sign_right_share=dict(turn=round(SG[0] / max(SG[1], 1), 3), step=round(SG[2] / max(SG[3], 1), 3))) if E["f"] else None),
                oracle_calls=(OC[0] if a.arm == "told" else None), seconds=round(time.time() - t0))

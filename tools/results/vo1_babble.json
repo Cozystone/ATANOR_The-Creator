@@ -1,0 +1,69 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md VO1",
+ "bodies": 8,
+ "beats": 3000,
+ "seed": 9901,
+ "gestures": 81,
+ "values": [
+  "tbX",
+  "tbY",
+  "lipAp",
+  "pressure"
+ ],
+ "lived_body_beats": 19200,
+ "knows_its_mouth": {
+  "test_beats": 4800,
+  "forecast": 0.0122,
+  "same_as_now": 0.11262,
+  "average_sound": 0.38129,
+  "when_the_sound_changed": {
+   "beats": 4150,
+   "forecast": 0.01278,
+   "same_as_now": 0.1302,
+   "direction_cosine": 0.78
+  },
+  "under_both_by_30pct": true
+ },
+ "drives_when_told": {
+  "trials": 200,
+  "start_distance_median": 0.735,
+  "end_distance_median": {
+   "own": 0.161,
+   "random": 1.185,
+   "hand": 0.072
+  },
+  "share_of_distance_closed_median": {
+   "own": 0.806,
+   "random": -0.039,
+   "hand": 0.919
+  },
+  "drives_when_told": true
+ },
+ "curve": [
+  {
+   "t": 500,
+   "train_loss": 0.0159
+  },
+  {
+   "t": 1000,
+   "train_loss": 0.0107
+  },
+  {
+   "t": 1500,
+   "train_loss": 0.0088
+  },
+  {
+   "t": 2000,
+   "train_loss": 0.006
+  },
+  {
+   "t": 2500,
+   "train_loss": 0.0083
+  },
+  {
+   "t": 3000,
+   "train_loss": 0.0083
+  }
+ ],
+ "seconds": 1076
+}

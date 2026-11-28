@@ -58,7 +58,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument("out", nargs="?", default=""); ap.add_argument("--being", required=True); ap.add_argument("--eye", type=float, default=0.0)
     ap.add_argument("--bodies", type=int, default=16); ap.add_argument("--t1", type=int, default=1500); ap.add_argument("--t2", type=int, default=5000); ap.add_argument("--t3", type=int, default=9000)
     ap.add_argument("--seed", type=int, default=9601); ap.add_argument("--view", type=int, default=0)
-    ap.add_argument("--cut", type=int, default=1); ap.add_argument("--motor", default="", choices=["", "choice", "shuffle", "xshuffle", "anyact"]); ap.add_argument("--motor-src", default="")
+    ap.add_argument("--cut", type=int, default=1); ap.add_argument("--motor", default="", choices=["", "choice", "shuffle", "xshuffle", "anyact", "own", "ownany"]); ap.add_argument("--motor-src", default="")
     a = ap.parse_args(); V2["on"] = True
     if a.eye:
         RoomBody.default_eye = a.eye
@@ -72,7 +72,23 @@ def main():
     if a.motor:
         import importlib.util
         sp_ = importlib.util.spec_from_file_location("motor_src", a.motor_src); mm_ = importlib.util.module_from_spec(sp_); sp_.loader.exec_module(mm_)
-        probe = mm_.MotorProposal(torch.tensor(B.combos, device=DEV), n); G_ = Mi.going
+        if a.motor in ("own", "ownany"):                                               # MC2: one organ a body - statistic, trace and proposable gestures all its own
+            class _Own:
+                def __init__(self):
+                    self.ps = [mm_.MotorProposal(torch.tensor(B.combos, device=DEV), 1) for _ in range(n)]
+                def propose(self, action, d, due, allowed):
+                    return torch.cat([q.propose(action[i:i + 1], d[i:i + 1], due[i:i + 1], allowed) for i, q in enumerate(self.ps)])
+                def record(self, action, delta, cut):
+                    for i, q in enumerate(self.ps):
+                        if a.motor == "ownany":                            # MC2b: told a random gesture; what it may propose stays what it really made
+                            v_ = q.visited.clone(); q.record(torch.randint(0, len(B.combos), (1,), generator=gsh).to(DEV), delta[i:i + 1], cut[i:i + 1]); q.visited = v_; q.visited[action[i]] = True
+                        else:
+                            q.record(action[i:i + 1], delta[i:i + 1], cut[i:i + 1])
+                changed = property(lambda self: sum(q.changed for q in self.ps)); opportunities = property(lambda self: sum(q.opportunities for q in self.ps))
+            probe = _Own()
+        else:
+            probe = mm_.MotorProposal(torch.tensor(B.combos, device=DEV), n)
+        G_ = Mi.going
         defi = lambda x_: 1 - x_[:, [G_.ins[2], G_.ins[1]]].clamp(0, 1)
         Mi.motor_candidate = lambda x_, pick, due, allowed: probe.propose(pick, defi(x_), due, allowed)
         ring = torch.zeros(n, 256, 2, device=DEV); gsh = torch.Generator(); gsh.manual_seed(a.seed + 1); rows_ = torch.arange(n, device=DEV)
@@ -81,6 +97,7 @@ def main():
         push = serve(8780)
     deaths = [0, 0, 0]; picks = [[0, 0, 0, 0] for _ in range(3)]; late = [[0, 0, 0, 0] for _ in range(3)]; src = [[0] * 5 for _ in range(3)]; moved = [0.0, 0.0, 0.0]
     T = [a.t1, a.t2, a.t3]; t = 0
+    CV = torch.zeros(max(1, a.t3 // 500), n, 2, dtype=torch.long, device=DEV)       # MC2 read: per 500 beats, per body: accepted lone presses of the causal lever, of the other
     # SH1 shadow (Astra 714123a; read-only, changes no behaviour): the same lived record given to a second gut that keeps "the movement it
     # actually began, and what its insides did 1-20 beats later" instead of "the place it set out for". Kinds: 1 first hand, 2 second hand, 3 a walk begun.
     SH = dict(hist=torch.zeros(n, 21, dtype=torch.long, device=DEV), acc=torch.zeros(4, 21, device=DEV), cnt=torch.zeros(4, 21, device=DEV), prev_hand=torch.zeros(n, dtype=torch.long, device=DEV),
@@ -101,6 +118,8 @@ def main():
         if (t + 1) % 250 == 0:
             net = (SH["acc"] / SH["cnt"].clamp(min=1e-6))[:, 1:].sum(1)
             SH["snaps"].append(dict(t=t + 1, phase=ph, first=round(float(net[1]), 4), second=round(float(net[2]), 4), walk=round(float(net[3]), 4), n=[int(SH["cnt"][k_, 1]) for k_ in (1, 2, 3)]))
+        if ph > 0 and not a.view:
+            gd_ = 1 if ph < 2 else 2; wi_ = min(tt // 500, CV.shape[0] - 1); CV[wi_, :, 0] += (pr == gd_).long(); CV[wi_, :, 1] += ((pr != gd_) & (pr != 0) & (pr != 3)).long()
         for v in (1, 2, 3):
             c_ = int((pr == v).sum()); picks[ph][v] += c_
             if tt >= T[ph] - (T[ph] - (0 if ph == 0 else T[ph - 1])) // 3:
@@ -147,7 +166,7 @@ def main():
     r = dict(protocol="atanor_os/WORLD_A_PROTOCOL.md LV2", quiet=dict(rel=getattr(Mi, "q_rel", None), checked=getattr(Mi, "q_n", None), turns_not_scored=getattr(Mi, "q_turn", 0)), being=a.being, bodies=n, seed=a.seed, deaths_by_phase=deaths, presses_by_phase=[dict(none=p[0], first=p[1], second=p[2], both=p[3]) for p in picks],
              causal_share_last_third=[None, share(late[1], 1), share(late[2], 2)], who_chose_by_phase=[dict(pull=s[0], value=s[1], random=s[2], held=s[3], tried=s[4]) for s in src],
              cells_walked_by_phase=[round(m, 1) for m in moved], gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), journeys=getattr(Mi, "g_ends", 0)),
-             remaps=getattr(Mi.going, "remaps", 0), life_cut=a.cut, motor=(dict(arm=a.motor, replaced=probe.changed, rechoices=probe.opportunities) if probe is not None else None), seconds=round(time.time() - t0), shadow_movement_gut=SH["snaps"], place_gut_actions=(int((Mi.gut.fast_action >= 0).sum()) if getattr(Mi, "gut", None) is not None else None))
+             remaps=getattr(Mi.going, "remaps", 0), press_windows=CV.tolist(), life_cut=a.cut, motor=(dict(arm=a.motor, replaced=probe.changed, rechoices=probe.opportunities) if probe is not None else None), seconds=round(time.time() - t0), shadow_movement_gut=SH["snaps"], place_gut_actions=(int((Mi.gut.fast_action >= 0).sum()) if getattr(Mi, "gut", None) is not None else None))
     print(json.dumps(r), flush=True)
     if a.out:
         json.dump(r, open(a.out, "w"), indent=1)

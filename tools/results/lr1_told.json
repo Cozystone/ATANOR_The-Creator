@@ -1,0 +1,198 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md DR1",
+ "arm": "told",
+ "being": "s3_e",
+ "bodies": 64,
+ "rounds": 12,
+ "cap": 120,
+ "seed": 9701,
+ "all": {
+  "trials": 768,
+  "filled_share": 0.715,
+  "fill_beats_median": 25.0,
+  "filled_share_by_third": [
+   0.535,
+   0.793,
+   0.816
+  ]
+ },
+ "by_bearing": {
+  "0": {
+   "trials": 96,
+   "filled_share": 0.771,
+   "fill_beats_median": 8.0,
+   "aimed_share": 0.917,
+   "aim_beats_median": 1.0,
+   "faced_in_reach_share": 0.854,
+   "turns_toward_mean": 2.76,
+   "turns_away_mean": 1.44,
+   "hand_beats_mean": 20.88,
+   "still_beats_mean": 5.57
+  },
+  "45": {
+   "trials": 192,
+   "filled_share": 0.75,
+   "fill_beats_median": 19.5,
+   "aimed_share": 0.74,
+   "aim_beats_median": 4.0,
+   "faced_in_reach_share": 0.818,
+   "turns_toward_mean": 3.99,
+   "turns_away_mean": 1.83,
+   "hand_beats_mean": 23.49,
+   "still_beats_mean": 7.55
+  },
+  "90": {
+   "trials": 192,
+   "filled_share": 0.74,
+   "fill_beats_median": 32.0,
+   "aimed_share": 0.625,
+   "aim_beats_median": 21.0,
+   "faced_in_reach_share": 0.786,
+   "turns_toward_mean": 4.38,
+   "turns_away_mean": 1.97,
+   "hand_beats_mean": 26.62,
+   "still_beats_mean": 8.94
+  },
+  "135": {
+   "trials": 192,
+   "filled_share": 0.641,
+   "fill_beats_median": 44.0,
+   "aimed_share": 0.641,
+   "aim_beats_median": 27.0,
+   "faced_in_reach_share": 0.724,
+   "turns_toward_mean": 4.92,
+   "turns_away_mean": 2.33,
+   "hand_beats_mean": 32.32,
+   "still_beats_mean": 12.69
+  },
+  "180": {
+   "trials": 96,
+   "filled_share": 0.688,
+   "fill_beats_median": 25.0,
+   "aimed_share": 0.521,
+   "aim_beats_median": 28.0,
+   "faced_in_reach_share": 0.792,
+   "turns_toward_mean": 4.76,
+   "turns_away_mean": 1.98,
+   "hand_beats_mean": 25.02,
+   "still_beats_mean": 12.98
+  }
+ },
+ "first_turn": {
+  "all": {
+   "trials": 672,
+   "turned_at_all": 0.973,
+   "first_turn_positive_when_side_neg": 0.247,
+   "first_turn_positive_when_side_pos": 0.729,
+   "first_turn_toward_share": 0.742,
+   "first_turn_beat_median": 3.0,
+   "filled_when_first_toward": 0.724,
+   "filled_when_first_away": 0.627
+  },
+  "by_abs_bearing": {
+   "45": {
+    "trials": 192,
+    "turned_at_all": 0.958,
+    "first_turn_positive_when_side_neg": 0.133,
+    "first_turn_positive_when_side_pos": 0.755,
+    "first_turn_toward_share": 0.81,
+    "first_turn_beat_median": 1.0,
+    "filled_when_first_toward": 0.779,
+    "filled_when_first_away": 0.571
+   },
+   "90": {
+    "trials": 192,
+    "turned_at_all": 0.974,
+    "first_turn_positive_when_side_neg": 0.154,
+    "first_turn_positive_when_side_pos": 0.74,
+    "first_turn_toward_share": 0.791,
+    "first_turn_beat_median": 3.0,
+    "filled_when_first_toward": 0.777,
+    "filled_when_first_away": 0.564
+   },
+   "135": {
+    "trials": 192,
+    "turned_at_all": 0.99,
+    "first_turn_positive_when_side_neg": 0.287,
+    "first_turn_positive_when_side_pos": 0.719,
+    "first_turn_toward_share": 0.716,
+    "first_turn_beat_median": 4.0,
+    "filled_when_first_toward": 0.618,
+    "filled_when_first_away": 0.685
+   }
+  },
+  "by_third": [
+   {
+    "trials": 224,
+    "turned_at_all": 0.973,
+    "first_turn_positive_when_side_neg": 0.276,
+    "first_turn_positive_when_side_pos": 0.696,
+    "first_turn_toward_share": 0.711,
+    "first_turn_beat_median": 3.0,
+    "filled_when_first_toward": 0.568,
+    "filled_when_first_away": 0.381
+   },
+   {
+    "trials": 224,
+    "turned_at_all": 0.964,
+    "first_turn_positive_when_side_neg": 0.292,
+    "first_turn_positive_when_side_pos": 0.767,
+    "first_turn_toward_share": 0.736,
+    "first_turn_beat_median": 2.0,
+    "filled_when_first_toward": 0.78,
+    "filled_when_first_away": 0.772
+   },
+   {
+    "trials": 224,
+    "turned_at_all": 0.982,
+    "first_turn_positive_when_side_neg": 0.176,
+    "first_turn_positive_when_side_pos": 0.723,
+    "first_turn_toward_share": 0.777,
+    "first_turn_beat_median": 1.0,
+    "filled_when_first_toward": 0.813,
+    "filled_when_first_away": 0.776
+   }
+  ]
+ },
+ "body_knowledge": {
+  "abs_error_median": {
+   "forward": 0.018418824300169945,
+   "side": 0.015829565934836864,
+   "turn": 0.00957471551373601
+  },
+  "abs_error_mean": {
+   "forward": 0.027,
+   "side": 0.023,
+   "turn": 0.018
+  },
+  "by_gesture_kind": {
+   "turn": {
+    "foreseen_forward": -0.006,
+    "felt_forward": 0.0,
+    "foreseen_turn_abs": 0.441,
+    "felt_turn_abs": 0.524,
+    "beats": 688
+   },
+   "step": {
+    "foreseen_forward": 0.028,
+    "felt_forward": 0.033,
+    "foreseen_turn_abs": 0.014,
+    "felt_turn_abs": 0.0,
+    "beats": 20981
+   },
+   "still": {
+    "foreseen_forward": 0.001,
+    "felt_forward": 0.0,
+    "foreseen_turn_abs": 0.013,
+    "felt_turn_abs": 0.0,
+    "beats": 16115
+   }
+  },
+  "sign_right_share": {
+   "turn": 1.0,
+   "step": 0.992
+  }
+ },
+ "oracle_calls": 1490,
+ "seconds": 129
+}

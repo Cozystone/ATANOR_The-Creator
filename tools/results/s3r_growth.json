@@ -1,0 +1,85 @@
+{
+ "protocol": "atanor_os/S3_S4_PROTOCOL.md (S3)",
+ "rows": [
+  {
+   "first_deaths": 0.86,
+   "last_deaths": 0.0,
+   "first_need": 1.69,
+   "last_need": 5.52,
+   "stay": 0,
+   "layout": "9104_0",
+   "forks": {
+    "far": [
+     0.65625,
+     0.71875
+    ],
+    "stem": [
+     0.1875,
+     0.84375
+    ]
+   },
+   "units_used": 47,
+   "seconds": 1488
+  },
+  {
+   "first_deaths": 0.2,
+   "last_deaths": 0.0,
+   "first_need": 3.15,
+   "last_need": 7.82,
+   "stay": 1,
+   "layout": "9105_1",
+   "forks": {
+    "far": [
+     1.0,
+     0.375
+    ],
+    "stem": [
+     0.65625,
+     0.5
+    ]
+   },
+   "units_used": 64,
+   "seconds": 2132
+  },
+  {
+   "first_deaths": 0.05,
+   "last_deaths": 0.0,
+   "first_need": 4.0,
+   "last_need": 8.21,
+   "stay": 2,
+   "layout": "9106_0",
+   "forks": {
+    "far": [
+     0.78125,
+     0.875
+    ],
+    "stem": [
+     0.15625,
+     0.78125
+    ]
+   },
+   "units_used": 64,
+   "seconds": 2781
+  },
+  {
+   "first_deaths": 0.02,
+   "last_deaths": 0.0,
+   "first_need": 3.78,
+   "last_need": 7.14,
+   "stay": 3,
+   "layout": "9104_0",
+   "forks": {
+    "far": [
+     0.96875,
+     1.0
+    ],
+    "stem": [
+     0.875,
+     1.0
+    ]
+   },
+   "units_used": 64,
+   "seconds": 3312
+  }
+ ]
+}
