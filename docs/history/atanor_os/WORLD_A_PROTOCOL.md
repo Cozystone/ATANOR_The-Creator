@@ -1426,3 +1426,30 @@ Reading, as registered:
   both - mixed; suspect for lives, useful for finding. Not closed, not adopted.
 - IM2: the arm is identical to the full bundle to the last number - the imagined way never fires in A2. Inert here.
 - Q1's "115 -> 22" (one start) stands only as "Q1 hides part of the bundle's harm"; with the second start at 91 it is not a recipe.
+
+## F2 one-in on the adopted recipe (registered before the run, 2026-11-28; founder: "run it")
+Question F1 could not separate: is the bundle worse because of something it has, or because it lacks the recipe's two (mismatch, learned
+trust)? Same room and beats as F1 (9104, 64 bodies, 3,000 beats), two starts each (--rep 0, 1). Arms: recipe + remap; recipe + gut (with
+own leave); recipe + seen eye (with R5); recipe + Q1; the full bundle + Q1 with the recipe's two switched on. Reference: recipe 11 / 18
+deaths, wait 179 / 211.5 (F1). IM2 is left out (never fires in A2).
+Judge: an addition with deaths more than 10% above the recipe in BOTH starts harms on the recipe (closed for the room); at or below the
+recipe in both = harmless here (says nothing yet about helping); mixed = not shown. If the last arm returns to the recipe's range in both
+starts, the bundle's harm was what it lacked. One start differing is not read.
+
+## F2 result: one-in on the adopted recipe (deaths, wait median, food fills; start 1 / start 2; recipe = 11, 179.0, 332 / 18, 211.5, 312)
+| recipe + | start 1 | start 2 | by the registered judge |
+|---|---|---|---|
+| remap (R1) | 26, 200.0, 285 | 21, 157.0, 311 | deaths +136%, +17%: harms on the recipe - closed for the room |
+| gut + own leave (G1, L7) | 32, 161.0, 307 | 38, 332.0, 250 | deaths x2.9, x2.1: harms - closed for the room |
+| seen eye + R5 (with the map it writes into) | 20, 206.0, 287 | 62, 197.0, 276 | deaths +82%, x3.4, fewer fills: harms - closed for the room |
+| Q1 | 12, 142.0, 337 | 20, 134.0, 305 | deaths +9%, +11% (1 and 2 bodies): not harmful by the judge; wait -21%, -37% |
+| the full bundle + Q1 with the recipe's two on | 47, 163.5, 294 | 98, 207.0, 266 | does not return: the harm is in what the bundle has, not in what it lacked |
+Reading: three of the four things I stacked on 11-27/28 (remap, gut over journeys, seen eye steering) each cost lives when added alone to
+the recipe, in both starts. They are switched off for the room (flags stay, default off). F1's "remap helps inside the bundle" and this
+do not contradict: inside the bundle it repairs harm the others make. Q1 alone is the one addition that does not cost lives and shortens
+the wait in both starts - a helping judge was not registered, so it is a candidate, not adopted; it needs its own registered run.
+What this does NOT say: that the eye is useless (first-meeting cases, pocket room b, are a different question) or that these organs fail
+outside this room (the gut found the cause alone in the lever device).
+My error in this run: the first "recipe + seen eye" arm ran without the map the eye writes into (ATANOR_IMAGINE_MAP), so the eye never
+ran and the arm equalled the recipe to the last digit; caught by that equality, rerun with the map on - the numbers above are the rerun.
+The seen arm therefore adds two flags (eye + its map), not one.

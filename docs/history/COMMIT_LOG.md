@@ -1427,3 +1427,6 @@
 - 2026-11-28 `0f249d4d` SH1: the being's own lived record tells the causal hand (by movement and delay); its gut holds only places - the candidate interface is the first thing to change
 - 2026-11-28 `49e40574` F1: first launch lost to my misplaced rest call (value learning ran every beat); fixed, progress line added, rerun
 - 2026-11-28 `c55e1d6a` F1 one-out falsification in A2: the stacked bundle is worse than the adopted recipe in both starts and no single organ is the cause; not adopted
+- 2026-11-28 `85b7e13e` export: lever tools and the 11-28 results
+- 2026-11-28 `61eea6e0` F2 registered: one-in on the adopted recipe
+- 2026-11-28 `6161989d` F2 one-in on the recipe: remap, gut over journeys and the seen eye each cost lives alone (closed for the room); Q1 does not and shortens the wait (candidate)
