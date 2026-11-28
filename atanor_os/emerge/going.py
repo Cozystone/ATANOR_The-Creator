@@ -578,7 +578,7 @@ class Going:
         if os.environ.get("ATANOR_SEEN", "0") == "1" and getattr(O, "view", None) is not None:
             with torch.enable_grad():
                 self._seen(O.view, p, h, fo, tried, moved, live)
-        self.wp_prev = p.clone()
+        self.wp_prev = p.clone(); self.wh_prev = h.clone()                 # PK3b-chain: read-out only (the heading beside the kept position)
 
     def _seen(self, view, p, h, fo, tried, moved, live):
         """SM1 (founder 2026-11-27: "does what it sees enter its map? a person takes in far structure by looking"): from its own walking it

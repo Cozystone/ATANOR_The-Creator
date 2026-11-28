@@ -1,0 +1,142 @@
+{
+ "chain": {
+  "bodies": 64,
+  "died_before_fill": 27,
+  "open_at_end": 0,
+  "each": {
+   "sight": {
+    "n": 57,
+    "median_beat": 219.0
+   },
+   "claim": {
+    "n": 0,
+    "median_beat": null
+   },
+   "candidate": {
+    "n": 0,
+    "median_beat": null
+   },
+   "approach": {
+    "n": 49,
+    "median_beat": 381.0
+   },
+   "reach": {
+    "n": 35,
+    "median_beat": 382.0
+   },
+   "fill": {
+    "n": 37,
+    "median_beat": 449.0
+   },
+   "candidate_at_old_place": {
+    "n": 0,
+    "median_beat": null
+   }
+  },
+  "in_order": [
+   57,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "skipping_claim": [
+   57,
+   57,
+   57,
+   49,
+   35,
+   25
+  ],
+  "died_last_stage": {
+   "sight": 8,
+   "claim": 0,
+   "candidate": 0,
+   "approach": 2,
+   "reach": 10,
+   "fill": 0,
+   "none": 7
+  },
+  "claim_to_food_at_fill_median": null
+ },
+ "cond": "b",
+ "ledger": null,
+ "self_fix": {
+  "spot_used": 0,
+  "spots": 0,
+  "spot_move": -1.0
+ },
+ "quiet": {
+  "rel": null,
+  "checked": null,
+  "turns_not_scored": 0
+ },
+ "rely": {
+  "eye_err": -1.0,
+  "mem_err": -1.0,
+  "eye_led": 0,
+  "memory_led": 0,
+  "seen_led": 0
+ },
+ "gut": {
+  "asked": 0,
+  "known": 0,
+  "differed": 0,
+  "journeys_ended": 0,
+  "usual_len": 0.0
+ },
+ "seen_relief": {
+  "hit": -1.0,
+  "samples": 0,
+  "writes": 0
+ },
+ "seen_map": {
+  "err": -1.0,
+  "stops": 0,
+  "writes": 0
+ },
+ "e1": 0,
+ "w0": {
+  "beats": 0,
+  "spread": 0.0,
+  "picks": null
+ },
+ "test": "strong",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 2000,
+ "after": 2000,
+ "blocked_side": null,
+ "first_gap_food_beats_after": -1880,
+ "phases": [
+  {
+   "deaths": 43,
+   "food_fills": 195,
+   "food_wait_median": 154.0,
+   "ways_left_right_gap": [
+    175,
+    4,
+    16
+   ]
+  },
+  {
+   "deaths": 91,
+   "food_fills": 85,
+   "food_wait_median": 242.0,
+   "ways_left_right_gap": [
+    37,
+    16,
+    32
+   ]
+  }
+ ],
+ "strong": {
+  "share_of_hungry_beats_at_pocket_top": 0.403,
+  "exits": 173,
+  "exit_beats_median_first_half": 82.0,
+  "exit_beats_median_second_half": 57.0
+ },
+ "remaps": 0,
+ "seconds": 412
+}

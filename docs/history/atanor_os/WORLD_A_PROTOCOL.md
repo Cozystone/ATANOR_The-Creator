@@ -1453,3 +1453,44 @@ outside this room (the gut found the cause alone in the lever device).
 My error in this run: the first "recipe + seen eye" arm ran without the map the eye writes into (ATANOR_IMAGINE_MAP), so the eye never
 ran and the arm equalled the recipe to the last digit; caught by that equality, rerun with the map on - the numbers above are the rerun.
 The seen arm therefore adds two flags (eye + its map), not one.
+
+## PK3b-chain: pocket room b read as a first-meeting chain (Astra's order, step 3; registered before the run, 2026-11-28)
+Judge side only; nothing in the being changes (one read-out line in going.py keeps the heading beside the position it already keeps).
+Same run as PK3 b (64 bodies, 2,000 + 2,000 beats, seed 9501, same flags as then = the stacked bundle, because the chain needs the eye's
+claims) plus a second arm with the adopted recipe (no eye claims: only sight, approach, reach, fill can be read there).
+One meeting per body: the life in progress when the food moves (t = 2,000), until its first food fill or its death. First beat of:
+ 1 sight (a ray of its own view hits the food; judge's cast over its view columns) - 2 claim (the eye's kept food claim, turned into the
+ world, within 2 cells of the food) - 3 candidate (the homing or lean target within 2 cells of the food) - 4 approach (within 2.5 cells) -
+ 5 reach (within 1.2 cells) - 6 fill. Also: a candidate within 2 cells of the OLD food place, and death.
+Reading (no bar; a diagnosis): the largest drop between neighbouring stages, counted over bodies, names the first break. It separates
+"never saw it" / "saw, the eye did not claim" / "claimed, never a candidate" / "candidate, not approached" / "reached, not filled".
+Check of my own turning into the world: for bodies that filled, the claim's distance to the food at the fill (should be near the eye's ~.8 cells).
+
+## PK3b-chain result (64 bodies, 2,000 + 2,000 beats, one start; one meeting per body after the food moves)
+| | bundle (as PK3 b) | adopted recipe |
+|---|---|---|
+| phases: deaths, food fills, wait median | 45, 216, 125.5 -> 75, 108, 262.0 | 43, 195, 154.0 -> 91, 85, 242.0 |
+| 1 saw the food (median beat) | 56 (214) | 57 (219) |
+| 4 came within 2.5 cells | 49 (442) | 49 (381) |
+| 5 came within 1.2 cells | 29 (521) | 35 (382) |
+| 6 filled | 31 (478) | 37 (449) |
+| died before a fill | 33 | 27 |
+| - of those, last stage: never saw / saw only / within 2.5 / within 1.2 | 1 / 1 (+13 with a candidate) / 8 / 10 | 7 / 8 / 2 / 10 |
+| candidate at the food (bundle only; median beat) | 41 (617) | - |
+| candidate at the OLD food place | 64 (beat 1) | - |
+Reading:
+- Seeing is not the break: 56-57 of 64 saw the new food in that life. But the first sight comes late (median ~215 beats after the move).
+- The largest drop is at the END of the chain, in both arms: 49 came within 2.5 cells, 31-37 filled, and 10 bodies in each arm died having
+  been within 1.2 cells of the food without ever filling. A fill in this world needs the hand gesture while the straight-ahead ray is on
+  the food within reach - being beside it is not enough. So in condition b "seen and reached but not taken" is a main loss, the same in the
+  recipe (no eye claims at all) - it is not the eye's claim, nor the candidate.
+- The candidate comes AFTER the fill for most (median 617 vs 478): the new place became a goal by having eaten there, not by having seen
+  it. All 64 held the old place as a goal from the first beat.
+- The bundle and the recipe differ little in this chain (fills 31 vs 37 in the first meeting; second-half deaths 75 vs 91, one start).
+Not readable - my instrument, said plainly:
+- Stage 2 (the eye's claim): 3 bodies. The ledger keeps one claim per kind per body, so while the old food place's claim stays open a new
+  sighting has no line; and my check (claim-to-food distance at the fill, 9.9 cells) was read after the ledger had already closed the
+  claim that filled, so it checks nothing. Stage 2 needs a per-sighting record; until then "saw, the eye did not claim" and "claimed, not a
+  candidate" are NOT separated.
+- "Within 1.2 cells" (29) is below "filled" (31): the reach of a fill is longer than my 1.2 - stage 5 undercounts.
+- Deaths are not split by which inside ran out (water is at the far side of the room).

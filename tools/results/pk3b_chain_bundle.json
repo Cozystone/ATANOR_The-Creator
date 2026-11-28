@@ -1,0 +1,153 @@
+{
+ "chain": {
+  "bodies": 64,
+  "died_before_fill": 33,
+  "open_at_end": 0,
+  "each": {
+   "sight": {
+    "n": 56,
+    "median_beat": 214.0
+   },
+   "claim": {
+    "n": 3,
+    "median_beat": 288.0
+   },
+   "candidate": {
+    "n": 41,
+    "median_beat": 617.0
+   },
+   "approach": {
+    "n": 49,
+    "median_beat": 442.0
+   },
+   "reach": {
+    "n": 29,
+    "median_beat": 521.0
+   },
+   "fill": {
+    "n": 31,
+    "median_beat": 478.0
+   },
+   "candidate_at_old_place": {
+    "n": 64,
+    "median_beat": 1.0
+   }
+  },
+  "in_order": [
+   56,
+   3,
+   1,
+   1,
+   1,
+   1
+  ],
+  "skipping_claim": [
+   56,
+   56,
+   56,
+   49,
+   29,
+   19
+  ],
+  "died_last_stage": {
+   "sight": 1,
+   "claim": 0,
+   "candidate": 13,
+   "approach": 8,
+   "reach": 10,
+   "fill": 0,
+   "none": 1
+  },
+  "claim_to_food_at_fill_median": 9.94520378112793
+ },
+ "cond": "b",
+ "ledger": {
+  "claims": 924,
+  "filled_there": 441,
+  "tried_nothing": 144,
+  "died_after_reaching": 116,
+  "died_never_reached": 103,
+  "open": 120,
+  "eye_place_error_at_fill_median": 1.17,
+  "eye_err": 0.93,
+  "memory_err_same_kind": 7.7,
+  "memory_scored": 494
+ },
+ "self_fix": {
+  "spot_used": 0,
+  "spots": 0,
+  "spot_move": -1.0
+ },
+ "quiet": {
+  "rel": null,
+  "checked": null,
+  "turns_not_scored": 0
+ },
+ "rely": {
+  "eye_err": 0.93,
+  "mem_err": 7.7,
+  "eye_led": 77090,
+  "memory_led": 106132,
+  "seen_led": 77090
+ },
+ "gut": {
+  "asked": 12474,
+  "known": 12410,
+  "differed": 9014,
+  "journeys_ended": 12421,
+  "usual_len": 9.8
+ },
+ "seen_relief": {
+  "hit": 0.825,
+  "samples": 21257,
+  "writes": 42482
+ },
+ "seen_map": {
+  "err": 0.293,
+  "stops": 5736,
+  "writes": 198514
+ },
+ "e1": 0,
+ "w0": {
+  "beats": 0,
+  "spread": 0.0,
+  "picks": null
+ },
+ "test": "strong",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 2000,
+ "after": 2000,
+ "blocked_side": null,
+ "first_gap_food_beats_after": -1926,
+ "phases": [
+  {
+   "deaths": 45,
+   "food_fills": 216,
+   "food_wait_median": 125.5,
+   "ways_left_right_gap": [
+    202,
+    0,
+    14
+   ]
+  },
+  {
+   "deaths": 75,
+   "food_fills": 108,
+   "food_wait_median": 262.0,
+   "ways_left_right_gap": [
+    53,
+    17,
+    38
+   ]
+  }
+ ],
+ "strong": {
+  "share_of_hungry_beats_at_pocket_top": 0.195,
+  "exits": 184,
+  "exit_beats_median_first_half": 55.0,
+  "exit_beats_median_second_half": 10.0
+ },
+ "remaps": 46,
+ "seconds": 730
+}
