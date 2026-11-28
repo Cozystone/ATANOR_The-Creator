@@ -1436,3 +1436,7 @@
 - 2026-11-28 `b9f98b4d` PK3b-chain 2: the eye tells the right place (46 of 55); half never becomes a goal; 13 die beside the food never facing it
 - 2026-11-28 `acd809a8` RL1b registered: later forecaster learning vs lives after the swap
 - 2026-11-28 `7c810a8f` RL1b: no cost after the swap shown (deaths lower with the rest arm in both starts), worse before it; Astra bundle complete with a summary on top
+- 2026-11-28 `c3a80989` DR1 registered: body-driving tests (knows its body / drives when told / the body's best)
+- 2026-11-28 `db1206bc` PK3b-chain 3 registered: bearing, distance and gesture at the fill judgment for bodies beside the food
+- 2026-11-28 `232de9c3` DR1: it knows its body (forecast of own gestures right) and does not drive it (48% when told the direction, 15% alone, 86% by the judge's hand)
+- 2026-11-28 `4633c8e5` PK3b-chain 3: beside the food the turn is missing, not the hand; Astra bundle updated with DR1 and the reply to 2cef2a5

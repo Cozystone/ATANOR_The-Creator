@@ -94,7 +94,17 @@ def main():
             here = w.pos.long(); inside = w.map[torch.arange(n, device=DEV), here[:, 0].clamp(0, S - 1), here[:, 1].clamp(0, S - 1)] == WALL
             if bool(inside.any()):                                         # a body standing where a wall now is: put it back at the birth point
                 place(B, info, torch.nonzero(inside)[:, 0])
-        act = Mi.choose(x); al = ~B.dead.clone(); f = B.step(act); x2 = O(B.raw()); died = al & B.dead
+        act = Mi.choose(x); PRE = None
+        if a.chain and t >= a.learn:                                       # PK3b-chain 3 (Astra 2cef2a5 hand-over): the state at the moment the world judges a fill - before the step
+            import math as _m
+            from atanor_os.emerge.room3d_gpu import FOOD as _F2
+            fc_ = w.src[:, 1].float() + 0.5; v_ = fc_ - w.pos; dist_ = v_.norm(dim=1); tof = torch.atan2(v_[:, 1], v_[:, 0])
+            bear_ = torch.remainder(tof - w.head + _m.pi, 2 * _m.pi) - _m.pi
+            k_a, d_a = w.cast(w.head[:, None], step=0.02, far=3.0); k_b, d_b = w.cast(tof[:, None], step=0.02, far=3.0)
+            PRE = dict(beside=(dist_ < 1.9) & (w.store[:, 1] < 0.7) & ~w.dead, bear=bear_.abs(), dist=dist_, hand=B.hand[act] == 2, facing=(k_a[:, 0] == _F2) & (d_a[:, 0] <= 1.2),
+                       reach_if_faced=(k_b[:, 0] == _F2) & (d_b[:, 0] <= 1.2), turn=(B.neck[act] == 1) | (B.neck[act] == 2), step=B.legs[act] != 0,
+                       turn_to=torch.where(B.neck[act] == 1, -1.0, torch.where(B.neck[act] == 2, 1.0, 0.0)) * torch.sign(bear_) > 0)
+        al = ~B.dead.clone(); f = B.step(act); x2 = O(B.raw()); died = al & B.dead
         P[k]["deaths"] += int(died.sum()); P[k]["beats"] += 1
         cx, cy = w.pos[:, 0].long().clamp(0, S - 1).tolist(), w.pos[:, 1].long().clamp(0, S - 1).tolist()
         for i in range(n):
@@ -153,6 +163,12 @@ def main():
                 CH["low"][0] += int((dd_ & (w.store[:, 0] <= w.store[:, 1])).sum()); CH["low"][1] += int((dd_ & (w.store[:, 1] < w.store[:, 0])).sum())
             for j, m in enumerate(now):
                 m = m & CH["live"] & (CH["st"][:, j] < 0); CH["st"][:, j] = torch.where(m, torch.full_like(CH["st"][:, j], t - a.learn), CH["st"][:, j])
+            if PRE is not None:
+                if "pre" not in CH:
+                    CH["pre"] = torch.zeros(n, 12, device=DEV)
+                m_ = (PRE["beside"] & CH["live"]).float(); h_ = PRE["hand"].float(); fa_ = PRE["facing"].float(); rf_ = PRE["reach_if_faced"].float()
+                CH["pre"] += torch.stack([m_, m_ * h_, m_ * fa_, m_ * rf_, m_ * fa_ * h_, m_ * rf_ * h_, m_ * PRE["bear"], m_ * PRE["dist"], m_ * PRE["turn"].float(), m_ * PRE["turn_to"].float(), m_ * PRE["step"].float(),
+                                          m_ * (PRE["bear"] < 0.262).float()], 1)
             fl = f[:, 1].bool() & CH["live"]
             dd = died & CH["live"]; CH["dead"] = torch.where(dd, torch.full_like(CH["dead"], t - a.learn), CH["dead"]); CH["live"] &= ~(dd | fl)
         if B.dead.any():
@@ -175,6 +191,16 @@ def main():
                      died_ever_reached={nm: int((dead_ & (st[:, j] >= 0)).sum()) for j, nm in enumerate(names[:7])},
                      eye_place_to_food_median=md(CH["cerr"]), false_food_claim_share_of_beats=round(CH["false"] / max(CH["lb"], 1), 3),
                      eye=dict(sr_hit=round(float(getattr(Mi.going, "sr_hit", -1)), 3), sr_n=int(getattr(Mi.going, "sr_n", 0)), writes=int(getattr(Mi.going, "sr_writes", 0))))
+    if CH is not None and "pre" in CH:
+        pr_ = CH["pre"].cpu().numpy(); dead_b = (CH["dead"].cpu().numpy() >= 0) & (pr_[:, 0] > 0); fill_b = (CH["st"][:, 7].cpu().numpy() >= 0) & (pr_[:, 0] > 0)
+        def grp(m):
+            q = pr_[m]; b_ = max(q[:, 0].sum(), 1.0)
+            return dict(bodies=int(m.sum()), beside_lacking_beats=int(q[:, 0].sum()), beats_per_body_median=md(q[:, 0].tolist()), hand_share=round(float(q[:, 1].sum() / b_), 3), facing_in_reach_share=round(float(q[:, 2].sum() / b_), 3),
+                        in_reach_if_it_faced_share=round(float(q[:, 3].sum() / b_), 3), mean_abs_bearing_deg=round(float(np.degrees(q[:, 6].sum() / b_)), 1), within_15deg_share=round(float(q[:, 11].sum() / b_), 3), mean_dist=round(float(q[:, 7].sum() / b_), 2),
+                        turn_share=round(float(q[:, 8].sum() / b_), 3), turn_toward_share_of_turns=round(float(q[:, 9].sum() / max(q[:, 8].sum(), 1.0)), 3), step_share=round(float(q[:, 10].sum() / b_), 3),
+                        fills_as_lived=int(q[:, 4].sum()), fills_if_only_direction_were_right=int(q[:, 5].sum()), fills_if_only_the_hand_were_used=int(q[:, 2].sum()), fills_if_both=int(q[:, 3].sum()),
+                        bodies_with_a_beat=dict(direction_only=int((q[:, 5] > 0).sum()), hand_only=int((q[:, 2] > 0).sum()), both=int((q[:, 3] > 0).sum())))
+        chain["beside"] = dict(died_beside=grp(dead_b), filled=grp(fill_b))
     r = dict(chain=chain, cond=a.cond, ledger=Mi.going.ledger_report(), self_fix=dict(spot_used=getattr(Mi.going, "sf1_n", 0), spots=int((Mi.going.Rpn > 0).sum()) if getattr(Mi.going, "Rpn", None) is not None else 0, spot_move=round(float(getattr(Mi.going, "rp_move", -1)), 2)), quiet=dict(rel=getattr(Mi, "q_rel", None), checked=getattr(Mi, "q_n", None), turns_not_scored=getattr(Mi, "q_turn", 0)), rely=dict(eye_err=round(float(getattr(Mi.going, "eye_err", -1)), 2), mem_err=round(float(getattr(Mi.going, "mem_err", -1)), 2), eye_led=getattr(Mi.going, "rely_eye", 0), memory_led=getattr(Mi.going, "rely_mem", 0), seen_led=getattr(Mi.going, "sm3_n", 0)), gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), differed=getattr(Mi, "g_diff", 0), journeys_ended=getattr(Mi, "g_ends", 0), usual_len=round(float(getattr(Mi, "g_len", 0)), 1)), seen_relief=dict(hit=round(float(getattr(Mi.going, "sr_hit", -1)), 3), samples=getattr(Mi.going, "sr_n", 0), writes=getattr(Mi.going, "sr_writes", 0)), seen_map=dict(err=round(float(getattr(Mi.going, "sm_err", -1)), 3), stops=getattr(Mi.going, "sm_n", 0), writes=getattr(Mi.going, "sm_writes", 0)), e1=getattr(Mi, "e1_n", 0), w0=(dict(beats=getattr(Mi, "w0_n", 0), spread=round(float(getattr(Mi, "w0_spread", 0)), 5), picks=(Mi.w0_pick.tolist() if getattr(Mi, "w0_pick", None) is not None else None))), test=a.test, seed=a.seed, being=a.being, learn=a.learn, after=a.after, blocked_side=blocked, first_gap_food_beats_after=first_gap,
              phases=[dict(deaths=p["deaths"], food_fills=len(p["waits"]), food_wait_median=md(p["waits"]), ways_left_right_gap=p["ways"]) for p in P],
              strong=(dict(share_of_hungry_beats_at_pocket_top=round(pocket_lack[0] / max(pocket_lack[1], 1), 3), exits=len(exits), exit_beats_median_first_half=md([e[1] for e in exits if e[0] < a.learn]), exit_beats_median_second_half=md([e[1] for e in exits if e[0] >= a.learn])) if a.test == "strong" else None), remaps=getattr(Mi.going, "remaps", 0), seconds=round(time.time() - t0))

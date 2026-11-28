@@ -1556,3 +1556,76 @@ here - the spread between runs of the same seed is as large as the effect read h
 evidence. The forecaster steps lost over the rest's cap were not written to the result (my omission).
 Decision: RL1 stays a trial flag (default off). The 7-second stall is gone with it and no cost after the swap is shown; the cost before
 the swap is unjudged and needs its own registered run before RL1 is adopted.
+
+## DR1 body-driving tests (registered before the run, 2026-11-28; founder: "is it not intelligent, or can it not drive its body? run both,
+## apply nothing until Astra has answered")
+Judge side only (tools/drive_test.py); nothing is added to the being. Open 16 x 16 room, food in the middle. A trial = a birth 2.5 cells
+from the food, lacking food, the food at a set bearing from where it faces (0, 45, 90, 135, 180 degrees, both sides); ends at the first
+food fill or after 120 beats. 64 bodies x 12 rounds = 768 trials an arm. The being is the adopted recipe (s3_e).
+Test 1, does it know its body: its own forecaster's felt motion for the gesture it made against what the body then felt (forward, side,
+turn), and over all 90 gestures whether the foreseen turn / step has the right sign.
+  Read as "knows its body" if the sign is right for >= 90% of turning and of stepping gestures and the mean error is under a quarter of a
+  gesture (forward < .10 cells of a .40 step; turn < .13 rad of a .52 turn).
+Test 2, can it drive: arms own (as it is) / told (the judge's true direction to the food as its homing content at full weight - the G2L
+rung, never a pass) / script (the judge's hand on the same body: turn until aimed, step until in reach, hand - the body's best).
+  Read: "drives" if told fills >= 90% of trials and its median beats are within 2x the script's. told poor -> the body is not driven even
+  when the direction is given (driving). told good, own poor -> it drives when told; what fails is its own knowledge becoming the goal
+  (the seat). own good -> neither is the problem in this plain case.
+Said before: the food's look is known to this being from its old room; the room here is new; the being keeps learning during the trials
+(later rounds may be better - read first and last thirds apart if they differ).
+
+## PK3b-chain 3 (Astra's hand-over with LOKI 2cef2a5, priority 2; registered before the run, 2026-11-28)
+The same pocket-room b run (bundle arm, as chain 2), with the state read BEFORE the world's step - at the moment the world judges a fill -
+for every beat a body is beside the food (centre within 1.9 cells) and lacking: the food's bearing from where it faces, its distance, and
+the gesture it actually makes (hand / turn, and whether toward the food / step). For the bodies that died having been beside it, and
+for those that filled. Counterfactuals on the same states, judge side, nothing stepped: a fill needs the hand AND the straight-ahead ray
+on the food within reach - so "only the direction right" = it used the hand and the food would be in reach if it faced it; "only the
+hand" = it was facing it in reach (hand given); "both". Counted as beats and as bodies with at least one such beat.
+Reading: if the died-beside bodies mostly used the hand while not facing -> the turn is missing; if they faced in reach and did not use
+the hand -> the hand; if neither would have filled -> they were not truly in reach (my 1.9-cell stage is too loose). One start, a diagnosis.
+
+## DR1 result (768 trials an arm; birth 2.5 cells from the food, lacking food, cap 120 beats; one start)
+Test 1 - it knows its body: its forecast of its own gesture against what the body felt: mean error forward .031 cells (bar < .10),
+side .030, turn .022 rad (bar < .13); a turn gesture is foreseen as .45 rad against .52 felt; the sign is right for 100% of turning and
+99% of stepping gestures (bar 90%). By the registered reading: it knows its body.
+Test 2 - it does not drive it:
+| arm | filled | median beats to the fill | by bearing 0 / 45 / 90 / 135 / 180: filled | filled by third of the test |
+|---|---|---|---|---|
+| script (the judge's hand) | 85.7% | 7 | 16% / 90% / 100% / 95% / 100% | .89 / .84 / .84 |
+| own (the being as it is) | 14.7% | 38 | 27% / 17% / 14% / 10% / 9% | .11 / .13 / .20 |
+| told (true direction as its homing content, full weight) | 47.9% | 46 | 54% / 52% / 43% / 46% / 47% | .29 / .50 / .65 |
+By the registered reading: told is far under 90% and 6.6x the script's beats -> the body is not driven even when the direction is given
+(driving); and own is a third of told -> its own knowledge also does not become the goal (the seat). Both, not one.
+What the trials show of how: per trial (own) 31-44 beats with the hand while the food is not straight ahead in reach, 14-24 beats still,
+turns toward the food 6-7 against 5 away (57% toward; told: 67%). With the food straight ahead at 2.5 cells (bearing 0: two steps and
+the hand) it fills in 27% of trials alone and 54% told. So it has each piece (it foresees its gestures; it uses the hand) and does not
+put turn -> step -> hand in order.
+It gets better inside the test, most when told (.29 -> .65 by thirds; own .11 -> .20): practice at this teaches it - a point for a
+body-practice period, to be decided after Astra (founder: "apply nothing before Astra has answered").
+My instrument's fault: the script is not the body's best - at bearing 0 it fills 16% (it counts "aimed" within 15 degrees, steps up, and
+the straight ray then misses the food cell's corner; a turn is 30 degrees so it cannot correct) - so "85.7%, 7 beats" understates what
+the body can do, which makes the being's gap larger, not smaller. One start. The room is new to the being; the food's look is known.
+
+## PK3b-chain 3 result (bundle arm; phases 45, 216, 125.5 -> 75, 108, 262.0; chain: saw 56, eye right place 49, beside lacking 40, fill 31, died 33)
+The state before the world's step, on every beat a body is beside the food (centre within 1.9 cells) and lacking:
+| | died having been beside (15 bodies, 404 beats) | filled (25 bodies, 294 beats) |
+|---|---|---|
+| beats beside per body, median | 19 | 5 |
+| mean distance to the food's centre | 1.24 cells | 1.18 |
+| mean bearing of the food from where it faces | 128 degrees | 81 degrees |
+| food within 15 degrees of straight ahead | 1.0% of beats | 8.5% |
+| facing it within reach | 1.2% | 13.3% |
+| in reach if it faced it | 83.7% | 78.2% |
+| uses the hand | 32.7% | 46.6% |
+| turns (of those, toward the food) | 8.4% (44%) | 9.5% (71%) |
+| steps | 65.8% | 85.0% |
+| fills: as lived / if only the direction were right / if only the hand were used / both | 2 / 115 / 5 / 338 | 11 / 109 / 39 / 230 |
+| bodies with at least one such beat: direction only / hand only / both | 12 / 3 / 14 of 15 | 21 / 12 / 21 of 25 |
+By the registered reading: the TURN is what is missing, not the hand. The bodies that died stood 1.2 cells from the food with it at their
+side or behind them (128 degrees on average; straight ahead on 1% of beats), used the hand on a third of those beats, turned on 8% and
+then as often away as toward. With only the direction right, 12 of the 15 would have had a filling beat; with only the hand, 3. In reach
+if faced on 84% of the beats, so my 1.9-cell stage was not too loose.
+Together with DR1 (same day): it foresees what a turn does to its body, and it does not turn to what it wants. The founder's earlier
+sight on the viewer ("its back against the water and it does not know") is this, counted.
+Small unexplained: 2 beats of the died bodies were facing in reach with the hand and did not end the meeting (a fill in the same beat as
+a death, or the spring's stock empty) - not chased.

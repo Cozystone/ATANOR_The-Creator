@@ -1,0 +1,84 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md DR1",
+ "arm": "script",
+ "being": "s3_e",
+ "bodies": 64,
+ "rounds": 12,
+ "cap": 120,
+ "seed": 9701,
+ "all": {
+  "trials": 768,
+  "filled_share": 0.857,
+  "fill_beats_median": 7.0,
+  "filled_share_by_third": [
+   0.891,
+   0.844,
+   0.836
+  ]
+ },
+ "by_bearing": {
+  "0": {
+   "trials": 96,
+   "filled_share": 0.156,
+   "fill_beats_median": 3.0,
+   "aimed_share": 1.0,
+   "aim_beats_median": 1.0,
+   "faced_in_reach_share": 1.0,
+   "turns_toward_mean": 0.0,
+   "turns_away_mean": 0.0,
+   "hand_beats_mean": 99.72,
+   "still_beats_mean": 0.0
+  },
+  "45": {
+   "trials": 192,
+   "filled_share": 0.896,
+   "fill_beats_median": 7.0,
+   "aimed_share": 0.974,
+   "aim_beats_median": 1.0,
+   "faced_in_reach_share": 0.964,
+   "turns_toward_mean": 7.32,
+   "turns_away_mean": 0.0,
+   "hand_beats_mean": 8.75,
+   "still_beats_mean": 0.0
+  },
+  "90": {
+   "trials": 192,
+   "filled_share": 1.0,
+   "fill_beats_median": 6.0,
+   "aimed_share": 1.0,
+   "aim_beats_median": 3.0,
+   "faced_in_reach_share": 1.0,
+   "turns_toward_mean": 3.0,
+   "turns_away_mean": 0.0,
+   "hand_beats_mean": 1.0,
+   "still_beats_mean": 0.0
+  },
+  "135": {
+   "trials": 192,
+   "filled_share": 0.953,
+   "fill_beats_median": 10.0,
+   "aimed_share": 0.964,
+   "aim_beats_median": 4.0,
+   "faced_in_reach_share": 0.953,
+   "turns_toward_mean": 11.39,
+   "turns_away_mean": 0.0,
+   "hand_beats_mean": 0.95,
+   "still_beats_mean": 0.0
+  },
+  "180": {
+   "trials": 96,
+   "filled_share": 1.0,
+   "fill_beats_median": 9.0,
+   "aimed_share": 1.0,
+   "aim_beats_median": 6.0,
+   "faced_in_reach_share": 1.0,
+   "turns_toward_mean": 6.0,
+   "turns_away_mean": 0.0,
+   "hand_beats_mean": 1.0,
+   "still_beats_mean": 0.0
+  }
+ },
+ "body_knowledge": null,
+ "oracle_calls": null,
+ "seconds": 265
+}
