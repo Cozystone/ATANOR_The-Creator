@@ -12,7 +12,7 @@ import numpy as np, torch
 from tools.need_fork import place, DEV
 from tools.a1_channel import V2
 from tools.l1_life import make
-from tools.s4_kin import being, rebirth
+from tools.s4_kin import being, rebirth, reread
 from atanor_os.emerge.room_body import RoomBody
 from atanor_os.emerge.room3d_gpu import FLOOR, WALL
 
@@ -94,6 +94,8 @@ def main():
             here = w.pos.long(); inside = w.map[torch.arange(n, device=DEV), here[:, 0].clamp(0, S - 1), here[:, 1].clamp(0, S - 1)] == WALL
             if bool(inside.any()):                                         # a body standing where a wall now is: put it back at the birth point
                 place(B, info, torch.nonzero(inside)[:, 0])
+                O.reset(inside); Mi.begin(inside); B.felt[:] = 0             # HC1 (2026-11-28 audit): a body the judge moved is a cut - its path organ kept the old spot before
+                x = torch.where(inside[:, None], O(B.raw()), x)
         act = Mi.choose(x); PRE = None
         if a.chain and t >= a.learn:                                       # PK3b-chain 3 (Astra 2cef2a5 hand-over): the state at the moment the world judges a fill - before the step
             import math as _m
@@ -172,7 +174,7 @@ def main():
             fl = f[:, 1].bool() & CH["live"]
             dd = died & CH["live"]; CH["dead"] = torch.where(dd, torch.full_like(CH["dead"], t - a.learn), CH["dead"]); CH["live"] &= ~(dd | fl)
         if B.dead.any():
-            rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
+            x = reread(B, O, x, rebirth(B, O, Mi, info))
         if (t + 1) % 1000 == 0:
             Mi.going.learn()
             if hasattr(Mi, "rest"):

@@ -32,7 +32,7 @@ def wrap(a):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--being", required=True); ap.add_argument("--eye", type=float, default=0.0)
-    ap.add_argument("--arm", default="own", choices=["own", "told", "script"]); ap.add_argument("--rounds", type=int, default=12); ap.add_argument("--cap", type=int, default=120)
+    ap.add_argument("--arm", default="own", choices=["own", "told", "script"]); ap.add_argument("--frame", type=int, default=1); ap.add_argument("--rounds", type=int, default=12); ap.add_argument("--cap", type=int, default=120)
     ap.add_argument("--warm", type=int, default=100); ap.add_argument("--bodies", type=int, default=64); ap.add_argument("--seed", type=int, default=9701)
     a = ap.parse_args(); V2["on"] = True; assert not 7701 <= a.seed <= 7712
     if a.eye:
@@ -49,7 +49,11 @@ def main():
         w.pos[:, 0] = fc[:, 0] + 2.5 * torch.cos(phi); w.pos[:, 1] = fc[:, 1] + 2.5 * torch.sin(phi)
         to_food = torch.atan2(fc[:, 1] - w.pos[:, 1], fc[:, 0] - w.pos[:, 0]); w.head[:] = torch.remainder(to_food - bear_of, 2 * math.pi)   # the food stands at `bear_of` from where it faces
         w.dead[:] = False; w.store[:, 0] = 0.9; w.store[:, 1] = 0.4; B.felt[:] = 0
-        O.reset(every); Mi.begin(every); Mi.prev = None
+        O.reset(every)
+        if a.frame:                                                         # HC1 (2026-11-28 audit): the judge put the body down, so its path organ is told where (one fixed frame: the food, heading -90 deg) -
+            hb = -math.pi / 2; d_ = w.pos - fc; c_, s_ = math.cos(hb), math.sin(hb)   # without this every round's zeroed path organ meant a different world spot for the same place unit
+            O.path.p = torch.stack([d_[:, 0] * c_ + d_[:, 1] * s_, -d_[:, 0] * s_ + d_[:, 1] * c_], 1); O.path.h = (w.head - hb + math.pi) % (2 * math.pi) - math.pi
+        Mi.begin(every); Mi.prev = None
         return O(B.raw())
 
     def bearing():

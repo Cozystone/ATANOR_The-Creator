@@ -55,6 +55,7 @@ class Guardian(Carer):
 
 
 def being(B, n, path=None):
+    flag_check()
     O = Organs(B.c, n, dev=DEV, depth=DEPTH); Mi = Mind(O, B.c, n, dev=DEV, value_arm="relief"); G = Going(O.dx, Mi.M, n, O.inside, DEV, W=1.0)
     if path is None:
         Mi.grow(BEING)
@@ -84,6 +85,28 @@ def being(B, n, path=None):
 
 def rebirth(B, O, Mi, info):
     dd = B.dead.clone(); idx = torch.nonzero(dd)[:, 0]; B.w.dead[idx] = False; B.w.store[idx] = 0.75; place(B, info, which=idx); O.reset(dd); Mi.begin(dd)
+    if hasattr(B, "pitch"):
+        B.pitch[idx] = 0.0                                              # HC1 audit: a reborn body kept the dead body's head tilt
+    return dd
+
+
+def reread(B, O, x, dd):
+    """HC1 (2026-11-28 audit): after a rebirth only the reborn rows take the new reading. Before, every living body's x was replaced by a
+    second organ call in the same beat, with its felt own-motion zeroed. ATANOR_OLD_REREAD=1 keeps that."""
+    B.felt[:] = 0; xn = O(B.raw())
+    return xn if os.environ.get("ATANOR_OLD_REREAD", "0") == "1" else torch.where(dd[:, None], xn, x)
+
+
+def flag_check():
+    """HC1 audit: flags that do nothing without another one - refuse to start instead of silently measuring the baseline (F2's seen-eye arm)."""
+    on = lambda k, d="0": os.environ.get("ATANOR_" + k, d) not in ("0", "")
+    need = [("SEEN", "IMAGINE_MAP"), ("RELY", "SEEN"), ("PARALLAX", "SEEN"), ("IMAGINE_GOAL", "IMAGINE_MAP"), ("OWN_LEAVE", "GUT"), ("PITCH_RETURN", "PITCH")]
+    bad = [f"ATANOR_{a_} needs ATANOR_{b_}" for a_, b_ in need if on(a_) and not on(b_) and not (b_ == "IMAGINE_MAP" and os.environ.get("ATANOR_B0", "0") == "own")]
+    homing = on("INNATE_HOMING", "1") and on("LEARNED_TRUST", "1")
+    bad += [f"ATANOR_{a_} is ignored without innate homing and learned trust" for a_ in ("TRUST_FROM", "PLACE_FROM") if os.environ.get("ATANOR_" + a_, "") and not homing]
+    assert not bad, "; ".join(bad)
+    import sys
+    print("recipe flags:", {k: os.environ.get("ATANOR_" + k, "-") for k in ("TURN_ONCE", "MISMATCH", "LEARNED_TRUST", "RENDER_FIX", "OLD_REREAD")}, file=sys.stderr, flush=True)
 
 
 def main():
@@ -186,7 +209,7 @@ def main():
                 rebirth(B, O, Mi, info)
         if bool(de.any()) or bool(dn.any()):                           # re-read after any rebirth; the re-read feels no motion (L1d drift fix)
             Be.felt[:] = 0; Bn.felt[:] = 0; xe = Oe(Be.raw()); xn = On(Bn.raw())
-    per = lambda arr, lo, hi: round(1000 * float(arr[lo:hi].sum()) / (n * (hi - lo)), 2)
+    per = lambda arr, lo, hi: round(1000 * float(arr[lo:hi].sum()) / max(n * (hi - lo), 1), 2)   # HC1 audit: the default --carry 0 divided by zero here
     fk = forks(Mn, On, rows, info, sd, paths_of(rows, info))
     r = dict(arm=a.arm, carry=a.carry, parent=a.parent, contact=a.contact, imagine=a.imagine, nurse=a.nurse, exit_store=exit_store, set_exit=a.exit_store, nursed=nursed, waited=waited, near_child=round(float(near[a.babble:max(a.carry, a.babble + 1)].mean()), 3), rep=a.rep, layout=a.lay, elder=a.elder, early_deaths=per(deaths, prot, prot + 3000), last_deaths=per(deaths, a.beats - 2000, a.beats),
              child_need=per(need, a.babble, prot), near_h1=round(float(near[a.babble:(a.babble + prot) // 2].mean()), 3), near_h2=round(float(near[(a.babble + prot) // 2:prot].mean()), 3), early_need=per(need, prot, prot + 3000), last_need=per(need, a.beats - 2000, a.beats), near_share=round(float(near[a.babble:].mean()), 3),

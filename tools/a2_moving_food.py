@@ -8,7 +8,7 @@ import numpy as np, torch
 from tools.need_fork import t_room, place, DEV
 from tools.a1_channel import V2
 from tools.l1_life import make
-from tools.s4_kin import being, rebirth
+from tools.s4_kin import being, rebirth, reread
 from atanor_os.emerge.room_body import RoomBody
 from atanor_os.emerge.room3d_gpu import FLOOR, FOOD
 
@@ -146,7 +146,7 @@ def main():
                 upos = torch.where((hit & (useen == 0))[:, None], sm / cnt.clamp(min=1)[:, None], torch.where(hit[:, None], 0.99 * upos + 0.01 * sm / cnt.clamp(min=1)[:, None], upos)); useen += cnt
         Mi.after(x, act, x2, died, B.dead & ~died); x = x2
         if B.dead.any():
-            rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
+            x = reread(B, O, x, rebirth(B, O, Mi, info))
         if (t + 1) % a.skill_every == 0 and (t + 1) % 1000 != 0:
             G.learn()                                                   # D45: the going skill learns more often (the value keeps its 1,000-beat cadence)
         if (t + 1) % 1000 == 0:

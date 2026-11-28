@@ -10,7 +10,7 @@ import argparse, json, time
 import numpy as np, torch
 from tools.need_fork import place, DEV
 from tools.a1_channel import V2
-from tools.s4_kin import being, rebirth
+from tools.s4_kin import being, rebirth, reread
 from atanor_os.emerge.room_body import RoomBody
 from atanor_os.emerge.body_contract import Channel
 
@@ -58,6 +58,7 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument("out", nargs="?", default=""); ap.add_argument("--being", required=True); ap.add_argument("--eye", type=float, default=0.0)
     ap.add_argument("--bodies", type=int, default=16); ap.add_argument("--t1", type=int, default=1500); ap.add_argument("--t2", type=int, default=5000); ap.add_argument("--t3", type=int, default=9000)
     ap.add_argument("--seed", type=int, default=9601); ap.add_argument("--view", type=int, default=0)
+    ap.add_argument("--cut", type=int, default=1); ap.add_argument("--motor", default="", choices=["", "choice", "shuffle", "xshuffle", "anyact"]); ap.add_argument("--motor-src", default="")
     a = ap.parse_args(); V2["on"] = True
     if a.eye:
         RoomBody.default_eye = a.eye
@@ -67,6 +68,14 @@ def main():
     O, Mi = being(B, n, a.being); w = B.w
     every = torch.ones(n, dtype=torch.bool, device=DEV); w.store[:] = 0.75; place(B, info); O.reset(every); Mi.begin(every); Mi.prev = None
     x = O(B.raw()); push = None
+    probe = None                                                           # MC1: Astra's movement candidate (her class, imported from her checkout; None = the being as it was)
+    if a.motor:
+        import importlib.util
+        sp_ = importlib.util.spec_from_file_location("motor_src", a.motor_src); mm_ = importlib.util.module_from_spec(sp_); sp_.loader.exec_module(mm_)
+        probe = mm_.MotorProposal(torch.tensor(B.combos, device=DEV), n); G_ = Mi.going
+        defi = lambda x_: 1 - x_[:, [G_.ins[2], G_.ins[1]]].clamp(0, 1)
+        Mi.motor_candidate = lambda x_, pick, due, allowed: probe.propose(pick, defi(x_), due, allowed)
+        ring = torch.zeros(n, 256, 2, device=DEV); gsh = torch.Generator(); gsh.manual_seed(a.seed + 1); rows_ = torch.arange(n, device=DEV)
     if a.view:
         from tools.lever2 import serve
         push = serve(8780)
@@ -81,7 +90,7 @@ def main():
         p0 = w.pos.clone(); act = Mi.choose(x); al = ~B.dead.clone(); f = B.step(act); x2 = O(B.raw()); died = al & B.dead
         deaths[ph] += int(died.sum()); pr = B.pressed
         hd_ = B.hand[act]; lg_ = B.legs[act] != 0; on = torch.where((hd_ != 0) & (hd_ != SH["prev_hand"]), hd_, torch.where(lg_ & ~SH["prev_leg"] & (hd_ == 0), torch.full_like(hd_, 3), torch.zeros_like(hd_)))
-        SH["prev_hand"], SH["prev_leg"] = hd_.clone(), lg_.clone()
+        SH["prev_hand"], SH["prev_leg"] = hd_.clone(), lg_.clone(); SH["prev_hand"][died] = 0; SH["prev_leg"][died] = False   # HC1: a new life's first onset was missed
         dl = (w.store.sum(1) - s_prev.sum(1)) if "s_prev" in dir() else torch.zeros(n, device=DEV); s_prev = w.store.clone()
         SH["hist"] = torch.cat([on[:, None], SH["hist"][:, :-1]], 1); SH["hist"][died] = 0
         SH["acc"] *= 0.9995; SH["cnt"] *= 0.9995
@@ -107,9 +116,26 @@ def main():
                       first_single=None, recovered=None,
                       gut=[dict(a=0, d=[round(float(getattr(G, "eye_err", -1)), 2), round(float(getattr(G, "mem_err", -1)), 2)], n=int(Mi.src[0]))]))
             time.sleep(0.03)
+        if probe is not None:
+            dlt = defi(x2) - defi(x)
+            if a.motor == "shuffle":                                       # the same body's change from 21-255 beats back: same numbers, no time pairing with what it did
+                ring[:, t % 256] = dlt; k_ = torch.randint(21, 256, (n,), generator=gsh).to(DEV); s_ = t - k_
+                dlt = torch.where((s_ >= 0)[:, None], ring[rows_, s_ % 256], torch.zeros_like(dlt))
+            if a.motor == "xshuffle":                                      # MC1b: another body's change at the same beat
+                dlt = dlt.roll(int(torch.randint(1, n, (1,), generator=gsh)), 0)
+            if a.motor == "anyact":                                        # MC1c: the organ is told a gesture drawn at random, not the one made; candidates stay the ones really made
+                v_ = probe.visited.clone(); probe.record(torch.randint(0, len(B.combos), (n,), generator=gsh).to(DEV), dlt, B.dead.clone()); probe.visited = v_; probe.visited[act] = True
+            else:
+                probe.record(act, dlt, B.dead.clone())
         Mi.after(x, act, x2, died, B.dead & ~died); x = x2
         if B.dead.any():
-            rebirth(B, O, Mi, info); B.felt[:] = 0; B.busy[:] = torch.where(B.dead, torch.zeros_like(B.busy), B.busy); x = O(B.raw())
+            cut_ = B.dead.clone()
+            dd_ = rebirth(B, O, Mi, info)
+            if a.cut:                                                      # Astra 2cef2a5: rebirth clears the dead flags, so keep the mask first; a reborn body must not inherit the device's state
+                B.busy[cut_] = 0; B.rise_in[cut_] = -1; B.fall_in[cut_] = -1
+            else:
+                B.busy[:] = torch.where(B.dead, torch.zeros_like(B.busy), B.busy)
+            x = reread(B, O, x, dd_)
         t += 1
         if t % 1000 == 0:
             Mi.going.learn()
@@ -121,7 +147,7 @@ def main():
     r = dict(protocol="atanor_os/WORLD_A_PROTOCOL.md LV2", quiet=dict(rel=getattr(Mi, "q_rel", None), checked=getattr(Mi, "q_n", None), turns_not_scored=getattr(Mi, "q_turn", 0)), being=a.being, bodies=n, seed=a.seed, deaths_by_phase=deaths, presses_by_phase=[dict(none=p[0], first=p[1], second=p[2], both=p[3]) for p in picks],
              causal_share_last_third=[None, share(late[1], 1), share(late[2], 2)], who_chose_by_phase=[dict(pull=s[0], value=s[1], random=s[2], held=s[3], tried=s[4]) for s in src],
              cells_walked_by_phase=[round(m, 1) for m in moved], gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), journeys=getattr(Mi, "g_ends", 0)),
-             remaps=getattr(Mi.going, "remaps", 0), seconds=round(time.time() - t0), shadow_movement_gut=SH["snaps"], place_gut_actions=(int((Mi.gut.fast_action >= 0).sum()) if getattr(Mi, "gut", None) is not None else None))
+             remaps=getattr(Mi.going, "remaps", 0), life_cut=a.cut, motor=(dict(arm=a.motor, replaced=probe.changed, rechoices=probe.opportunities) if probe is not None else None), seconds=round(time.time() - t0), shadow_movement_gut=SH["snaps"], place_gut_actions=(int((Mi.gut.fast_action >= 0).sum()) if getattr(Mi, "gut", None) is not None else None))
     print(json.dumps(r), flush=True)
     if a.out:
         json.dump(r, open(a.out, "w"), indent=1)

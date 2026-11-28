@@ -9,7 +9,7 @@ import numpy as np, torch
 from tools.need_fork import place, DEV
 from tools.a1_channel import V2
 from tools.l1_life import make
-from tools.s4_kin import being, rebirth
+from tools.s4_kin import being, rebirth, reread
 from atanor_os.emerge.room_body import RoomBody
 
 S = 16
@@ -186,7 +186,7 @@ def main():
             side[0][0] += int(f[:, 0].sum()); side[0][1] += int(f[:, 1].sum())
         Mi.after(x, act, x2, died, B.dead & ~died); x = x2
         if B.dead.any():
-            rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
+            x = reread(B, O, x, rebirth(B, O, Mi, info))
         if (t + 1) % 1000 == 0:
             Mi.going.learn()
             if hasattr(Mi, "rest"):

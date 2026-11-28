@@ -1440,3 +1440,11 @@
 - 2026-11-28 `db1206bc` PK3b-chain 3 registered: bearing, distance and gesture at the fill judgment for bodies beside the food
 - 2026-11-28 `232de9c3` DR1: it knows its body (forecast of own gestures right) and does not drive it (48% when told the direction, 15% alone, 86% by the judge's hand)
 - 2026-11-28 `4633c8e5` PK3b-chain 3: beside the food the turn is missing, not the hand; Astra bundle updated with DR1 and the reply to 2cef2a5
+- 2026-11-28 `91889006` MC1 registered: Astra's movement candidate in the lever world at full length with the life-boundary fix and a shuffled time-pair control
+- 2026-11-28 `0064f551` MC1: Astra's movement candidate holds at full length (share .94/.95, deaths 652->51, 595->71); broken-pairing control three cells of four; MC1b registered
+- 2026-11-28 `9af03bd2` MC1b: fed another body's change the gain mostly stays (.82-.86, deaths after swap 95, 49); both controls may be leaky; MC1c registered
+- 2026-11-28 `da7a6305` RF1 registered: the render fix on the adopted main line (the check left undone since 11-27)
+- 2026-11-28 `3f72c25c` Audit 2026-11-28: unapplied corrections and harness faults listed; four judge-side fixes; HC1 and DR1b registered
+- 2026-11-28 `9c17cf8e` MC1c: told random gestures the being does not find the cause (.31/.18 apart, deaths 2-3x native); the candidate's gain rests on the gesture record
+- 2026-11-28 `a5a801a3` RF1: render fix raises deaths on the being grown in the faulty world (30 vs 11, 19 vs 18) - stays off for s3_e, regrow proposed; HC1 fixes applied (reborn-rows re-read, pitch reset, flag guard, crash guard)
+- 2026-11-28 `f86a0930` HC1: corrected re-read moves the recipe little (11->14, 18->20), now default; DR1b: in a fixed frame it drives when told (72%), alone 34% - DR1's numbers withdrawn; roadmap, state and Astra bundle updated

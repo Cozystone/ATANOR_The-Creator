@@ -6,7 +6,7 @@ import numpy as np, torch
 from tools.need_fork import t_room, place, DEV
 from tools.a1_channel import V2
 from tools.l1_life import make
-from tools.s4_kin import being, rebirth
+from tools.s4_kin import being, rebirth, reread
 from tools import room_live_view as VIEW
 from atanor_os.emerge.room_body import RoomBody
 from atanor_os.emerge.room3d_gpu import FLOOR, FOOD
@@ -103,7 +103,7 @@ while True:
             f" | 탐색(최근 100박자 칸 수) {len(set(TL['cells']))} | 어긋남 (최근 300박자) {sum(TL['mm'])}번 | 이 몸짓을 정한 것: {SRC_}")
     Mi.after(x, act, x2, died, B.dead & ~died); x = x2; t += 1
     if bool(died.any()):
-        deaths += 1; since = -1; rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
+        deaths += 1; since = -1; x = reread(B, O, x, rebirth(B, O, Mi, info))
     if t % 1000 == 0:
         G.learn()
         if hasattr(Mi, "rest"):

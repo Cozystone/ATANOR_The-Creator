@@ -477,6 +477,9 @@ class Mind:
         if force is not None:
             again = again | force; self.force = None
         self.again, self.lw_last = again, lw                                # 재는 쪽 기록만
+        motor_candidate = getattr(self, "motor_candidate", None)
+        if motor_candidate is not None:
+            pick = motor_candidate(x, pick, again, alw)
         self.cur = torch.where(again, pick, self.cur)
         lwh = getattr(self, "learned_home", None)
         if lwh is not None:                                                    # LW1: credit for the homing content in the choices made this beat

@@ -102,6 +102,7 @@ class Organs:
             r.reset(which)
         if self.path is not None:
             self.path.reset(which)
+        self._bcut = which.clone() if getattr(self, "_bcut", None) is None else (self._bcut | which)   # HC1 audit: the refill at rebirth is not a rise of the insides (read in __call__)
         for i in self.img:
             if self.prev[i] is not None:
                 self.prev[i][which] = -1
@@ -125,6 +126,8 @@ class Organs:
             bnow = torch.cat(parts, 1); bp = getattr(self, "_bprev", None)
             if bp is not None and bp.shape == bnow.shape:
                 rose = ((bnow - bp) > 0.01).any(1)
+                if getattr(self, "_bcut", None) is not None:
+                    rose = rose & ~self._bcut; self._bcut = None
                 for i in self.img:
                     if hasattr(self.ret[i], "relief"):
                         self.ret[i].relief(rose)

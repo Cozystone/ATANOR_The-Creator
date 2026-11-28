@@ -76,7 +76,7 @@ def life(rows, info, seed, W, n=64, beats=12000, child=3000, babble=1000, keep_l
                 with torch.enable_grad():
                     Mi.wo.learn(n=max(1, 2500 // max(1, getattr(Mi.wo, 'per_call', 1))))
         if B.dead.any():
-            dd = B.dead.clone(); idx = torch.nonzero(dd)[:, 0]; B.w.dead[idx] = False; B.w.store[idx] = 0.75; place(B, info, which=idx); O.reset(dd); Mi.begin(dd); B.felt[:] = 0; x = O(B.raw())   # L1d: the re-read after rebirth feels no motion (the drift bug); lifeid[idx.cpu().numpy()] += 1
+            dd = B.dead.clone(); idx = torch.nonzero(dd)[:, 0]; B.w.dead[idx] = False; B.w.store[idx] = 0.75; place(B, info, which=idx); O.reset(dd); Mi.begin(dd); B.felt[:] = 0; x = O(B.raw()); lifeid[idx.cpu().numpy()] += 1   # L1d: the re-read after rebirth feels no motion (the drift bug); HC1: the life counter sat inside this comment and never ran
     for q in Q:
         q["src"] = q["src"].tolist(); q["time_in_stem"] = q.pop("stem") / max(1, q.pop("beats"))
     ins_ = Mi.o.inside; ins = list(range(x.shape[1]))[ins_] if isinstance(ins_, slice) else [int(v) for v in ins_]

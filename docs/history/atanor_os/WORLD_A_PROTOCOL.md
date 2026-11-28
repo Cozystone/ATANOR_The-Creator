@@ -1629,3 +1629,235 @@ Together with DR1 (same day): it foresees what a turn does to its body, and it d
 sight on the viewer ("its back against the water and it does not know") is this, counted.
 Small unexplained: 2 beats of the died bodies were facing in reach with the hand and did not end the meeting (a fill in the same beat as
 a death, or the spring's stock empty) - not chased.
+
+## MC1: Astra's movement candidate in the lever world at full length, with a shuffled time-pair control (registered before the run, 2026-11-28)
+Source: Astra's hand-over (her repo at 2cef2a5, MOTOR_INTERFACE_RESULTS.md; fetched with the founder's approval). Her result at 8 bodies,
+1,200 beats, seeds 9781 / 9782: asking "after I began this gesture before, what did my insides do 1-20 beats later?" as a candidate at the
+re-choice beat lifts the causal lever's share from .42-.58 to .92-.99 and deaths 63 -> 10. Her two asks of us: (1) the life-boundary fix
+in every arm, re-verify at 16 bodies, 9,000 beats, and see whether the gain vanishes when action and outcome are no longer paired in
+time; (2) the pocket-room contact read (done: PK3b-chain 3).
+The bug she found in tools/lever_world.py (mine): at a rebirth the dead flags were cleared before they were used to clear the device, so a
+reborn body kept the dead body's busy count and its scheduled rise / fall. Fixed here for every arm (--cut 1, the default from now on;
+--cut 0 keeps the old harness). All earlier lever-world numbers (LV2, SH1's life, RL1b) carry this bug.
+What is added to the being: one hook in Mind.choose (a callable `motor_candidate`, None by default - with None the code path is the old
+one; the room's defaults do not change). The organ itself is Astra's class, imported from her checkout at run time, not copied here.
+Arms (whole being unmodified otherwise, s3_e, eye 1.1, ATANOR_LEARNED_TRUST=0 ATANOR_TURN_ONCE=1 as RL1b; 16 bodies; linked 1,500 / apart
+to 5,000 / swapped to 9,000; seeds 9601, 9602; all six in one batch):
+  native   - the fix only, no hook
+  choice   - the hook on, the organ fed each beat's change of the two lacks
+  shuffle  - the hook on, but the change the organ is fed is the same body's change from a random earlier beat (21-255 beats back, outside
+             its 20-beat window): the same numbers, no longer paired in time with what it did
+Judge (Astra's, kept): the gain is re-verified if in BOTH starts the causal share at the end of phase 2 AND of phase 3 is higher with
+choice than native, and total deaths are not higher. The gain rests on the time pairing if in both starts and both phases the shuffle
+arm's share is nearer native's than choice's (shuffle - native < half of choice - native). If shuffle keeps the gain, the gain is not from
+what followed the gesture (it may be from breaking the held gesture) and I say so.
+Also read, not judged: how often the candidate replaced the pick; who chose; native-with-fix against RL1b's waking arm (45/114/546,
+45/127/473) as a look at what the bug did. Known limit said before: runs are not repeatable to the body on this GPU (same seed gave 281,
+225, 546 deaths after the swap), two starts in one batch is weak; the 20-beat window is the designer's; 16 bodies share one statistic, so
+this is not one body learning from its own rare meetings. Nothing is switched on in the room on this result.
+
+## MC1 result (lever world, whole being, 16 bodies, 9,000 beats; deaths linked / apart / swapped; causal share at the end of phases 2, 3)
+| arm | start 9601 | start 9602 |
+|---|---|---|
+| native (life-boundary fix only) | 46 / 102 / 504; .796, .256 | 47 / 118 / 430; .733, .343 |
+| choice (Astra's movement candidate at the re-choice) | 38 / 7 / 6; .939, .945 | 48 / 15 / 8; .939, .946 |
+| shuffle (same, fed the body's change from 21-255 beats back) | 61 / 339 / 180; .532, .819 | 48 / 168 / 293; .668, .319 |
+The candidate replaced the pick at 99.1% of re-choices in both choice runs (52,323 / 52,800; 48,918 / 49,373), 98.3-98.7% with shuffle.
+Judge 1 (re-verified?): MET. In both starts the causal share is higher with choice at the end of phase 2 (.94 vs .80, .73) and of phase 3
+(.95 vs .26, .34), and total deaths fall 652 -> 51 and 595 -> 71. After the swap the native being falls below chance (it keeps the old
+lever); with the candidate it holds .95 and 6-8 deaths in 4,000 beats. Astra's short result stands at full length.
+Judge 2 (does the gain rest on the time pairing?): NOT MET as registered - three cells of four. Shuffle is at or below native in phase 2
+of both starts (.53, .67) and in phase 3 of start 9602 (.32), but in phase 3 of start 9601 it reads .819, nearer choice than native. The
+lives do not follow: 180 deaths after the swap there against 6 with choice, and shuffle has MORE deaths than native while apart in both
+starts (339, 168 against 102, 118). So: with the pairing broken the gain in lives is gone in every cell, and the gain in the share is gone
+in three of four. I do not call the fourth noise. A fault in my control that would give it: I shuffled inside one body over 21-255 beats;
+a body that keeps one lever for hundreds of beats still feeds the organ changes that came from that lever, so the slow pairing is left
+and only the fine timing is broken (a guess, not measured). A cleaner control is the change of ANOTHER body at the same beat (MC1b below).
+What the bug did (read only): native with the fix (504, 430 deaths after the swap) is inside the spread of RL1b's waking arm without it
+(546, 473) - no visible effect of the bug on our earlier lever numbers at this resolution.
+My errors in this run: I launched all six at once; three died at start with CUDA out of memory, the lever viewer died with them, and when
+the second three started the machine became unusable and the founder rebooted it. So the batch condition I registered ("all six in one
+batch") is broken: choice x2 and native 9602 ran together (beside three dying neighbours, ~1,090 s each); native 9601 and both shuffle
+runs ran one at a time after the reboot (~670 s each). Arms were therefore not run under the same load. Rule from now: at most three GPU
+runs at once, viewers counted, memory read first.
+Limits as registered: 16 bodies share one statistic; the 20-beat window is the designer's; this world pairs a gesture and its outcome
+closely; nothing is switched on in the room.
+
+## MC1b: the cleaner broken-pairing control (registered before the run, 2026-11-28)
+Same as MC1's shuffle arm but the change the organ is fed each beat is ANOTHER body's change at the same beat (the 16 bodies rolled by a
+random shift 1..15 drawn each beat): the same numbers at the same time in the life of the world, paired with a gesture that did not cause
+them. Seeds 9601, 9602, one run at a time. Judge: the pairing carries the gain if in both starts and both phases the share is nearer
+native's than choice's (MC1's numbers above: below .868 / .601 for 9601, below .836 / .645 for 9602) and deaths after the swap are not
+below half of native's. Otherwise the gain does not need the gesture-outcome pairing and I say so. Limit said before: bodies die and are
+reborn at different beats, so another body's change can fall across its death; such beats are fed as they are.
+
+## MC1b result (the organ fed another body's change at the same beat; 16 bodies, 9,000 beats, one run at a time)
+| start | deaths linked / apart / swapped | causal share end of phase 2, 3 | replaced |
+|---|---|---|---|
+| 9601 | 45 / 129 / 95 | .861, .821 | 57,802 / 58,436 |
+| 9602 | 49 / 29 / 49 | .841, .839 | 60,318 / 60,660 |
+By the registered judge: the pairing does NOT carry the gain in this control. Three cells of four are nearer choice than native (bars
+.868 / .601 and .836 / .645; only 9601 phase 2 is under its bar, by .007), and deaths after the swap (95, 49) are far under half of
+native's (252, 215). Fed changes that its own gesture did not cause, the being still presses the causal lever .82-.86 and after the swap
+dies a fifth to a tenth as often as native. It is not as good as the true pairing (.94 / .95; 6-8 deaths after the swap; 7-15 apart).
+What I registered I would say, said: on this control most of the gain does not need a body's own gesture-outcome pairing.
+Why this control may not have broken the pairing either (a guess, not measured): the 16 bodies write into ONE shared statistic and so
+act alike. When most bodies press one lever, another body's change at that beat is mostly the outcome of that same lever. The pairing
+survives at the level of the crowd. MC1's within-body shuffle has the same shape of hole in time (one start, .82). Both of my controls
+moved the outcome to a place where the gesture was still the same. Neither says the organ learns nothing from pairing; neither shows it
+does. The other reading stays open: at 98-99% of re-choices the pick is replaced, and replacing the held gesture by anything may itself
+help (pull chose 20-30 thousand beats in every hook arm against 3-4 thousand native).
+MC1c below separates these. It is the third control on one question; I say so, and it is the last - whatever it gives is the answer
+handed to Astra, together with the two above.
+
+## MC1c: the organ told a gesture it did not make (registered before the run, 2026-11-28)
+Same as choice, but the gesture recorded into the organ each beat is drawn at random from all 90 (per body, per beat) instead of the one
+executed; the change of the two lacks is the body's own and true; the set of gestures it may propose is still only those really executed.
+No slow or crowd pairing can survive: what is credited has nothing to do with what was done. The hook still replaces picks. Seeds 9601,
+9602, one run at a time.
+Readings fixed now: (a) share near chance or native's and deaths near or above native's in both starts -> the gain of choice comes from
+the gesture-outcome record, and MC1 / MC1b were leaky controls; (b) share and deaths stay near MC1b's (.82-.86; under half of native's
+deaths after the swap) -> the gain is mostly from replacing the held gesture, not from what the organ knows, and Astra's result must be
+re-read; (c) between or split by start -> said as it is, no verdict. Also written: how often the pick was replaced.
+
+## RF1: the world's render fix on the adopted main line (registered before the run, 2026-11-28; founder on the viewer: "the old error where
+## the background shows through at the food still seems to be there")
+It is: World fix 2 (11-27, ATANOR_RENDER_FIX=1: the wall behind a 1-cell-high spring is drawn instead of open sky) was left "default off
+until a check that the main line is not worse", and I never ran that check. So every room number since (the adopted recipe, F1, F2, the
+pocket-room chains, DR1) was measured in a world that draws sky above every spring, and the viewer I restarted after the reboot showed it
+too. My open item, left open. The viewer has the fix on from now (said in its label).
+Run: A2 room 9104, s3_e, eye 1.1, 64 bodies, 3,000 beats, the adopted recipe (MISMATCH, LEARNED_TRUST=1, TURN_ONCE), with and without
+the fix, two starts (--rep 0, 1), both arms of a start run together. Judge: the fix becomes the room's default if deaths with it are not
+higher than without in both starts (the same bar as world fix 1); if higher in both, it stays off and the reason is looked for; split ->
+said, a third start decides. Also read: fills, wait, and the eye's own correctness (sr_hit).
+Known before: s3_e grew up seeing the faulty picture, so the fix shows it a world it has not seen (the look of a spring's surround
+changes); a worse result may be that, not the fix being wrong. That is a reason to regrow, not to keep a wrong world.
+
+# AUDIT 2026-11-28 (founder: "small errors, things fixed before and not applied - debug it all once, and update the repo")
+Two read-only reviews (one of every flag against the protocol's last decision, one of the measuring tools' life boundaries and timing),
+then my own reading of each finding's code. Listed whole; what is fixed, what is registered, what stays open.
+
+## A. Corrections that existed and were not applied (the founder's case)
+1. World fix 2 (ATANOR_RENDER_FIX; sky above a spring instead of the wall behind): check never run since 11-27 -> RF1 (registered above), running.
+2. M1d (11-27): the place units' own positions are not part of the saved being, so a lone body (the viewer) starts every life with none
+   and its homing walks it home. The carry (ATANOR_PLACE_FROM) was built, the registered one-body measure has no result, and the carry is
+   silently ignored when ATANOR_LEARNED_TRUST=0. Open - no result exists; to run after the checks below.
+3. P2b (ATANOR_PITCH_RETURN, corrects P2's head drifting to the floor): never measured; P2 itself has no result. Both stay trial flags.
+4. tools/a2_moving_food --view still uses the wrong renderer admitted on 11-25; the food-in-view shares written then were never
+   re-measured. Those shares are withdrawn as numbers until re-measured with the being's own picture.
+5. The recipe is not the default: ATANOR_TURN_ONCE, ATANOR_MISMATCH and eye 1.1 are off / 1.6 unless a run sets them, and the protocol
+   says both "the eye stays 1.6 on the main line" (older) and "recipe = eye 1.1" (newer). Settled here: the room's main line is eye 1.1
+   with the two flags; every run of mine since the recipe passed them explicitly (checked in the launch scripts). Defaults stay as they
+   are so old results reproduce; a tool now prints the recipe state at start (below).
+
+## B. Faults in the measuring tools (read end to end; not executed unless said)
+6. After ANY death every tool did `B.felt[:] = 0; x = O(B.raw())` for ALL bodies: the living bodies' organs ran a second time in that beat
+   (the eye moves again, the normalisers update twice) and their felt own-motion read zero in the x carried to the next beat. Rare in a
+   recipe run (11-18 deaths in 3,000 beats), every few beats in a lever-world native run (500 deaths in 4,000 beats, 16 bodies). In every
+   room number so far. Fix: keep the living bodies' x, splice in only the reborn rows (the second organ call itself remains - the organs
+   cannot be run for part of a batch; said). Registered as HC1 below, since it changes what the being is given.
+7. tools/drive_test.py (DR1): the judge put each body down at a random spot and heading and zeroed its path organ, so the same place
+   unit meant a different spot of the room every round. The "own" arm (15%) therefore mixed "does not drive its body" with "its map was
+   scrambled by me". The "told" arm (48%) and the forecast test do not use the map, and the pocket-room read (chain 3: no turn beside the
+   food) was in a proper frame. DR1's own-arm number is withdrawn until re-run (DR1b below). Fixed (--frame 1, default).
+8. tools/s5_space.py: a body standing where the wall appears was put back at the birth point without telling its organs (its path sense
+   kept the old spot for that life). Touches conditions a and c of the pocket room at the moment the wall appears, not b. Fixed (a cut).
+9. tools/lever_world.py: the shadow read missed the first onset of a new life. Fixed (judge-side).
+10. tools/l1_life.py: the life counter sat inside a comment and never ran, so journeys across a death were read as one life in D25's
+    pieces. Fixed; L1's D25 reads are suspect.
+11. tools/a3_rooms.py: bumped_held / bumped_free read a field nothing writes; always 0. Not fixed (which touch signal is meant is not
+    clear from the code); those two result fields are void.
+12. tools/s4_kin.py main: crashes with a division by zero at the end with the default --carry 0. To fix after RF1 (file in use).
+13. rebirth() does not reset the head's pitch (only with ATANOR_PITCH); the eye's relief trace reads the refill at rebirth as relief
+    (only with ATANOR_ATTEND). Both off in the recipe. To fix after RF1.
+14. Flags that do nothing alone: SEEN, RELY, PARALLAX need IMAGINE_MAP (this bit me in F2); OWN_LEAVE needs GUT; PITCH_RETURN needs
+    PITCH; IMAGINE_GOAL needs IMAGINE_MAP; TRUST_FROM / PLACE_FROM / TRUST_MODE need INNATE_HOMING and LEARNED_TRUST; REST_LEARN needs a
+    tool that calls the rest (s4_kin, drive_test, l1_life do not). To do after RF1: being() refuses to start on such a combination.
+15. Plausible, not confirmed: the learned trust's traces are not cleared at death (a relief within ~30 beats of rebirth credits the dead
+    body's choices); the novelty spread takes the death-to-rebirth jump. Open.
+
+## C. Known-wrong or unfinished readings still standing in this file
+RL1's cost before the swap (unjudged); L7 journey length (unfixed; the gut was closed with it broken); TC1's crashed rerun, the A3 hops
+diagnostic, W1 wall pattern (registered, no result - closed here as never run); the lever-world life-boundary bug is in LV2, SH1, RL1b and
+the Q1 / EF1 lever runs (only a look, no rerun); same-seed runs are not repeatable on this GPU (affects every one-start reading); MC1's
+arms ran under unequal load; the DR1 script arm is not the body's best. Flags with no entry here by name: RELIEF_SPOT (SF1), OWN_RATE
+(SF3), GUT (G1), HOPS.
+Nothing closed for the room is switched on by any tool (checked).
+
+## HC1: the rebirth re-read fixed for the living (registered before the run, 2026-11-28)
+Change: after a rebirth, x = where(reborn, x_new, x_before) in tools/a2_moving_food.py, a2_view.py, a3_rooms.py, s5_space.py,
+lever_world.py, s4_kin.py (one helper). Default on; ATANOR_OLD_REREAD=1 keeps the old re-read. A correction to the harness.
+Run: A2 room 9104, recipe, 64 bodies, 3,000 beats, old vs new re-read, two starts, with the render fix as RF1 decides. Judge: none for
+adoption - the new re-read is right by construction and becomes the default either way; the run says how much the old one moved the
+numbers (deaths, fills, wait). If deaths with the correction are higher in both starts, the main line's numbers are restated at the new
+values and that is said to Astra.
+## DR1b: the body-driving "own" and "told" arms in a fixed frame (registered before the run)
+tools/drive_test.py with --frame 1, same seeds and sizes as DR1 (768 trials an arm). Read against DR1: own 14.7%, told 47.9%. No judge;
+it replaces DR1's own-arm number.
+
+## MC1c result (the organ told a random gesture instead of the one made; the change of the lacks true; 16 bodies, 9,000 beats, one at a time)
+| start | deaths linked / apart / swapped | causal share end of phase 2, 3 | replaced |
+|---|---|---|---|
+| 9601 | 54 / 233 / 252 | .314, .691 | 56,043 / 57,073 |
+| 9602 | 48 / 397 / 271 | .178, .619 | 43,258 / 44,796 |
+Beside it: native 102 / 504 and 118 / 430 deaths (apart / swapped), share .80 / .26 and .73 / .34; choice 7 / 6 and 15 / 8, .94 / .95.
+By the readings fixed before the run: (c), between - not cleanly (a), because after the swap its deaths are half to two thirds of
+native's and its share is above native's; not (b), nothing near .82-.86.
+What the numbers say without stretching: with the gesture record destroyed the being does not find the cause. While apart it presses the
+causal lever LESS than chance (.31, .18) and dies two to three times as often as native. After the swap the share rises to .62-.69 - the
+mirror of the same lean (1 - .31 = .69): it keeps one lever whatever it causes, and the swap happens to make that lever the good one.
+That is also why it beats native after the swap: native holds the lever it learned, this one holds a lever it did not learn.
+So, the three controls together, as I hand them to Astra:
+ - true record (choice): .94 / .95, deaths 7-15 / 6-8;
+ - record with no relation to the gesture (MC1c): cause not found, worse than native while apart -> replacing the held gesture alone
+   does not give the gain; it costs lives;
+ - record moved within the body's own recent past (MC1) or to another body at the same beat (MC1b): much or most of the gain stays ->
+   those two did not break the pairing (bodies that share one statistic act alike; a body keeps a lever for long), as guessed.
+The gain of Astra's candidate rests on the record of what followed the gesture. What is NOT shown by any of this: that a single body
+learns it from its own life (16 bodies share one statistic, and MC1b shows the crowd's record is enough), and that the pairing has to be
+fine in time (MC1: a 21-255 beat smear kept the gain in one start of two).
+Forking said plainly: three controls on one question, the second and third registered after seeing the one before. Each registration and
+its readings were fixed before its run and are in this file in order.
+
+## RF1 result (A2 room 9104, recipe, 64 bodies, 3,000 beats; deaths; water / food fills)
+| start | render fix off | render fix on |
+|---|---|---|
+| rep 0 | 11; 797 / 622 | 30; 657 / 556 |
+| rep 1 | 18; 785 / 552 | 19; 667 / 619 |
+By the registered judge: deaths with the fix are higher in both starts (by 19 and by 1), so the fix does NOT become the room's default on
+this being, and the reason is to be looked for. The reason I said before the run stands as the first candidate and is not measured:
+s3_e grew up in the world that draws sky above every spring, so the corrected world shows it springs it has not seen (water fills fall
+16% in both starts). The second start's difference (19 against 18) is nothing; the judge's letter is met only by one death there.
+What this leaves, said plainly: the being on the main line is fitted to a world drawn wrongly, and every room number is from that world.
+Keeping the wrong world because the being is used to it is not a fix. The correction that follows is a being grown in the corrected
+world (the same growth as s3_e, the render fix on), then the recipe measured there - a growth run, to be proposed to Astra with the
+rest, not started on my own tonight. The viewer keeps the fix on and says so in its label; the measured main line stays as it was.
+(The off arm gave 11 and 18 deaths again - the same as F1 / F2's recipe arm.)
+
+## HC1 result (A2 room 9104, recipe, 64 bodies, 3,000 beats; deaths; water / food fills)
+| start | old re-read (every living body re-read at any death) | corrected (reborn rows only) |
+|---|---|---|
+| rep 0 | 11; 797 / 622 | 14; 751 / 629 |
+| rep 1 | 18; 785 / 552 | 20; 793 / 574 |
+The correction is the default from now (ATANOR_OLD_REREAD=1 keeps the old). It moves the recipe little: deaths +3 and +2, fills within
+6%. The main line's reference from now is 14 / 20 deaths; F1 / F2's arms were all measured with the old re-read and compare among
+themselves as before. Not re-measured with the correction: the lever world (where deaths are frequent and the old re-read ran every few
+beats in the native arm) - MC1's arms all carried it alike.
+Seen on the way: the old arm gave 11 and 18 for the third time (F1 / F2, RF1, here). In this room at this size the recipe run IS
+repeatable; the non-repeatability I wrote of is the lever world's (281 / 225 / 546) and the pocket room's. I had said it of everything.
+
+## DR1b result (body driving in a fixed frame; 768 trials an arm; against DR1 where I scrambled the map each round)
+| arm | DR1 (scrambled) | DR1b (fixed frame) | by third of the test |
+|---|---|---|---|
+| own (hungry, food 2.5 cells away, 120 beats) | 14.7%, 38 beats | 34.4%, 37 beats | .24 -> .37 -> .42 |
+| told the direction | 47.9%, 46 beats | 71.5%, 25 beats | .54 -> .79 -> .82 |
+| the judge's script (unchanged) | 85.7%, 7 beats | - | |
+By bearing, told: 77% / 75% / 74% / 64% / 69% (0 / 45 / 90 / 135 / 180 degrees); own: 52% / 36% / 30% / 28% / 35%.
+I was wrong twice. First in the test (the scrambled map). Then in the audit two hours ago, where I wrote that the told arm did not use
+the map and stood: it rose from 48% to 72%. Both DR1 numbers are withdrawn.
+What stands now: told where the food is, the being drives its body there and fills in 72% of trials (82% in the last third; the judge's
+own script 86%), and it gets better inside the test. So "it cannot drive its body" is mostly not true - most of that was my harness.
+Left alone it fills 34% (52% when the food is straight ahead, about 30% when it is to the side or behind), with turns still as often
+away as toward (5.4 toward, 4.2 away at 135 degrees). The gap that remains is between knowing where and being told where - the seat, not
+the steering. The pocket-room read (chain 3: beside the food, no turn) was in a proper frame and is untouched by this.
+The founder's question ("not intelligent, or cannot drive its body?") gets a different answer than I gave on the day: it drives.
