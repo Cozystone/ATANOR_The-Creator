@@ -1531,3 +1531,28 @@ Reading:
 Faults that remain, said plainly: stage 5b is read after the world's step, so a body that faces and fills in the same beat is not counted
 as facing (19 fills "without facing") - 5b's count is a floor, its "0 died" stands. This run's second half differs from the first chain
 run with the same flags and seed (deaths 94 vs 75): the runs are not repeatable to the body on this GPU; one start, a diagnosis.
+
+## RL1b: does learning the forecaster later cost lives after the wiring is swapped? (Astra's second judgment; registered before the run, 2026-11-28)
+The lever world, the whole being unmodified, 16 bodies, 9,000 beats (linked 1,500 / apart to 5,000 / swapped to 9,000), two starts
+(seeds 9601, 9602). Arms: forecaster learning inside the waking loop (as before) vs moved to the rest once per 1,000 beats
+(ATANOR_REST_LEARN=1). Everything else the same.
+Judge: RL1 costs lives if the deaths after the swap (phase 3) are more than 10% higher with the rest arm in BOTH starts; not shown if
+they differ in sign or by less; also read: causal share at the end of phases 2 and 3, and the forecaster steps lost over the rest's cap.
+Known limit said before: these runs are not repeatable to the body on this GPU, and the being hardly uses the forecaster for choosing in
+this world (held 80%+), so a null result says "no cost here", not "no cost".
+
+## RL1b result (lever world, whole being, 16 bodies, 9,000 beats; deaths by phase linked / apart / swapped; causal share at the end of phases 2, 3)
+| arm | start 9601 | start 9602 |
+|---|---|---|
+| forecaster learning inside waking (as before) | 45 / 114 / 546; .742, .333 | 45 / 127 / 473; .734, .390 |
+| moved to the rest (RL1) | 48 / 177 / 347; .651, .474 | 45 / 147 / 292; .685, .486 |
+By the registered judge: RL1 does NOT cost lives after the swap - deaths after the swap are lower with it in both starts (-36%, -38%).
+What the judge did not ask and the numbers show: before the swap the rest arm is worse (deaths apart +55%, +16%; causal share .65-.69
+against .73-.74). So the likeliest reading is not "later learning is better" but "it learned the first wiring less firmly, so it lost
+less when the wiring turned": after the swap the waking arm falls BELOW chance (.33, .39 - it keeps pressing the old cause), the rest arm
+sits at chance (.47, .49). Neither arm finds the new cause. This is the same seat problem as SH1, not a learning-time problem.
+Weakness said plainly: the waking arm at seed 9601 gave 281 (LV2) and 225 (SH1's life) deaths after the swap in earlier runs and 546
+here - the spread between runs of the same seed is as large as the effect read here. Two starts agreeing inside one batch is weak
+evidence. The forecaster steps lost over the rest's cap were not written to the result (my omission).
+Decision: RL1 stays a trial flag (default off). The 7-second stall is gone with it and no cost after the swap is shown; the cost before
+the swap is unjudged and needs its own registered run before RL1 is adopted.

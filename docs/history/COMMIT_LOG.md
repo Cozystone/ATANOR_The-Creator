@@ -1434,3 +1434,5 @@
 - 2026-11-28 `045eb539` PK3b-chain: the first-meeting chain breaks at its end (seen and reached, not taken), the same without eye claims; the claim stage is not readable with my ledger
 - 2026-11-28 `dceb6a3a` PK3b-chain 2 registered: the eye's claim read per beat, the chain's end split, deaths by inside
 - 2026-11-28 `b9f98b4d` PK3b-chain 2: the eye tells the right place (46 of 55); half never becomes a goal; 13 die beside the food never facing it
+- 2026-11-28 `acd809a8` RL1b registered: later forecaster learning vs lives after the swap
+- 2026-11-28 `7c810a8f` RL1b: no cost after the swap shown (deaths lower with the rest arm in both starts), worse before it; Astra bundle complete with a summary on top
