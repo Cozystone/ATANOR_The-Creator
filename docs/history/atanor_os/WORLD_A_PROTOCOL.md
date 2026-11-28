@@ -1494,3 +1494,40 @@ Not readable - my instrument, said plainly:
   candidate" are NOT separated.
 - "Within 1.2 cells" (29) is below "filled" (31): the reach of a fill is longer than my 1.2 - stage 5 undercounts.
 - Deaths are not split by which inside ran out (water is at the far side of the room).
+
+## PK3b-chain 2 (registered before the run, 2026-11-28; founder: "fix it and measure again")
+The same run, bundle arm (the chain needs the eye), with my instrument's three faults mended - nothing in the being changes:
+- stage 2 is read from what the eye says each beat (its own "relief of the food kind ahead" above one half, with its distance and
+  bearing), not from the one-line ledger: 2a the eye says so while the food is truly in its view; 2b that place, turned into the world,
+  is within 2 cells of the food. Check of the turning: the median distance of those places from the food (should be about the eye's ~1 cell).
+- the end of the chain is split: beside it while lacking food (centre within 1.9 cells) / facing it within reach while lacking (the
+  straight-ahead ray on the food within the world's reach) / fill (= the hand gesture then).
+- deaths before a fill are split by which inside was lower at death.
+Also counted: beats the eye says "food ahead" with no food in view (false claims), per body.
+Reading as before: the largest drop between neighbouring stages names the first break; now "saw, the eye did not say" / "said, wrong
+place" / "right place, not a candidate" / "beside, never facing" / "facing, no hand" are separated. One start; a diagnosis, no bar.
+
+## PK3b-chain 2 result (bundle arm, 64 bodies, one start; phases 45, 216, 125.5 -> 94, 80, 277.5)
+Check of my turning into the world: the eye's said place is a median 1.37 cells from the food - valid this time. False "food ahead" on 4.7% of beats.
+| stage (first beat in that life) | bodies | median beat | of the 33 that died before a fill, ever reached it |
+|---|---|---|---|
+| 1 saw the food | 55 | 234 | 24 |
+| 2a the eye says "food ahead" while it is in view | 48 | 310 | 19 |
+| 2b at the right place (within 2 cells) | 46 | 380 | 18 |
+| 3 a candidate there (homing or lean target) | 23 | 500 | 15 |
+| 4 within 2.5 cells | 49 | 425 | 18 |
+| 5a beside it while lacking food (centre within 1.9) | 40 | 494 | 13 |
+| 5b facing it within reach while lacking | 12 seen (see note) | 478 | 0 |
+| 6 fill | 31 | 485 | - |
+Deaths before a fill: 33, of which 32 with food the lower inside. All 64 held the old food place as a candidate (median beat 5).
+Reading:
+- The eye is not the break: of 55 that saw it, 48 were told by their eye and 46 at the right place.
+- Break A, knowing -> goal: only 23 of the 46 ever had the new place as a candidate, and 23 of the 31 fills came WITHOUT it having been a
+  candidate first. What the eye knows mostly does not become what the being goes for; the old place stays the goal.
+- Break B, beside -> facing: 13 bodies died lacking food having stood beside it, and not one of them ever had it straight ahead within
+  reach; no body that did face it within reach while lacking died unfilled. Being near is reached; turning to it is not.
+- 9 died without ever seeing it (late first sight, median 234 beats).
+- So the 33 deaths end at: never saw 9 / saw, eye silent or wrong 6 / right place but never beside 5 / beside, never facing 13.
+Faults that remain, said plainly: stage 5b is read after the world's step, so a body that faces and fills in the same beat is not counted
+as facing (19 fills "without facing") - 5b's count is a floor, its "0 died" stands. This run's second half differs from the first chain
+run with the same flags and seed (deaths 94 vs 75): the runs are not repeatable to the body on this GPU; one start, a diagnosis.

@@ -1432,3 +1432,5 @@
 - 2026-11-28 `6161989d` F2 one-in on the recipe: remap, gut over journeys and the seen eye each cost lives alone (closed for the room); Q1 does not and shortens the wait (candidate)
 - 2026-11-28 `70936ca3` PK3b-chain registered: pocket room b read as a first-meeting chain (judge side; one read-out line)
 - 2026-11-28 `045eb539` PK3b-chain: the first-meeting chain breaks at its end (seen and reached, not taken), the same without eye claims; the claim stage is not readable with my ledger
+- 2026-11-28 `dceb6a3a` PK3b-chain 2 registered: the eye's claim read per beat, the chain's end split, deaths by inside
+- 2026-11-28 `b9f98b4d` PK3b-chain 2: the eye tells the right place (46 of 55); half never becomes a goal; 13 die beside the food never facing it
