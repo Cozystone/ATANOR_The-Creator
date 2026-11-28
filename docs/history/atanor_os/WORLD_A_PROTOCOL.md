@@ -1211,3 +1211,218 @@ L7 ATANOR_OWN_LEAVE=1: a journey past its own longest paying journey of late (fa
   paying journeys) collapsed to 4.5 beats - sips at a spring are short paying journeys - and churned 2,639 journeys in 700 beats; changed
   before any registered run.
 Measure together on the pocket room's three conditions after growth G.
+
+# LG1 claim ledger + PK3 pocket room's three conditions (registered 2026-11-28; Astra's review of R5, LOKI d637cac - read, not fetched)
+Astra's review (synthetic, 24 seeds): R5 is worth keeping, but belief belongs to "this claim under this condition", not to "the eye" or
+"the memory" as a whole; score only the same spring; successes alone bias the record; 1 / mean-distance^2 is not an inverse variance;
+recovery of a source that became right again took a median of 14 confirmations. Advice: before changing behaviour, strengthen the ledger.
+Done: R5b - the memory is scored only when its goal was for the inside that rose (it had been scored against any relief: my error; the 4.0
+cells was inflated by goals for the other kind). LG1 - each written claim of the eye is frozen when written and closed as: filled there
+(within 2.5 cells) / reached it lacking and nothing came for 10 beats / died after reaching / died never having reached. Read-out only;
+choice is not changed by it. Smoke (64 bodies, 600 beats, condition b): 143 claims - 36 filled there, 13 tried and nothing, 94 open; the
+eye's place error at fills 1.33 cells; memory (same kind, 3 scored) 2.51.
+PK3 (tools/s5_space.py --test strong --cond a|b|c): a - it has eaten at that very place (first through a gap in the pocket's top; the gap
+then closes: the way it knows is blocked, the first step must go away); b - the place is new, the look is known (the food first stands by
+the pocket's mouth, then at the top); c - as before (found for the first time). 2,000 + 2,000 beats, 64 bodies, seed 9501, s3_e eye 1.1 with
+R1, IM2, seen eyes with bearing (carried), G1, R5, L7, T1, full weight. Read-outs: food fills and deaths by phase, the ledger's four
+outcomes, eye vs memory error on same-kind pairs, which led. The two numbers Astra asked for: does eye < memory hold on same-kind pairs;
+how many claims could be checked at all in lives that died without a fill.
+
+# LV1 two-lever device (registered before running; Astra's whole review, founder 2026-11-28 "build it now and show it") - tools/lever2.py
+Outside space: the first gate of the intellectual axis. A body with two insides that drain (.004 a beat). Two unnamed levers; an action
+lasts 16 beats. One lever brings, 8 beats later, a rise (+.30) of whichever inside is lower; the other brings, 14 beats later, a fall (-.10)
+of both. Phase 1 (1,500 beats): the levers are linked - only "wait" or "both"; the rise and the fall always come as a pair and pressing
+both does not keep a body alive for long. Phase 2 (to 5,000): each can be pressed alone; nothing rewards trying one alone. Phase 3 (to
+9,000): the wiring is swapped, the device looks the same. A death refills the body; memory goes on.
+The being is the common principle alone, not the room being: Astra's SomaticReadout (as wired for the gut in the room; cue = the device's
+unchanging look) + wholeness as the only judge. Said plainly: this tests the common organ, not that the room being carries over.
+Arms, 24 seeds each: gut / always both / random. Pass (Astra's scene): (1) in phase 2 it presses a lever alone without being told, finds
+the cause (5 presses of the causal lever in a row) in >= 20 of 24 lives, and its phase-2 deaths are below both controls'; (2) after the
+swap it drops the old lever and finds the new cause again in >= 20 of 24. Expected (said before): (1) met - an untried action is expected
+to change nothing, which beats "both" whenever the fall would hurt more than the rise helps; (2) met but slowly, wrong at first (Astra's
+flipped-effect result: 24/24 wrong before feedback).
+## LV1 result (24 seeds; deaths by phase 1 / 2 / 3): both bars met - with the limits said below
+gut: 48 / 20 / 95; tried a lever alone 24 of 24 (median 13 beats after the levers came apart); found the cause 24 of 24 (median 77 beats);
+  after the swap found the new cause 23 of 24 (median 42 actions, 9 wrong presses first). Phase-2 picks: wait 48, both 649, first alone
+  4,509, second alone 48.
+always both: 48 / 120 / 144 (never tries alone). random: 128 / 318 / 330; found the cause 1 of 24, after the swap 5 of 24.
+Bars: (1) alone-press and cause found >= 20 of 24, phase-2 deaths below both controls (20 vs 120, 318) - met. (2) re-found after the swap
+>= 20 of 24 - met (23), slowly and wrong at first as expected (deaths in phase 3: 95, below both controls but 4.7x its own phase 2).
+What this shows: the common principle (cue -> kept action -> later change of its own insides, judged by wholeness) separates two changes
+that always came together, by its own action, outside space, and revises after a hidden change. What it does not show: (a) that the room
+being carries over - this is the common organ alone, built by me for this device (the action set, the 16-beat action, the cue are given);
+(b) a chosen experiment - it tries a lever alone because an untried action is expected to change nothing, not because it compares two
+explanations and picks the action that tells them apart; (c) anything about efficiency on a personal device. Viewer on 8779.
+
+# LV2 the lever device as a world of the room body; the whole room being in it, unmodified (registered before running)
+Founder 2026-11-28: "make it an integrated being - do not cut organs out; it will leave unused what it does not need (nobody removes the
+gut to test a liver drug)". tools/lever_world.py: the same body contract as the room (same eyes, skin, legs, neck, hand, two insides) in a
+closed 3 x 3 cell with no springs; the hand's two gestures are the two levers; effects, delays and phases as LV1 (linked 1,500 beats, apart
+to 5,000, swapped to 9,000). Being: s3_e with everything it has now (R1, seen eyes, IM2, G1 gut, R5, L7, T1, full weight), nothing changed
+for this world. 16 bodies, seed 9601. Read-outs: presses by phase (first / second / both), the causal lever's share of single presses in the
+last third of phases 2 and 3, deaths by phase, who chose (pull / value / random / held / tried), cells walked, the gut's journeys.
+The lone organ (LV1) found the cause 24 / 24. Pass: causal share >= .8 in the last third of phase 2 and >= .8 again in phase 3, deaths in
+phase 2 below phase 1's rate. Expected (said before): not met - its gut asks about journeys to places and its homing points at old springs;
+nothing in it yet ties "this gesture, kept" to "my insides later" away from a spring. The gap to LV1 = the list of what was room-only.
+Smoke (8 bodies, 450 beats): presses both 69 | first 44, second 22 | first 34, second 32; held 78% of beats; it walks 130-180 cells a phase.
+
+# Q1 / EF1 three properties for every organ (registered 2026-11-28; founder: "how does a person leave an unneeded organ unused - metacognition,
+# or each organ's own metabolism? ... put the three properties in; imitate what can be imitated") - built, not yet measured
+Looked up (one search each, 2026-11-28): signalling takes most of the grey matter's energy, which favours sparse, efficient codes (Attwell &
+Laughlin 2001; later budgets lower the spike's share); attention as the precision (gain) of prediction errors - an unreliable error is
+turned down (Feldman & Friston 2010; contested: a 2024 critique says precision alone does not capture attention); movement as an effort -
+reward trade, effort = energy spent, larger reward -> more vigour (Shadmehr, Huang & Ahmed 2016; Summerside et al. 2018; one study finds
+choices follow a subjective effort that departs from the metabolic one). So: mostly not metacognition - nothing knows "this organ is not
+needed"; an organ with no input is silent, a signal that keeps being wrong is turned down, and using anything costs.
+Q1 ATANOR_QUIET=1 (Mind._quiet): the two organs that say where to go - the lean (toward its next place) and the homing plan - each keep
+  their own record: of the beats on which the body did what the organ asked (its top gesture) and it had named a place more than .7 cells
+  away, the share on which the body came nearer that place by its own path sense (> .05 cells). The organ's content is multiplied by that
+  share (starts at 1 = as it was; fading; never under .05 so that it can come back). Checked every such beat, not only at relief -
+  this is what the two failed trust rules lacked. With R5 (eye vs memory) this is the same principle on a third and fourth source.
+EF1 ATANOR_EFFORT=e: using the body costs - a beat of walking 1, of reaching .5, of turning .3, times e times the resting drain, taken from
+  both insides; standing still is free. A change to the world's body, decided by the founder ("put all three in").
+Smoke (lever world, 8 bodies, 450 beats, e = .5): the lean's record fell 1.0 -> .52 in the closed cell (468 checks), the plan's stayed
+(10 checks); deaths 0 / 10 / 6 (without: 0 / 2 / 4) - the effort cost bites in a world that drains fast.
+To measure (after the runs now going; one at a time, as Astra's review asks): (a) A2 9104, 64 bodies, 3,000 beats, the room recipe with and
+without Q1 - deaths and food wait not worse by > 10% (Q1 must not silence what works); (b) the lever world with and without Q1 - cells
+walked in the closed cell (bar: at least halved) and the causal lever's share; (c) EF1 apart from Q1, e = .25 and .5, in A2 and the lever world.
+
+## LV2 result (the whole room being, unmodified, in the lever world; 16 bodies, 9,000 beats): not met, as expected - and the gap is the list
+Deaths by phase 47 / 118 / 281. Presses: linked 1,321 | first 1,973, second 1,030 | first 1,668, second 1,771. The causal lever's share in
+the last third: phase 2 .668, phase 3 .533 (bar .8 both; the lone organ: 24 / 24 found it). Who chose: held 80-83% of beats, pull 7-10%,
+tried 9-10%, value 0. It walked 2,930 / 5,559 / 5,701 cells inside a closed 3 x 3 cell. Its gut was asked 11,725 times - about journeys to
+places. Reading: in phase 2 it leans to the causal lever (.67 - its pull, the scene memory of relief by gesture, does learn something),
+but after the swap it does not re-find it (.53 = chance). What was room-only, read off the numbers: (1) the gut's unit is a journey to a
+place; (2) every goal is a place; (3) the organs that say "go there" keep speaking where there is nowhere to go (Q1 was not on in this
+run); (4) moving costs nothing (EF1 not on). Next: the same run with Q1 and EF1, then the gut's unit made general (an action kept, not a
+place gone to).
+## PK3 results so far (a, b; c running) - 64 bodies, 2,000 + 2,000 beats (deaths, food fills, median wait by phase)
+a (ate at that very place, then the gap closes): 101, 94, 372 | 82, 126, 227 - it keeps eating after the known way is blocked (leaves the
+  pocket in 113 beats, was 41). b (the place is new, the look is known: food by the pocket's mouth, then at the top): 50, 212, 127 | 108, 59,
+  362 - at the new place fills fall to 28% and deaths double; the look alone does not carry it there in time.
+Ledger (Astra's two numbers): on same-kind pairs the eye's place error is .81-.82 cells, the memory's 6.4-7.0 (400-470 scored): the gap
+holds and is larger. Claims 791 / 985: filled there 265 / 463, tried and nothing 97 / 154, died after reaching 144 / 139, died never having
+reached 191 / 143 - a fifth to a quarter of claims could never be checked. The gut's journeys end after ~9-11 beats (12,464 in 4,000 beats):
+L7's "longest paying journey of late" is still dragged down by sips at a spring - my measure, wrong again; to fix before reading the gut.
+
+## PK3 c (found for the first time): 128 deaths, 0 food fills | 163, 66, wait 299 - nothing in the first 2,000 beats
+The three conditions in order: a (ate there; way then blocked) keeps eating 94 -> 126; b (look known, place new) falls 212 -> 59;
+c (first finding) 0 -> 66. As Astra ordered them. Eye vs memory on same-kind pairs in c: .76 vs 8.59 cells. The carried eye knows the look
+of food in c too - and still nothing was found in the first half: the look alone does not find a far spring in time.
+# Q1b / L7b (changed before any registered run of Q1 / L7; my measures were off)
+Q1b: an organ's "nearer" is scored only on beats where the gesture done is, by its own forecaster, a move - a turn it asked for is not a
+failed approach (first smoke: its record was ~.5 in a room where it lives and in a closed cell alike). L7b: only journeys that began more
+than 8 beats after its last relief count toward its usual journey length (a sip right after a sip is the same meal; its usual length had
+sunk to 9-11 beats and journeys were cut 12,000 times in 4,000 beats).
+Runs (one start each, the registered checks): A2 9104, 64 bodies, 3,000 beats, the newest recipe with and without Q1 (bar: deaths and food
+wait not worse by > 10%); the lever world, 16 bodies, with Q1, and with Q1 + EF1 (.25) - against LV2's .668 / .533 and cells walked.
+
+# EFF1 the efficiency ledger's first line (tools/cost_cpu.py; Astra's four columns) - desktop CPU stand-in, NOT the laptop; power not measured
+One body of s3_e with everything on (R1, seen eyes, IM2, G1, R5, L7, Q1, T1), no graphics card, 4 threads, 200 beats after 60 warm-up:
+| part | mean ms | p95 ms | p99 ms |
+|---|---|---|---|
+| world (physics + drawing; not the being's cost on a real device) | 6.4 | 8.2 | 8.6 |
+| senses (eye, skin, path) | 8.0 | 9.5 | 10.8 |
+| choice | 7.1 | 13.0 | 14.2 |
+| learning after the beat | 112.7 | 5.2 | 7,045 |
+| the being's beat (senses + choice + learning) | 127.8 | 26.0 | 7,059 |
+Beats over 100 ms: 1.5%. Process memory 1.9 GB (Python + the framework; the being's own files are 3 MB: going 1.6, mind 1.3).
+Reading: an ordinary beat costs the being ~20 ms on this CPU (the 2026-11-27 GPU figure of 39 ms was dominated by per-call overhead, not
+work) - inside the 100 ms bound here. What breaks the bound is rare and huge: a learning burst of ~7 s every so often (the skill / value
+learning done in the waking loop) - 1.5% of beats, 88% of the mean. That belongs to rest or sleep, not to a waking beat ("no pause over
+200 ms" was set 2026-11-26 and is not met). Memory: 1.9 GB resident is the framework's, far over what glasses with 2 GB in all can give.
+Not measured: the laptop itself, watts, joules, direct experiences needed. Columns 1 and 2 of Astra's ledger stay empty until the laptop run.
+
+# Astra leads the roadmap (founder 2026-11-28). Astra's order, fixed: finish Q1 / EF1; in the lever world read "the hand actually used ->
+# the delayed change of its insides" outside choice; re-read pocket room b as a first-encounter chain; take the one 7-second call out of the
+# waking loop. No new organ before these three are in. (Astra's 714123a, read not fetched: with the walking organ left in, three changes
+# together recover 24 / 24 in its synthetic body - record the movement actually kept, correct the walking organ's promise by the real change
+# of the insides, judge by the lack at the time the outcome arrives; a cost of walking was not needed.)
+## RL1 the 7-second call found and moved (tools/cost_cpu.py with a profile; registered as engineering, apart from the research line)
+The call: Mind.after, every 50 beats, 20 gradient steps of 2,048 samples on its forecaster (core.loss) - ~2.8 s a burst on this CPU.
+ATANOR_REST_LEARN=1: awake it only counts the burst as owed; Mind.rest() does the owed steps (at most 400 a rest, the rest counted as lost,
+not hidden); the tools call it where they already paused for the going skill (every 1,000 beats). Same body, same flags, 200 beats:
+the being's beat mean 16.7 ms, p95 21.8, p99 23.2, beats over 100 ms 0% (before: mean 127.8, p99 7,059, 1.5%). The cost did not go away,
+it moved: the rest took 20.8 s for 3.3 s of waking compute - the forecaster's learning is ~86% of all the being computes. Not yet measured
+(Astra's second judgment): does learning later cost lives right after a change (lever world's swap) - RL1 on / off, same seeds.
+## SH1 shadow first look (lever world, 8 bodies, 750 beats; read-only, the being unchanged): the lived record does hold it
+A second gut fed the same record as "the movement actually begun -> what its insides did 1-20 beats later" (first hand / second hand / a
+walk begun): summed change after the first hand vs the second, at the end of each phase - linked -.054 / -.037; apart (first is causal)
+-.049 / -.083; swapped (second is causal) -.085 / -.062. The causal hand is the less bad one in both phases, within 250 beats each, from
+~100 onsets a hand a phase. The being's own gut held 25 actions, all places. So, by Astra's table: the experience was there and it can be
+told apart from the lived record; what is missing is a place for that knowledge among the candidates. Full run (16 bodies, 9,000 beats) next.
+
+## Q1 check in A2 (9104, 64 bodies, 3,000 beats, one start; the newest bundle with and without Q1): the bar is met - and the bundle is the news
+| | deaths | food fills | food wait (median) | circling |
+|---|---|---|---|---|
+| bundle without Q1 (R1, seen eyes, IM2, G1, R5, L7, T1, full weight) | 115 | 204 | 253.5 | .037 |
+| bundle with Q1 | 22 | 304 | 176.5 | .044 |
+Bar (Q1 must not make A2 worse by > 10%): met - deaths -81%, wait -30%. Q1's own record in this room: lean .63, plan .72 (19,448 / 906
+moves scored; 28,782 asked-for turns not scored) - above the closed cell's first smoke (.52), as it should be.
+But the bundle without Q1 (115 deaths) is far worse than the adopted room recipe on the same room and length (s3_e + T1 + J1: 11 / 18 / 18
+by rep). Something stacked since the recipe harms A2, and Q1 hides part of it by turning the two "go there" organs down to .6-.7. One start
+only. Also: the gut's usual journey is still 10 beats after L7b - that fix did not do what I said.
+# F1 falsification, one out at a time (registered; Copilot / Astra: "falsify one by one, no new organ"): A2 9104, 64 bodies, 3,000 beats,
+same start: the adopted recipe (reference), and the bundle with Q1 minus one - no gut / no seen eyes (and no R5) / no IM2 / no R1.
+Reading: an arm that does better than the full bundle (22 deaths, wait 176.5) by >= 10% in deaths and wait names what harms; an arm that
+does worse names what helps. The harmful ones go off and to "closed" unless a second start reverses it.
+
+## Q1 and EF1 in the lever world (whole being, 16 bodies, 9,000 beats, one start): Q1 does not make it quiet there; EF1 costs lives
+| arm | deaths 1 / 2 / 3 | causal share, end of phase 2 / 3 | cells walked 1 / 2 / 3 |
+|---|---|---|---|
+| LV2 (no Q1) | 47 / 118 / 281 | .668 / .533 | 2,930 / 5,559 / 5,701 |
+| + Q1 | 48 / 126 / 240 | .692 / .618 | 2,993 / 6,252 / 7,212 |
+| + Q1 + EF1 (.25) | 85 / 154 / 420 | .708 / .504 | 3,489 / 6,656 / 7,402 |
+Bar (cells walked in the closed cell at least halved; causal share >= .8): not met. With Q1 it walks more, not less. Why, from Q1's own
+record: the lean's record fell only to .57 (.50 with EF1), and the plan's stayed .97 on 292-355 scored moves - in a 3 x 3 cell "nearer
+the place it named" is true about half the time by walking back and forth, so "nearer" does not say "useless here". Astra's point holds:
+the record must be of what following the organ did to its insides, not of getting nearer. EF1 at .25: deaths up in every phase (85 / 154 /
+420) and the swap not re-found (.504) - a cost of moving, with nothing yet that turns the cost into choosing less, only kills. Not adopted;
+EF1 off. Q1 stays a trial flag: it helped in A2 (one start) and did not do in the lever world what it was built for.
+
+## SH1 result (lever world, whole being unchanged, 16 bodies, 9,000 beats; read-only shadow): its own lived record tells the causal hand
+The second gut, fed the same record as "the movement actually begun -> the summed change of its insides 1-20 beats later" (fading .9995):
+| end of | first hand | second hand | a walk begun | onsets first / second |
+|---|---|---|---|---|
+| linked (1,500) | -.056 | -.054 | -.064 | 1,039 / 1,002 |
+| apart, first causal: 1,750 | -.058 | -.073 | | |
+| apart: 5,000 | -.016 | -.108 | -.036 | 1,809 / 1,507 |
+| swapped, second causal: 5,250 | -.037 | -.108 | | |
+| swapped: 6,500 (crosses) | -.090 | -.082 | | |
+| swapped: 9,000 | -.129 | -.050 | -.142 | 1,670 / 1,772 |
+Linked: the two hands are alike, as they should be. Apart: the causal hand is the better one within 250 beats and the gap widens. After the
+swap the record crosses over 1,500 beats later (slow: this shadow fades at .9995 a beat, my setting) and ends clearly reversed. Meanwhile
+the being itself: causal share .695 / .611, deaths 47 / 130 / 225, and its gut held 64 actions - every one a place.
+By Astra's three questions: (1) was there experience - yes, 1,500-1,800 onsets of each hand in every phase; (2) can it be told from the
+lived record - yes, by movement and delay, not by place; (3) known but not chosen - the knowledge has no seat among the candidates.
+So the first interface to change, by Astra's rule, is the candidates: what the gut is asked about. One change, to be registered next:
+the gut is also asked about the movements it has begun (with the delays its own record shows), beside the places.
+
+## F1 first launch lost to my own error (2026-11-28; recorded as it happened)
+The five one-out arms launched at 01:57 ran seven hours and produced nothing. Cause: my RL1 patch to tools/a2_moving_food.py (01:46) put
+the rest call at loop level instead of inside the once-per-1,000-beats block, so the 2,500-step value learning ran on every beat. I had also
+sent the runs' output to nowhere, so nothing showed the stall. The other tools (a2_view, a3_rooms, lever_world, s5_space) have the call in
+the right place; the Q1 A2 pair and the lever-world runs were not touched by this (the A2 pair started before the patch). Fixed, a progress
+line every 250 beats added, and the same five arms rerun unchanged (same judge, same start) in two batches. No result of the lost launch is used.
+
+## F1 result: one-out falsification in A2 (64 bodies, 3,000 beats, room 9104; second start = --rep 1 for the arms that could flip)
+Judge registered before the run: against the full bundle + Q1, an arm more than 10% better names what harms, a worse arm names what helps.
+| arm | start 1: deaths, wait, food fills | start 2: deaths, wait, food fills |
+|---|---|---|
+| adopted recipe (none of the new; mismatch + learned trust) | 11, 179.0, 332 | 18, 211.5, 312 |
+| full bundle + Q1 (gut, seen eye + R5, imagined way, remap, own leave) | 22, 176.5, 304 | 91, 207.0, 264 |
+| without the gut | 30, 188.0, 285 | 65, 188.0, 287 |
+| without the seen eye (and R5) | 17, 256.0, 280 | 73, 199.0, 198 |
+| without the imagined way (IM2) | 22, 176.5, 304 | - |
+| without the remap (R1) | 72, 181.0, 293 | - |
+Reading, as registered:
+- The full bundle is worse than the adopted recipe in both starts (deaths x2 and x5) and unstable between starts (22 -> 91); the recipe is
+  stable (11, 18). The bundle is NOT adopted for A2; the recipe stays the room's main line.
+- No single removal brings the bundle back to the recipe. So the harm is not one organ. The bundle also lacks two things the recipe has
+  (mismatch, learned trust) - one-out could not test that; the separating run is one-in (recipe + one addition at a time).
+- Remap: removing it costs most (22 -> 72, one start) - it helps inside this bundle.
+- Gut: sign flips between starts (30 vs 22; 65 vs 91) - not shown to help or harm. Its journey length is still ~10-11 beats (unfixed).
+- Seen eye: fewer deaths without it in both starts (-23%, -20%) but food comes later in start 1 (wait 256 vs 176.5) and fills are fewer in
+  both - mixed; suspect for lives, useful for finding. Not closed, not adopted.
+- IM2: the arm is identical to the full bundle to the last number - the imagined way never fires in A2. Inert here.
+- Q1's "115 -> 22" (one start) stands only as "Q1 hides part of the bundle's harm"; with the second start at 91 it is not a recipe.

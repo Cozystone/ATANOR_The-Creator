@@ -1,0 +1,63 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md EFF1",
+ "device": "desktop CPU stand-in, no graphics card",
+ "threads": 4,
+ "beats": 200,
+ "bodies": 1,
+ "being": "s3_e",
+ "flags": {
+  "ATANOR_GUT": "1",
+  "ATANOR_IMAGINE_GOAL": "1",
+  "ATANOR_IMAGINE_MAP": "1",
+  "ATANOR_LEARNED_TRUST": "0",
+  "ATANOR_OWN_LEAVE": "1",
+  "ATANOR_QUIET": "1",
+  "ATANOR_RELY": "1",
+  "ATANOR_REMAP": "1",
+  "ATANOR_REST_LEARN": "1",
+  "ATANOR_SEEN": "1",
+  "ATANOR_SEEN_FROM": "s3_e_seen2.pt",
+  "ATANOR_TURN_ONCE": "1"
+ },
+ "world": {
+  "mean_ms": 5.79,
+  "p95_ms": 6.7,
+  "p99_ms": 7.42
+ },
+ "senses": {
+  "mean_ms": 7.3,
+  "p95_ms": 8.34,
+  "p99_ms": 9.54
+ },
+ "choice": {
+  "mean_ms": 6.24,
+  "p95_ms": 11.58,
+  "p99_ms": 12.39
+ },
+ "learning": {
+  "mean_ms": 3.11,
+  "p95_ms": 4.33,
+  "p99_ms": 4.76
+ },
+ "being_beat": {
+  "mean_ms": 16.65,
+  "p95_ms": 21.83,
+  "p99_ms": 23.21
+ },
+ "over_100ms_share": 0.0,
+ "memory": {
+  "rss_mb": 1909.4,
+  "peak_mb": 1909.4
+ },
+ "being_files_mb": {
+  "going.pt": 1.62,
+  "mind.pt": 1.33
+ },
+ "rest": {
+  "seconds": 20.84,
+  "steps": 60,
+  "bursts_lost": 0,
+  "waking_seconds": 3.33
+ },
+ "power": "not measured"
+}

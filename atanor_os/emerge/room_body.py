@@ -170,6 +170,10 @@ class RoomBody:
             if _os.environ.get("ATANOR_PITCH_RETURN", "0") == "1":                      # P2b (founder 2026-11-27): the neck's own tone - a head not held
                 self.pitch = torch.where(held_, self.pitch, self.pitch * 0.7)            # up or down drifts back to level (~1 s), as a body does; no choice in it
             self.pitch = (self.pitch + torch.where(nk == 4, 1.0, torch.where(nk == 3, -1.0, 0.0)) * math.radians(10)).clamp(-math.radians(15), math.radians(30))
+        eff_ = float(_os_fov.environ.get("ATANOR_EFFORT", "0") or 0)
+        if eff_ > 0:                                                                # EF1 (founder 2026-11-28): using the body costs - walking a beat, pushing,
+            use = (lg != 0).float() + 0.5 * (hd != 0).float() + 0.3 * ((nk == 1) | (nk == 2)).float()     # reaching, turning take a little of its insides on top of
+            w.store = w.store - eff_ * w.drain * TICK * (use * alive.float())[:, None]                    # living (as a share of the resting drain); stillness is free
         was = w.pos.clone(); h0 = w.head.clone()
         hh, t = 1 / 60.0, 0.0
         while t < TICK - 1e-9:

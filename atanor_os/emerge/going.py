@@ -23,6 +23,17 @@ class Skill(nn.Module):
         return self.f(torch.cat([((x - self.mu) / self.sd.clamp(min=0.05)).clamp(-5, 5), g], 1))
 
 
+def own_mean(obj, name, x, base=0.05, start=2.0):
+    """SF3 (registered 2026-11-28): a record's own pace. With ATANOR_OWN_RATE=1 a record moves faster the more its new reading departs from
+    what it usually sees (its own mean absolute departure) - surprised, it learns fast; as expected, slowly (Pearce & Hall 1980; Behrens et
+    al. 2007). Without the flag: the fixed pace `base`, as before."""
+    x = float(x); m = float(getattr(obj, name, start)); dv = float(getattr(obj, name + "_dev", 0.5 * abs(start) + 1e-3)); rate = base
+    if os.environ.get("ATANOR_OWN_RATE", "0") == "1":
+        rate = min(0.5, base * (1.0 + abs(x - m) / (dv + 1e-6)))
+    setattr(obj, name + "_dev", (1 - base) * dv + base * abs(x - m)); setattr(obj, name, (1 - rate) * m + rate * x)
+    return rate
+
+
 def _blend(*wv, wall=98.0):
     """B0: bilinear over a distance field, leaving out corners that are walls (no way) - a body against a wall is not 'far'."""
     num = 0.0; den = 0.0
@@ -120,6 +131,8 @@ class Going:
                 self.V[k] = 0
             if getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None:
                 self.Pu[k] = self.organs.path.p[i]; self.Pn[k] = 1.0
+            if getattr(self, "Rp", None) is not None:
+                self.Rpn[k] = 0
             self.lastv[k] = float(self.beats); self.remaps += 1; self._fields = {}
 
     @torch.no_grad()
@@ -181,6 +194,7 @@ class Going:
     @torch.no_grad()
     def observe(self, x, a, x2, died):
         if os.environ.get("ATANOR_SEEN", "0") == "1":                       # SM2: which inside rose this beat (channel order of needs)
+            self._sm_lackc = self.needs(x)[1]
             self._sm_rose = ((x2[:, self.ins] - x[:, self.ins] > 0.01) if self.chan == "contract" else torch.stack([x2[:, self.ins[2]] - x[:, self.ins[2]] > 0.01, x2[:, self.ins[1]] - x[:, self.ins[1]] > 0.01], 1)) & ~died[:, None]
         if (os.environ.get("ATANOR_IMAGINE_MAP", "0") == "1" or os.environ.get("ATANOR_B0", "0") == "own") and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
             self.wall_map_observe(x, a, died)                                   # IM1: its own wall map grows from where it walked and where it was stopped
@@ -246,6 +260,18 @@ class Going:
             if bool(sel.any()):
                 self._evidence(u2[sel], rose[sel])
         self.R.index_put_((u2[:, None].expand(-1, self.k).reshape(-1), torch.arange(self.k, device=self.dev).repeat(len(u2))), rose.reshape(-1).float(), accumulate=True)
+        if os.environ.get("ATANOR_RELIEF_SPOT", "0") == "1" and bool(rose.any()) and getattr(self, "organs", None) is not None and getattr(self.organs, "path", None) is not None:
+            if getattr(self, "Rp", None) is None:                             # SF1 (registered 2026-11-28): a place unit is wide; the memory keeps, per unit and
+                self.Rp = torch.zeros(self.KU, self.k, 2, device=self.dev); self.Rpn = torch.zeros(self.KU, self.k, device=self.dev)   # inside, the spot where relief
+            P_ = self.organs.path.p                                             # really came (its own path sense) - and is corrected by each new relief there
+            for b, c in torch.nonzero(rose).tolist():
+                u_ = int(u2[b])
+                if float(self.Rpn[u_, c]) == 0:
+                    self.Rp[u_, c] = P_[b]
+                else:
+                    rate = own_mean(self, "rp_move", float((self.Rp[u_, c] - P_[b]).norm()), base=0.3, start=1.0)
+                    self.Rp[u_, c] = self.Rp[u_, c] + min(0.9, rate) * (P_[b] - self.Rp[u_, c])
+                self.Rpn[u_, c] += 1
         if self.mended:                                                  # the piece being lived sits in the last 64 rows; a full piece may be kept in a slot
             j = self.slots * self.piece + self.ri; self.rX[j] = x; self.rA[j] = a; self.rL[j] = self.life; self.ri += 1
             if self.ri == self.piece:
@@ -385,6 +411,8 @@ class Going:
         if getattr(self, "homing_lean", False) and getattr(self, "Pu", None) is not None and getattr(self, "organs", None) is not None and getattr(self, "net", None) is not None:
             return self._home(x, v, torch.ones_like(lack, dtype=torch.bool), lack)     # D47 (not met; off): its own lean walks by the homing vector to the unit its chain aims at
         g = self.C[v]
+        if getattr(self, "Pu", None) is not None:                              # Q1: where this lean says to go (its own place for that unit), for its own record
+            self._t_lean = (self.Pu[v].clone(), self.Pn[v] > 0)
         lp = self.toward(x, g); return self.W * lack[:, None] * (lp - lp.mean(1, keepdim=True))
 
     @torch.no_grad()
@@ -422,7 +450,7 @@ class Going:
                     path.append(prev[path[-1]])
                 path = path[::-1]; tl[i] = path[min(self.hops, len(path) - 1)]; okl[i] = True
         tgt = torch.tensor(tl, device=self.dev, dtype=torch.long); ok = torch.tensor(okl, device=self.dev, dtype=torch.bool)
-        self._last_goal = goal.clone()
+        self._last_goal = goal.clone(); self._last_goal_c = self.needs(x)[1].clone()
         has_ = goal >= 0
         self.n_goal = getattr(self, "n_goal", 0) + int(has_.sum()); self.n_noway = getattr(self, "n_noway", 0) + int((has_ & ~ok).sum())   # judge-side count
         if os.environ.get("ATANOR_IMAGINE_GOAL", "0") == "1" and getattr(self, "wmap", None) is not None and getattr(self, "Pu", None) is not None:
@@ -588,7 +616,11 @@ class Going:
         if bool(stop.any()):                                                  # stopped: the pictures behind it on this line learn the exact way
             X = self.sm_v[stop]; Y = d[stop] + 0.5
             with torch.no_grad():
-                e = float((F.softplus(self.sm_net(X))[:, 0] - Y).abs().mean()); self.sm_err = 0.98 * self.sm_err + 0.02 * e; self.sm_n += len(Y)
+                e = float((F.softplus(self.sm_net(X))[:, 0] - Y).abs().mean())
+                if os.environ.get("ATANOR_OWN_RATE", "0") == "1":             # SF3: the eye net itself learns faster when its new stops surprise it
+                    for g_ in self.sm_opt.param_groups:
+                        g_["lr"] = 1e-3 * min(5.0, max(1.0, e / (self.sm_err + 1e-6)))
+                self.sm_err = 0.98 * self.sm_err + 0.02 * e; self.sm_n += len(Y)
             idx = (torch.arange(len(Y), device=dev) + self.sm_k) % 4096; self.sm_X[idx] = X; self.sm_Y[idx] = Y; self.sm_k += len(Y)
             self.sm_ok = self.sm_ok & ~stop                                   # used once
         m = min(self.sm_k, 4096)
@@ -601,6 +633,8 @@ class Going:
         if k:
             self.sm_opt.zero_grad(); loss.backward(); self.sm_opt.step()
         self._seen_relief(view, p, h, live, L)
+        if getattr(self, "_sm_rose", None) is not None and getattr(self, "_lg", None) is not None:
+            self._ledger_step(p, getattr(self, "_sm_lackc", torch.zeros(n, dtype=torch.long, device=dev)), self._sm_rose, live, ~live)
         self.sm_v[self.sm_i] = view; self.sm_p[self.sm_i] = p; self.sm_h[self.sm_i] = h; self.sm_ok[self.sm_i] = live; self.sm_i = (self.sm_i + 1) % L
         with torch.no_grad():
             dhat = F.softplus(self.sm_net(view))[:, 0].clamp(max=20.0); self.sm_last = dhat
@@ -620,6 +654,45 @@ class Going:
         """SM1 / SM2 as part of the being: what its eye has learned from its feet and its insides (carried from a 64-body life to one body)."""
         return dict(sm=self.sm_net.state_dict(), sm_err=self.sm_err, sm_n=self.sm_n, sr=self.sr_net.state_dict(), sr_hit=self.sr_hit, sr_n=self.sr_n)
 
+    def _ledger(self, n):
+        """LG1 (Astra's review of R5, 2026-11-28): each written claim of the eye ("relief of this kind lies there") is kept as written and
+        closed by one of four outcomes - filled at that place / reached it lacking and tried with nothing coming / given up on the way
+        (death before reaching) / never visited. Only the first two are evidence about the claim."""
+        L_ = getattr(self, "_lg", None)
+        if L_ is None or L_["set"].shape[0] != n:
+            d = self.dev; k = self.k
+            L_ = dict(set=torch.zeros(n, k, dtype=torch.bool, device=d), q=torch.zeros(n, k, 2, device=d), near=torch.zeros(n, k, dtype=torch.long, device=d),
+                      ever=torch.zeros(n, k, dtype=torch.bool, device=d), made=0, filled=0, tried_none=0, died_on_way=0, died_unvisited=0, fill_err=[])
+            self._lg = L_
+        return L_
+
+    def _ledger_step(self, p, lack_c, rose, live, died):
+        L_ = self._ledger(p.shape[0]); k = self.k
+        if not bool(L_["set"].any()):
+            return
+        d = (L_["q"] - p[:, None, :]).norm(dim=2)                              # [n, k]
+        hit = L_["set"] & rose & (d < 2.5)
+        if bool(hit.any()):
+            L_["filled"] += int(hit.sum()); L_["fill_err"] += d[hit].tolist()[:64]; L_["fill_err"] = L_["fill_err"][-2000:]
+        chan = torch.zeros_like(L_["set"]); chan[torch.arange(len(lack_c), device=self.dev), lack_c] = True
+        at = L_["set"] & ~hit & (d < 1.0) & chan & live[:, None]
+        L_["ever"] |= L_["set"] & (d < 1.5)
+        L_["near"] = torch.where(at, L_["near"] + 1, L_["near"])
+        tried = L_["set"] & (L_["near"] > 10)
+        L_["tried_none"] += int(tried.sum())
+        dead = L_["set"] & died[:, None] & ~hit & ~tried
+        L_["died_on_way"] += int((dead & L_["ever"]).sum()); L_["died_unvisited"] += int((dead & ~L_["ever"]).sum())
+        L_["set"] &= ~(hit | tried | dead)
+
+    def ledger_report(self):
+        L_ = getattr(self, "_lg", None)
+        if L_ is None:
+            return None
+        fe = L_["fill_err"]
+        return dict(claims=L_["made"], filled_there=L_["filled"], tried_nothing=L_["tried_none"], died_after_reaching=L_["died_on_way"], died_never_reached=L_["died_unvisited"],
+                    open=int(L_["set"].sum()), eye_place_error_at_fill_median=(round(float(np.median(fe)), 2) if fe else None),
+                    eye_err=round(float(getattr(self, "eye_err", -1)), 2), memory_err_same_kind=round(float(getattr(self, "mem_err", -1)), 2), memory_scored=getattr(self, "mem_errn", 0))
+
     def _seen_relief(self, view, p, h, live, L):
         """SM2 (founder 2026-11-27 on the viewer: "the water is in view and it does not look at it"): what it sees enters its relief memory.
         When one of its insides rises, the pictures of the last 32 beats that were facing the place where it rose learn "relief of this
@@ -638,9 +711,12 @@ class Going:
         if rose is not None and bool(rose.any()):
             lg = getattr(self, "_last_goal", None)
             for b, c in torch.nonzero(rose & live[:, None]).tolist():
-                if lg is not None and lg.shape[0] == n and int(lg[b]) >= 0 and getattr(self, "Pu", None) is not None and float(self.Pn[int(lg[b])]) > 0:
-                    e_ = float((self.Pu[int(lg[b])] - p[b]).norm())             # R5: how far its memory's place was from where relief came
-                    self.mem_err = 0.95 * float(getattr(self, "mem_err", 2.0)) + 0.05 * e_; self.mem_errn = getattr(self, "mem_errn", 0) + 1
+                lgc = getattr(self, "_last_goal_c", None)
+                if lg is not None and lg.shape[0] == n and int(lg[b]) >= 0 and getattr(self, "Pu", None) is not None and float(self.Pn[int(lg[b])]) > 0 \
+                        and lgc is not None and int(lgc[b]) == c:                    # R5b: only when its goal was for the inside that rose (the same spring)
+                    g_ = int(lg[b]); cl_ = self.Rp[g_, c] if getattr(self, "Rp", None) is not None and float(self.Rpn[g_, c]) > 0 else self.Pu[g_]
+                    e_ = float((cl_ - p[b]).norm())                               # R5: how far its memory's place (its corrected spot, if any) was from where relief came
+                    own_mean(self, "mem_err", e_); self.mem_errn = getattr(self, "mem_errn", 0) + 1
                 v = p[b][None] - self.sm_p[:, b]; d = v.norm(dim=1); ang = torch.atan2(v[:, 1], v[:, 0])
                 bear = torch.remainder(ang - self.sm_h[:, b] + math.pi, 2 * math.pi) - math.pi       # where it was in the view, by its own path sense
                 face = bear.abs() < 0.65
@@ -651,7 +727,7 @@ class Going:
                         o = self.sr_net(X)
                         dq = F.softplus(o[:, k + c]).clamp(max=14.0); bq = o[:, 2 * k + c].clamp(-0.8, 0.8); hq = self.sm_h[sel, b] + bq
                         q_ = self.sm_p[sel, b] + dq[:, None] * torch.stack([torch.cos(hq), torch.sin(hq)], 1)
-                        self.eye_err = 0.95 * float(getattr(self, "eye_err", 2.0)) + 0.05 * float((q_ - p[b][None]).norm(dim=1).mean())   # R5: the eye's own
+                        own_mean(self, "eye_err", float((q_ - p[b][None]).norm(dim=1).mean()))   # R5: the eye's own
                         self.sr_hit = 0.98 * self.sr_hit + 0.02 * float((torch.sigmoid(o[:, c]) > 0.5).float().mean()); self.sr_n += m
                     idx = (torch.arange(m, device=dev) + self.sr_k) % 4096; self.sr_X[idx] = X; self.sr_C[idx] = c; self.sr_D[idx] = d[sel]; self.sr_B[idx] = bear[sel]; self.sr_k += m
         old = (self.sm_i + 1) % L; keep = self.sm_ok[old]                    # the oldest kept pictures: no relief followed within 32 beats
@@ -674,6 +750,9 @@ class Going:
                     self._po.p = q[None].clone(); self._po.h = torch.zeros(1, device=dev); code = self._po(torch.zeros(1, 6, device=dev))[:, :PC]
                     u_ = int(self.unit(code)[0])
                     self.R[u_, c] = torch.maximum(self.R[u_, c], 0.2 * float(pr[b, c]) * self.Vn[u_].clamp(min=1.0))   # an expected relief there (fainter than lived)
+                    L_ = self._ledger(n)
+                    if not bool(L_["set"][b, c]):                                  # LG1: the claim is frozen as first written, until it is closed
+                        L_["set"][b, c] = True; L_["q"][b, c] = q; L_["near"][b, c] = 0; L_["ever"][b, c] = False; L_["made"] += 1
                     if float(self.Pn[u_]) < 1.0:
                         self.Pu[u_] = q; self.Pn[u_] = 1.0
                     self.sr_writes += 1
@@ -700,7 +779,12 @@ class Going:
         body would then move: progress along the vector + alignment of the heading after the turn (equal weight, each standardised)."""
         O = self.organs; p, h = O.path.p, O.path.h
         if vec is None:
-            v = self.Pu[tgt] - p; c, s = torch.cos(h), torch.sin(h)
+            tp = self.Pu[tgt]
+            lg = getattr(self, "_last_goal", None); lgc = getattr(self, "_last_goal_c", None)
+            if getattr(self, "Rp", None) is not None and lg is not None and lgc is not None and lg.shape[0] == tgt.shape[0]:
+                at_goal = (tgt == lg) & (lg >= 0); has = self.Rpn[tgt, lgc] > 0   # SF1: for the last stretch it aims at the spot where relief came, not the unit's middle
+                tp = torch.where((at_goal & has)[:, None], self.Rp[tgt, lgc], tp); self.sf1_n = getattr(self, "sf1_n", 0) + int((at_goal & has).sum())
+            v = tp - p; c, s = torch.cos(h), torch.sin(h)
             bx, by = v[:, 0] * c + v[:, 1] * s, -v[:, 0] * s + v[:, 1] * c
         else:
             bx, by = vec
@@ -760,6 +844,8 @@ class Going:
                 pm = (bx2[:, None] * f + by2[:, None] * sd) / d2[:, None]; am = torch.cos(b2[:, None] - tn)
                 prog = torch.where(m[:, None], pm, prog); algn = torch.where(m[:, None], am, algn); ok = ok | m
                 self.sm3_n = getattr(self, "sm3_n", 0) + int(m.sum())
+        if vec is None and tgt is not None and getattr(self, "Pu", None) is not None:      # Q1: where the plan says to go, in its own path frame
+            self._t_plan = (self.Pu[tgt].clone(), ok.clone() & (self.Pn[tgt] > 0))
         z = lambda a: (a - a.mean(1, keepdim=True)) / (a.std(1, keepdim=True) + 1e-6)
         out = self.W * lack[:, None] * (z(prog) + z(algn))
         return torch.where(ok[:, None], out, torch.zeros_like(out))

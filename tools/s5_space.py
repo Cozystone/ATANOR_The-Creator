@@ -58,7 +58,7 @@ def set_cells(w, cells, kind):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("out"); ap.add_argument("--being", required=True); ap.add_argument("--eye", type=float, default=0.0)
     ap.add_argument("--test", choices=["shortcut", "detour", "strong"], required=True); ap.add_argument("--learn", type=int, default=3000); ap.add_argument("--after", type=int, default=2000)
-    ap.add_argument("--seed", type=int, default=9501); ap.add_argument("--bodies", type=int, default=64)
+    ap.add_argument("--cond", default="c", choices=["a", "b", "c"]); ap.add_argument("--seed", type=int, default=9501); ap.add_argument("--bodies", type=int, default=64)
     a = ap.parse_args(); V2["on"] = True
     if a.eye:
         RoomBody.default_eye = a.eye
@@ -74,6 +74,14 @@ def main():
     first_gap = None; blocked = None
     for t in range(a.learn + a.after):
         k = 0 if t < a.learn else 1
+        if a.test == "strong" and a.cond != "c" and t in (0, a.learn):      # Astra's three conditions for the pocket room (2026-11-28)
+            from atanor_os.emerge.room3d_gpu import FOOD
+            if a.cond == "a":                                              # a: it has eaten at that very place - first through a gap in the pocket's top, then the gap closes
+                set_cells(w, [(7, 6), (8, 6)], FLOOR if t == 0 else WALL)
+            else:                                                          # b: the place is new, the look is known - first the food stands elsewhere (left, by the pocket's mouth), then at the top
+                c_new = (1, 11) if t == 0 else (7, 1); old_ = w.src[:, 1].clone()
+                w.map[torch.arange(n, device=DEV), old_[:, 0], old_[:, 1]] = FLOOR; w.base[int(old_[0, 0]), int(old_[0, 1])] = FLOOR
+                w.map[:, c_new[0], c_new[1]] = FOOD; w.base[c_new[0], c_new[1]] = FOOD; w.src[:, 1] = torch.tensor(c_new, device=DEV); w.spots[FOOD] = torch.tensor([c_new], device=DEV)
         if t == a.learn and a.test != "strong":                            # the world changes, for every body and its rebirths
             if a.test == "shortcut":
                 set_cells(w, GAP, FLOOR)
@@ -114,10 +122,12 @@ def main():
             rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
         if (t + 1) % 1000 == 0:
             Mi.going.learn()
+            if hasattr(Mi, "rest"):
+                Mi.rest()                                                      # RL1: the rest - what the waking beats owed is learned now
             with torch.enable_grad():
                 Mi.wo.learn(n=max(1, 2500 // max(1, getattr(Mi.wo, "per_call", 1))))
     md = lambda v: float(np.median(v)) if v else None
-    r = dict(rely=dict(eye_err=round(float(getattr(Mi.going, "eye_err", -1)), 2), mem_err=round(float(getattr(Mi.going, "mem_err", -1)), 2), eye_led=getattr(Mi.going, "rely_eye", 0), memory_led=getattr(Mi.going, "rely_mem", 0), seen_led=getattr(Mi.going, "sm3_n", 0)), gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), differed=getattr(Mi, "g_diff", 0), journeys_ended=getattr(Mi, "g_ends", 0), usual_len=round(float(getattr(Mi, "g_len", 0)), 1)), seen_relief=dict(hit=round(float(getattr(Mi.going, "sr_hit", -1)), 3), samples=getattr(Mi.going, "sr_n", 0), writes=getattr(Mi.going, "sr_writes", 0)), seen_map=dict(err=round(float(getattr(Mi.going, "sm_err", -1)), 3), stops=getattr(Mi.going, "sm_n", 0), writes=getattr(Mi.going, "sm_writes", 0)), e1=getattr(Mi, "e1_n", 0), w0=(dict(beats=getattr(Mi, "w0_n", 0), spread=round(float(getattr(Mi, "w0_spread", 0)), 5), picks=(Mi.w0_pick.tolist() if getattr(Mi, "w0_pick", None) is not None else None))), test=a.test, seed=a.seed, being=a.being, learn=a.learn, after=a.after, blocked_side=blocked, first_gap_food_beats_after=first_gap,
+    r = dict(cond=a.cond, ledger=Mi.going.ledger_report(), self_fix=dict(spot_used=getattr(Mi.going, "sf1_n", 0), spots=int((Mi.going.Rpn > 0).sum()) if getattr(Mi.going, "Rpn", None) is not None else 0, spot_move=round(float(getattr(Mi.going, "rp_move", -1)), 2)), quiet=dict(rel=getattr(Mi, "q_rel", None), checked=getattr(Mi, "q_n", None), turns_not_scored=getattr(Mi, "q_turn", 0)), rely=dict(eye_err=round(float(getattr(Mi.going, "eye_err", -1)), 2), mem_err=round(float(getattr(Mi.going, "mem_err", -1)), 2), eye_led=getattr(Mi.going, "rely_eye", 0), memory_led=getattr(Mi.going, "rely_mem", 0), seen_led=getattr(Mi.going, "sm3_n", 0)), gut=dict(asked=getattr(Mi, "g_asked", 0), known=getattr(Mi, "g_known", 0), differed=getattr(Mi, "g_diff", 0), journeys_ended=getattr(Mi, "g_ends", 0), usual_len=round(float(getattr(Mi, "g_len", 0)), 1)), seen_relief=dict(hit=round(float(getattr(Mi.going, "sr_hit", -1)), 3), samples=getattr(Mi.going, "sr_n", 0), writes=getattr(Mi.going, "sr_writes", 0)), seen_map=dict(err=round(float(getattr(Mi.going, "sm_err", -1)), 3), stops=getattr(Mi.going, "sm_n", 0), writes=getattr(Mi.going, "sm_writes", 0)), e1=getattr(Mi, "e1_n", 0), w0=(dict(beats=getattr(Mi, "w0_n", 0), spread=round(float(getattr(Mi, "w0_spread", 0)), 5), picks=(Mi.w0_pick.tolist() if getattr(Mi, "w0_pick", None) is not None else None))), test=a.test, seed=a.seed, being=a.being, learn=a.learn, after=a.after, blocked_side=blocked, first_gap_food_beats_after=first_gap,
              phases=[dict(deaths=p["deaths"], food_fills=len(p["waits"]), food_wait_median=md(p["waits"]), ways_left_right_gap=p["ways"]) for p in P],
              strong=(dict(share_of_hungry_beats_at_pocket_top=round(pocket_lack[0] / max(pocket_lack[1], 1), 3), exits=len(exits), exit_beats_median_first_half=md([e[1] for e in exits if e[0] < a.learn]), exit_beats_median_second_half=md([e[1] for e in exits if e[0] >= a.learn])) if a.test == "strong" else None), remaps=getattr(Mi.going, "remaps", 0), seconds=round(time.time() - t0))
     print(json.dumps(r), flush=True); json.dump(r, open(a.out, "w"), indent=1)

@@ -1,0 +1,82 @@
+{
+ "cond": "a",
+ "ledger": {
+  "claims": 791,
+  "filled_there": 265,
+  "tried_nothing": 97,
+  "died_after_reaching": 144,
+  "died_never_reached": 191,
+  "open": 94,
+  "eye_place_error_at_fill_median": 1.31,
+  "eye_err": 0.82,
+  "memory_err_same_kind": 6.41,
+  "memory_scored": 470
+ },
+ "rely": {
+  "eye_err": 0.82,
+  "mem_err": 6.41,
+  "eye_led": 79685,
+  "memory_led": 133433,
+  "seen_led": 79685
+ },
+ "gut": {
+  "asked": 10041,
+  "known": 9913,
+  "differed": 7487,
+  "journeys_ended": 9988,
+  "usual_len": 10.8
+ },
+ "seen_relief": {
+  "hit": 0.89,
+  "samples": 17104,
+  "writes": 34592
+ },
+ "seen_map": {
+  "err": 0.727,
+  "stops": 6045,
+  "writes": 149230
+ },
+ "e1": 0,
+ "w0": {
+  "beats": 0,
+  "spread": 0.0,
+  "picks": null
+ },
+ "test": "strong",
+ "seed": 9501,
+ "being": "s3_e",
+ "learn": 2000,
+ "after": 2000,
+ "blocked_side": null,
+ "first_gap_food_beats_after": -970,
+ "phases": [
+  {
+   "deaths": 101,
+   "food_fills": 94,
+   "food_wait_median": 371.5,
+   "ways_left_right_gap": [
+    22,
+    22,
+    50
+   ]
+  },
+  {
+   "deaths": 82,
+   "food_fills": 126,
+   "food_wait_median": 226.5,
+   "ways_left_right_gap": [
+    38,
+    42,
+    44
+   ]
+  }
+ ],
+ "strong": {
+  "share_of_hungry_beats_at_pocket_top": 0.345,
+  "exits": 230,
+  "exit_beats_median_first_half": 41.0,
+  "exit_beats_median_second_half": 113.0
+ },
+ "remaps": 37,
+ "seconds": 990
+}

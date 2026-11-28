@@ -396,7 +396,9 @@ class Mind:
                 gl = gl * self.going_earned.weight()
             if gl is not None and os.environ.get("ATANOR_TRUST_LEAN", "0") == "1" and getattr(self, "learned_home", None) is not None and getattr(go, "homing", False):
                 gl = gl * self.learned_home.w                                    # S1b: the going lean reads the same homing vector, so the same learned trust weighs it
-            if gl is not None:
+            if gl is not None and os.environ.get("ATANOR_QUIET", "0") == "1":     # Q1 (registered 2026-11-28): an organ counts by how often what it foretold came
+                gl = gl * self._quiet("lean"); self._q_gl = gl                 # true - here: "going this way brings me nearer that place". Nothing to say or
+            if gl is not None:                                                 # nothing borne out -> it goes quiet by itself (never below a whisper, so it can return)
                 sc = sc + gl
                 if rec:
                     parts["going"] = gl
@@ -427,6 +429,8 @@ class Mind:
                         self._lw_f = pl.clone(); pl = pl * lwh.w
                     else:
                         pl = pl * (1.0 if getattr(self, "plan_full", False) else self.plan_earned.weight())
+                    if os.environ.get("ATANOR_QUIET", "0") == "1":
+                        pl = pl * self._quiet("plan"); self._q_pl = pl
                     sc = sc + pl
                     if rec:
                         parts["plan"] = pl
@@ -539,6 +543,18 @@ class Mind:
                 act = torch.where(need, pa, act); self.cur = torch.where(need, pa, self.cur); again = again | need; tried = tried & ~need
                 self.e1_n = getattr(self, "e1_n", 0) + int(need.sum())
             self._e1_prev = (sn_.clone(), P_.clone(), df_.clone())
+        if os.environ.get("ATANOR_QUIET", "0") == "1" and go is not None and getattr(go, "organs", None) is not None:
+            P_ = go.organs.path.p; pend = {}
+            fo_ = go._foreseen(x); mg_ = (fo_[..., 0] ** 2 + fo_[..., 1] ** 2).sqrt()       # Q1b: "nearer" is foretold only by a gesture its own forecaster
+            walks = mg_.gather(1, act[:, None])[:, 0] > 0.5 * mg_.amax(1).clamp(min=0.1)   # sees as a move; a turn asked for is not scored as a failed approach
+            for nm, cont, tg in (("lean", getattr(self, "_q_gl", None), getattr(go, "_t_lean", None)), ("plan", getattr(self, "_q_pl", None), getattr(go, "_t_plan", None))):
+                if cont is None or tg is None or cont.shape[0] != n or tg[0].shape[0] != n:
+                    continue
+                said = cont.abs().sum(1) > 1e-6                                 # the organ had something to say this beat
+                led = said & tg[1] & (cont.argmax(1) == act) & walks             # and what the body does is what it asked for, and is a move
+                self.q_turn = getattr(self, "q_turn", 0) + int((said & tg[1] & (cont.argmax(1) == act) & ~walks).sum())
+                pend[nm] = (led, tg[0].clone(), (tg[0] - P_).norm(dim=1))
+            self._q_pend = (pend, P_.clone()); self._q_gl = None; self._q_pl = None
         b0m = os.environ.get("ATANOR_B0", "0")
         if b0m in ("own", "oracle") and go is not None and getattr(self, "goal_prev", None) is not None and getattr(go, "organs", None) is not None:
             wsc, on_ = go.b0_foresight(x, self.goal_prev)   # B0 (Plan B first step): the imagined outcome chooses
@@ -572,18 +588,20 @@ class Mind:
             from loki_memory.somatic_readout import SomaticReadout
             self.gut = SomaticReadout(cue_width=2 + k, channels=k, slots=64, events=256).to(d)
             self.gj = torch.full((n,), -1, dtype=torch.long, device=d); self.gcue = torch.zeros(n, 2 + k, device=d); self.gbefore = torch.zeros(n, k, device=d)
-            self.gt = torch.zeros(n, dtype=torch.long, device=d); self.g_len = 100.0; self.g_asked = 0; self.g_known = 0; self.g_diff = 0; self.g_ends = 0
+            self.gt = torch.zeros(n, dtype=torch.long, device=d); self.g_since = torch.full((n,), 999, dtype=torch.long, device=d); self.g_far = torch.zeros(n, dtype=torch.bool, device=d); self.g_len = 100.0; self.g_asked = 0; self.g_known = 0; self.g_diff = 0; self.g_ends = 0
         df = 1.0 - (torch.stack([x[:, go.ins[2]], x[:, go.ins[1]]], 1) if go.chan == "room" else x[:, go.ins]).clamp(0, 1)
         P_ = go.organs.path.p if getattr(go, "organs", None) is not None and getattr(go.organs, "path", None) is not None else torch.zeros(n, 2, device=d)
         cue = torch.cat([P_ / 8.0, df], 1)
         self.gt = torch.where(self.gj >= 0, self.gt + 1, self.gt)
         rose = (self.gbefore - df).max(1).values > 0.05                         # an inside rose since it set out: the journey paid
+        self.g_since = torch.where(rose & (self.gj >= 0), torch.zeros_like(self.g_since), self.g_since + 1)   # beats since its last relief
         late = self.gt > (self.g_len if os.environ.get("ATANOR_OWN_LEAVE", "0") == "1" else 3 * self.g_len)   # L7 (registered): past its own usual journey it
         end = (self.gj >= 0) & (rose | (default < 0) | late | self.cut)                                          # books what the journey cost so far and asks again
         for i in torch.nonzero(end)[:, 0].tolist():
             after = torch.ones(k, device=d) if bool(self.cut[i]) and not bool(rose[i]) else df[i]
             self.gut.remember(self.gcue[i], int(self.gj[i]), self.gbefore[i], after); self.g_ends += 1
-            if bool(rose[i]):                                                    # its usual: the mean of paying journeys; with L7 the longest paying journey
+            if bool(rose[i]) and bool(self.g_far[i]):                            # L7b: only journeys that began away from a meal count (a sip right after a sip is
+                                                                                 # the same meal, not a journey). Its usual: the mean of paying journeys; with L7 the longest
                 self.g_len = max(0.995 * self.g_len, float(self.gt[i])) if os.environ.get("ATANOR_OWN_LEAVE", "0") == "1" else 0.95 * self.g_len + 0.05 * float(self.gt[i])   # of late (fading), so sips at a spring do not shrink it
         self.gj = torch.where(end, torch.full_like(self.gj, -1), self.gj)
         out = default.clone(); start = (default >= 0) & (self.gj < 0)
@@ -598,9 +616,35 @@ class Mind:
                 pick = int(default[i]); self.g_asked += 1
                 if bool(known.any()):
                     pick, conf, called = self.gut.choose(cue[i], acts, df[i]); self.g_known += 1; self.g_diff += int(pick != int(default[i]))
-                self.gj[i] = pick; self.gcue[i] = cue[i]; self.gbefore[i] = df[i]; self.gt[i] = 0
+                self.gj[i] = pick; self.gcue[i] = cue[i]; self.gbefore[i] = df[i]; self.gt[i] = 0; self.g_far[i] = bool(self.g_since[i] > 8)
         held = self.gj >= 0
         return torch.where(held, self.gj, out)
+
+    def _quiet(self, name):
+        """Q1: the organ's own record - of the beats the body did what it asked, the share on which the body came nearer the place it named
+        (by its own path sense). Starts at 1 (as it was); a fading mean; never under .05."""
+        q = getattr(self, "q_rel", None)
+        if q is None:
+            self.q_rel = q = dict(lean=1.0, plan=1.0); self.q_n = dict(lean=0, plan=0)
+        return max(0.05, q[name])
+
+    def _quiet_check(self, died, cut):
+        pe = getattr(self, "_q_pend", None); go = self.going
+        if pe is None or getattr(go, "organs", None) is None:
+            return
+        pend, _ = pe; P_ = go.organs.path.p; self._quiet("lean")
+        for nm, (led, tgt, d0) in pend.items():
+            m = led & ~died & ~cut & (d0 > 0.7)
+            if bool(m.any()):
+                hit = ((d0 - (tgt - P_).norm(dim=1)) > 0.05)[m].float().mean()
+                k = min(0.05, 0.002 * int(m.sum()))                              # more bodies checked this beat, more is learned (one mind)
+                if os.environ.get("ATANOR_OWN_RATE", "0") == "1":                # SF3: and faster when the reading departs from its usual
+                    dv = self.q_dev.get(nm, 0.2) if hasattr(self, "q_dev") else 0.2
+                    if not hasattr(self, "q_dev"):
+                        self.q_dev = {}
+                    sur = abs(float(hit) - self.q_rel[nm]) / (dv + 1e-6); self.q_dev[nm] = 0.98 * dv + 0.02 * abs(float(hit) - self.q_rel[nm]); k = min(0.3, k * (1.0 + sur))
+                self.q_rel[nm] = (1 - k) * self.q_rel[nm] + k * float(hit); self.q_n[nm] += int(m.sum())
+        self._q_pend = None
 
     def _e1(self):
         if getattr(self, "e1", None) is None:
@@ -615,6 +659,8 @@ class Mind:
         ins = self.net.inside
         if getattr(self, "going", None) is not None:                           # L1: the going organ keeps its own place memory and ring
             self.going.observe(x, act, x2, died | cut)
+            if os.environ.get("ATANOR_QUIET", "0") == "1":
+                self._quiet_check(died, cut)
         if os.environ.get("ATANOR_E1", "0") == "1" and getattr(self, "_e1_prev", None) is not None and getattr(self.going, "organs", None) is not None:
             go_ = self.going; ec = self._e1(); sn_, P0, d0 = self._e1_prev; P1 = go_.organs.path.p
             d1 = 1.0 - torch.stack([x2[:, go_.ins[2]], x2[:, go_.ins[1]]], 1).clamp(0, 1)
@@ -691,13 +737,29 @@ class Mind:
             with torch.enable_grad():
                 self.learn_inner()
         if self.steps % self.learn_every == 0 and len(self.buf) > 100:
-            X, A, X2, OK = [torch.cat([b[k] for b in self.buf]) for k in range(4)]
-            self.net.train()
-            for _ in range(20):
+            if os.environ.get("ATANOR_REST_LEARN", "0") == "1":                # RL1 (registered 2026-11-28; Astra: "take the one call that stops the waking loop out of it"):
+                self.owed = getattr(self, "owed", 0) + 1                       # awake it only keeps what it lived (its ring, as before) and reads the weights it has;
+            else:                                                              # the forecaster's big learning waits for a rest (Mind.rest)
+                self._learn_burst(20)
+        self.prev = (x, act); self.cut = cut.clone()
+
+    def _learn_burst(self, steps):
+        if len(self.buf) <= 100:
+            return
+        X, A, X2, OK = [torch.cat([b[k] for b in self.buf]) for k in range(4)]
+        self.net.train()
+        with torch.enable_grad():
+            for _ in range(steps):
                 i = torch.randint(0, len(X), (2048,), device=self.dev)
                 loss = self.net.loss(X[i], A[i], X2[i], OK[i]); self.opt.zero_grad(); loss.backward(); self.opt.step()
-            self.net.eval()
-        self.prev = (x, act); self.cut = cut.clone()
+        self.net.eval()
+
+    def rest(self, cap=400):
+        """RL1: a rest. The forecaster's learning owed from the waking beats is done now (20 steps per waking burst skipped, at most `cap`
+        steps a rest; what is over the cap is counted as lost, not hidden). Returns (steps done, bursts lost)."""
+        owed = getattr(self, "owed", 0); steps = min(cap, 20 * owed); lost = max(0, owed - cap // 20)
+        self._learn_burst(steps); self.owed = 0; self.rest_steps = getattr(self, "rest_steps", 0) + steps; self.rest_lost = getattr(self, "rest_lost", 0) + lost
+        return steps, lost
 
     @torch.no_grad()
     def _track_pull(self, x, e, alive):

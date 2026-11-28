@@ -1410,3 +1410,20 @@
 - 2026-11-28 `c743c6a6` Links: motion-parallax eyes (P1), sources count by their own error about where relief came (R5), leaving by its own journey record (L7)
 - 2026-11-28 `28dfd2a9` Astra request: review of sources counting by their own error, and widening it to several sources
 - 2026-11-28 `56e81994` Astra sources request: candidates compete rather than average; ask for the common layer
+- 2026-11-28 `1193238f` LG1 claim ledger (four outcomes), R5b memory scored on same-kind pairs only, pocket room's three conditions (PK3) registered
+- 2026-11-28 `c9f803f6` Astra's whole review adopted: what counts as progress changes; six working rules; next small check outside space
+- 2026-11-28 `35b3ce6e` LV1 two-lever device outside space: the common principle separates two co-occurring changes by its own action (24/24) and re-finds after a hidden swap (23/24); limits recorded
+- 2026-11-28 `65e93ce1` LV2: the lever device as a world of the room body; the whole being unmodified (registered)
+- 2026-11-28 `51e9771d` Q1: organs count by how often what they foretold came true (dense check each beat); EF1: using the body costs; registered, unmeasured
+- 2026-11-28 `2faa9501` Astra request: efficiency as a principle of structure (when not to compute; thinking that costs)
+- 2026-11-28 `5d9cf7f5` Results: LV2 whole being in the lever world (not met; room-only list), PK3 a and b with the ledger; SF1 relief spot, SF3 own pace; human research part 2
+- 2026-11-28 `48cd560e` Astra request: the gap between the lone organ and the whole being; PK3 c result file
+- 2026-11-28 `98e8d21f` Q1b (moves only are scored), L7b (journeys from away only); PK3 c recorded; checks registered
+- 2026-11-28 `e8b9f990` EFF1: first line of the efficiency ledger (CPU stand-in): ordinary beat ~20 ms, rare 7 s learning bursts, 1.9 GB process
+- 2026-11-28 `dcfeefb8` Results bundle for Astra (lever device, pocket room, ledger, eyes, efficiency, unmeasured list)
+- 2026-11-28 `e57dd1f4` RL1: the 7 s forecaster burst moved to a rest (waking p99 23 ms; the cost moved, not gone); SH1 shadow movement gut (first look: the lived record tells the causal hand)
+- 2026-11-28 `2181fff7` Q1 check in A2: bar met (deaths 115 -> 22) but the stacked bundle is far worse than the adopted recipe; F1 one-out falsification registered
+- 2026-11-28 `598d87f0` Q1 / EF1 in the lever world: Q1 does not quiet the walking there, EF1 costs lives - not adopted
+- 2026-11-28 `0f249d4d` SH1: the being's own lived record tells the causal hand (by movement and delay); its gut holds only places - the candidate interface is the first thing to change
+- 2026-11-28 `49e40574` F1: first launch lost to my misplaced rest call (value learning ran every beat); fixed, progress line added, rerun
+- 2026-11-28 `c55e1d6a` F1 one-out falsification in A2: the stacked bundle is worse than the adopted recipe in both starts and no single organ is the cause; not adopted

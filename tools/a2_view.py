@@ -106,6 +106,8 @@ while True:
         deaths += 1; since = -1; rebirth(B, O, Mi, info); B.felt[:] = 0; x = O(B.raw())
     if t % 1000 == 0:
         G.learn()
+        if hasattr(Mi, "rest"):
+            Mi.rest()                                                      # RL1: the rest - what the waking beats owed is learned now
         with torch.enable_grad():
             Mi.wo.learn(n=max(1, 2500 // max(1, getattr(Mi.wo, "per_call", 1))))
     if True:                                                            # display only: four in-between pictures per beat, at the world's own tempo (a beat = 0.2 s)

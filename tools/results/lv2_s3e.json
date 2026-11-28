@@ -1,0 +1,71 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md LV2",
+ "being": "s3_e",
+ "bodies": 16,
+ "seed": 9601,
+ "deaths_by_phase": [
+  47,
+  118,
+  281
+ ],
+ "presses_by_phase": [
+  {
+   "none": 22679,
+   "first": 0,
+   "second": 0,
+   "both": 1321
+  },
+  {
+   "none": 52997,
+   "first": 1973,
+   "second": 1030,
+   "both": 0
+  },
+  {
+   "none": 60561,
+   "first": 1668,
+   "second": 1771,
+   "both": 0
+  }
+ ],
+ "causal_share_last_third": [
+  null,
+  0.668,
+  0.533
+ ],
+ "who_chose_by_phase": [
+  {
+   "pull": 2427,
+   "value": 0,
+   "random": 0,
+   "held": 19162,
+   "tried": 2411
+  },
+  {
+   "pull": 4558,
+   "value": 0,
+   "random": 0,
+   "held": 45699,
+   "tried": 5743
+  },
+  {
+   "pull": 4387,
+   "value": 0,
+   "random": 0,
+   "held": 53231,
+   "tried": 6382
+  }
+ ],
+ "cells_walked_by_phase": [
+  2929.9,
+  5559.0,
+  5701.3
+ ],
+ "gut": {
+  "asked": 11725,
+  "known": 11709,
+  "journeys": 11716
+ },
+ "remaps": 3,
+ "seconds": 1344
+}

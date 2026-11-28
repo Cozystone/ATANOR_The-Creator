@@ -1,0 +1,84 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md LV1",
+ "seeds": 24,
+ "arms": {
+  "gut": {
+   "deaths_by_phase": [
+    48,
+    20,
+    95
+   ],
+   "tried_alone": 24,
+   "first_alone_beats_median": 13,
+   "found_cause": 24,
+   "found_cause_beats_median": 77,
+   "refound_after_swap": 23,
+   "refound_chunks_median": 42,
+   "wrong_presses_before_refound_median": 9,
+   "picks_phase2": [
+    48,
+    649,
+    4509,
+    48
+   ],
+   "picks_phase3": [
+    474,
+    904,
+    245,
+    4409
+   ]
+  },
+  "both": {
+   "deaths_by_phase": [
+    48,
+    120,
+    144
+   ],
+   "tried_alone": 0,
+   "first_alone_beats_median": null,
+   "found_cause": 0,
+   "found_cause_beats_median": null,
+   "refound_after_swap": 0,
+   "refound_chunks_median": null,
+   "wrong_presses_before_refound_median": null,
+   "picks_phase2": [
+    0,
+    5328,
+    0,
+    0
+   ],
+   "picks_phase3": [
+    0,
+    6072,
+    0,
+    0
+   ]
+  },
+  "random": {
+   "deaths_by_phase": [
+    128,
+    318,
+    330
+   ],
+   "tried_alone": 24,
+   "first_alone_beats_median": 19,
+   "found_cause": 1,
+   "found_cause_beats_median": 3362,
+   "refound_after_swap": 5,
+   "refound_chunks_median": 125,
+   "wrong_presses_before_refound_median": 29,
+   "picks_phase2": [
+    1341,
+    1388,
+    1310,
+    1317
+   ],
+   "picks_phase3": [
+    1551,
+    1547,
+    1419,
+    1584
+   ]
+  }
+ }
+}

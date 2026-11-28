@@ -1,0 +1,82 @@
+{
+ "protocol": "atanor_os/WORLD_A_PROTOCOL.md LV2",
+ "quiet": {
+  "rel": {
+   "lean": 0.4997084849293444,
+   "plan": 0.9714801589680262
+  },
+  "checked": {
+   "lean": 11674,
+   "plan": 355
+  },
+  "turns_not_scored": 47899
+ },
+ "being": "s3_e",
+ "bodies": 16,
+ "seed": 9601,
+ "deaths_by_phase": [
+  85,
+  154,
+  420
+ ],
+ "presses_by_phase": [
+  {
+   "none": 22693,
+   "first": 0,
+   "second": 0,
+   "both": 1307
+  },
+  {
+   "none": 52982,
+   "first": 2077,
+   "second": 941,
+   "both": 0
+  },
+  {
+   "none": 60727,
+   "first": 1820,
+   "second": 1453,
+   "both": 0
+  }
+ ],
+ "causal_share_last_third": [
+  null,
+  0.708,
+  0.504
+ ],
+ "who_chose_by_phase": [
+  {
+   "pull": 2771,
+   "value": 0,
+   "random": 0,
+   "held": 18735,
+   "tried": 2494
+  },
+  {
+   "pull": 5162,
+   "value": 0,
+   "random": 0,
+   "held": 45239,
+   "tried": 5599
+  },
+  {
+   "pull": 5434,
+   "value": 0,
+   "random": 0,
+   "held": 52113,
+   "tried": 6453
+  }
+ ],
+ "cells_walked_by_phase": [
+  3488.6,
+  6655.5,
+  7402.2
+ ],
+ "gut": {
+  "asked": 11110,
+  "known": 11094,
+  "journeys": 11096
+ },
+ "remaps": 3,
+ "seconds": 3116
+}
